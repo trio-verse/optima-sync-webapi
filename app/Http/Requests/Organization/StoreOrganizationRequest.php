@@ -32,19 +32,4 @@ class StoreOrganizationRequest extends FormRequest
             'address'     => ['required', 'string', 'min:5', 'max:255'],
         ];
     }
-
-   
-    public function messages():array
-    {
-       return[
-        'name.required'        => 'اسم المنظمة مطلوب',
-        'email.required'       => 'البريد الإلكتروني مطلوب',
-        'email.email'          => 'يرجى إدخال بريد إلكتروني صحيح',
-        'email.unique'         => 'هذا البريد الإلكتروني مسجل لمنظمة أخرى',
-        'phone.required'       => 'رقم الهاتف مطلوب',
-        'phone.regex'          => 'يرجى إدخال رقم هاتف صحيح',
-        'phone.unique'         => 'هذا الرقم مسجل لمنظمة أخرى',
-        'address.required'     => 'العنوان مطلوب',
-       ];
-    }
 }
