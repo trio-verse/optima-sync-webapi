@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Helper\V1\ApiResponse;
 use App\Models\Organization;
 use Illuminate\Support\Facades\DB;
 
@@ -18,5 +19,15 @@ class OrganizationService{
         ]);
         return $organization;
        } );
+    }
+
+    public function updateOrg(int $id , array $data) : Organization|false{
+        $org = Organization::find($id)->firstOrFail();
+
+        DB::transaction(function() use ($org , $data) {
+            $org->update($data);
+        });
+
+        return $org ;
     }
 }

@@ -10,7 +10,10 @@ Route::prefix('v1')->group(function () {
     Route::post('/register-email', [OtpAuthenticationController::class, 'store']);
     Route::post('verify-otp', [OtpAuthenticationController::class, 'verify']);
 
-    // create Organization 
-    Route::post('/organizations' , [OrganizationController::class, 'store']);
+    // Organization
+    Route::middleware(['auth:sanctum'])->group(function(){
+        Route::post('/organizations' , [OrganizationController::class, 'store']);
+        Route::patch('/organizations/{id}' , [OrganizationController::class, 'update']);
+    });
 
 });
