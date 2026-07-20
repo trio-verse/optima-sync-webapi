@@ -28,4 +28,9 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
         ];
     }
+
+    // Relations
+    public function orgnizations(){
+        return $this->hasMany(Organization::class);
+    }
 }

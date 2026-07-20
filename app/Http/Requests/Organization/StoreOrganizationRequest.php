@@ -14,7 +14,8 @@ class StoreOrganizationRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        $user = $this->user();
+        return isset($user) === true ? true : false ;
     }
 
     /**
