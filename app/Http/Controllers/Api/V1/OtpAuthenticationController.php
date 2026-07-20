@@ -21,7 +21,9 @@ class OtpAuthenticationController extends Controller
 
 
     /**
-     * Store a newly created resource in storage.
+     * send email for authentication.
+     * Store a newly created email in storage & OTP sent to your email
+     * @unauthenticated
      */
     public function store(SendOtpRequest $request): JsonResponse
     {
@@ -36,6 +38,11 @@ class OtpAuthenticationController extends Controller
         }
     }
 
+    /**
+     * verify otp to authenticate user.
+     * login or register the user via otp 
+     * @unauthenticated
+     */
     public function verify(VerifyOtpRequest $request): JsonResponse
     {
         $validated = $request->validated();
