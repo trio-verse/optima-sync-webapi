@@ -1,38 +1,27 @@
-FROM php:8.4-fpm
+# استخدام اسم الـ Tag الرسمي السليم لـ FrankenPHP مع PHP 8.4
+FROM dunglas/frankenphp:1-php8.4
 
-# 1. تثبيت الحزم الحزم الأساسية للنظام و PHP Extensions المطلوبين لـ Laravel
-RUN apt-get update && apt-get install -y \
-    git \
-    curl \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    zip \
-    unzip \
-    libzip-dev \
-    cron
+# 1. تثبيت إضافات PHP التي يحتاجها Laravel
+RUN install-php-extensions pdo_mysql gd bcmath zip intl opcache pcntl
 
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+# 2. مسار العمل
+WORKDIR /app
 
-
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
-
+# 3. نسخ كود المشروع
+COPY . /app
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-WORKDIR /var/www
-
-
-COPY . /var/www
-
-
+# 4. تثبيت حزم Composer
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
+# 5. ضبط الصلاحيات للمجلدات التي يكتب عليها Laravel
+RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache
 
-RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+# 6. تحديد مجلد الـ public كـ Document Root
+ENV DOCUMENT_ROOT=/app/public
 
+# فتح البورت
+EXPOSE 8080
 
-EXPOSE 9000
-
-
-CMD ["php-fpm"]
+CMD ["frankenphp", "php-server", "--listen", ":8080", "--root", "/app/public"]
