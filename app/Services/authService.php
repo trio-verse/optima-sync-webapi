@@ -8,7 +8,7 @@ use App\Models\User;
 use Exception;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Mail;
-
+// File changed
 class AuthService
 {
 
