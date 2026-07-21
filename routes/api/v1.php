@@ -14,6 +14,9 @@ Route::prefix('v1')->group(function () {
     Route::middleware(['auth:sanctum'])->group(function(){
         Route::post('/organizations' , [OrganizationController::class, 'store']);
         Route::patch('/organizations/{id}' , [OrganizationController::class, 'update']);
+
+        Route::post('/organizations/{organizationId}/members', [OrganizationController::class, 'addMember']);
+        Route::patch('/organizations/{organizationId}/members/{memberId}', [OrganizationController::class, 'updateMemberRole']);
     });
 
 });
