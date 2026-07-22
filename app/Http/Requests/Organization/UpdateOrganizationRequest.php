@@ -31,6 +31,7 @@ class UpdateOrganizationRequest extends FormRequest
             'phone' => ['sometimes', 'string', 'regex:/^\+?[0-9\s\-\(\)]{7,20}$/', Rule::unique('organizations', 'phone')->ignore($organizationId)],
             'description' => ['nullable', 'string', 'min:10', 'max:500'],
             'address' => ['sometimes', 'string', 'min:5', 'max:255'],
+            'logo'        => ['sometimes', 'nullable', 'image', 'mimes:webp', 'max:2048'],
         ];
     }
 }

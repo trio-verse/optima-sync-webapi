@@ -94,7 +94,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: July 20, 2026</li>
+        <li>Last updated: July 22, 2026</li>
     </ul>
 </div>
 
@@ -414,16 +414,14 @@ response new organization</p>
     <pre><code class="language-bash">curl --request POST \
     "http://127.0.0.1:8000/api/v1/organizations" \
     --header "Authorization: Bearer {ACCESS_TOKEN}" \
-    --header "Content-Type: application/json" \
+    --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --data "{
-    \"name\": \"b\",
-    \"email\": \"zbailey@example.net\",
-    \"phone\": \"+08s790-\",
-    \"description\": \"Quo omnis nostrum aut adipisci.\",
-    \"address\": \"p\"
-}"
-</code></pre></div>
+    --form "name=b"\
+    --form "email=zbailey@example.net"\
+    --form "phone=+08s790-"\
+    --form "description=Quo omnis nostrum aut adipisci."\
+    --form "address=p"\
+    --form "logo=@C:\Users\wadah\AppData\Local\Temp\php11FE.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -433,22 +431,22 @@ response new organization</p>
 
 const headers = {
     "Authorization": "Bearer {ACCESS_TOKEN}",
-    "Content-Type": "application/json",
+    "Content-Type": "multipart/form-data",
     "Accept": "application/json",
 };
 
-let body = {
-    "name": "b",
-    "email": "zbailey@example.net",
-    "phone": "+08s790-",
-    "description": "Quo omnis nostrum aut adipisci.",
-    "address": "p"
-};
+const body = new FormData();
+body.append('name', 'b');
+body.append('email', 'zbailey@example.net');
+body.append('phone', '+08s790-');
+body.append('description', 'Quo omnis nostrum aut adipisci.');
+body.append('address', 'p');
+body.append('logo', document.querySelector('input[name="logo"]').files[0]);
 
 fetch(url, {
     method: "POST",
     headers,
-    body: JSON.stringify(body),
+    body,
 }).then(response =&gt; response.json());</code></pre></div>
 
 </span>
@@ -473,7 +471,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <form id="form-POSTapi-v1-organizations" data-method="POST"
       data-path="api/v1/organizations"
       data-authed="1"
-      data-hasfiles="0"
+      data-hasfiles="1"
       data-isarraybody="0"
       autocomplete="off"
       onsubmit="event.preventDefault(); executeTryOut('POSTapi-v1-organizations', this);">
@@ -521,10 +519,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="Content-Type"                data-endpoint="POSTapi-v1-organizations"
-               value="application/json"
+               value="multipart/form-data"
                data-component="header">
     <br>
-<p>Example: <code>application/json</code></p>
+<p>Example: <code>multipart/form-data</code></p>
             </div>
                                 <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
@@ -599,6 +597,18 @@ You can check the Dev Tools console for debugging information.</code></pre>
     <br>
 <p>Must be at least 5 characters. Must not be greater than 255 characters. Example: <code>p</code></p>
         </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>logo</code></b>&nbsp;&nbsp;
+<small>file</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="file" style="display: none"
+                              name="logo"                data-endpoint="POSTapi-v1-organizations"
+               value=""
+               data-component="body">
+    <br>
+<p>Must be an image. Must not be greater than 2048 kilobytes. Example: <code>C:\Users\wadah\AppData\Local\Temp\php11FE.tmp</code></p>
+        </div>
         </form>
 
                     <h2 id="endpoints-PATCHapi-v1-organizations--id-">Update organization</h2>
@@ -618,16 +628,14 @@ response updated organization data</p>
     <pre><code class="language-bash">curl --request PATCH \
     "http://127.0.0.1:8000/api/v1/organizations/architecto" \
     --header "Authorization: Bearer {ACCESS_TOKEN}" \
-    --header "Content-Type: application/json" \
+    --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --data "{
-    \"name\": \"b\",
-    \"email\": \"zbailey@example.net\",
-    \"phone\": \"+08s790-\",
-    \"description\": \"Quo omnis nostrum aut adipisci.\",
-    \"address\": \"p\"
-}"
-</code></pre></div>
+    --form "name=b"\
+    --form "email=zbailey@example.net"\
+    --form "phone=+08s790-"\
+    --form "description=Quo omnis nostrum aut adipisci."\
+    --form "address=p"\
+    --form "logo=@C:\Users\wadah\AppData\Local\Temp\php122E.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -637,22 +645,22 @@ response updated organization data</p>
 
 const headers = {
     "Authorization": "Bearer {ACCESS_TOKEN}",
-    "Content-Type": "application/json",
+    "Content-Type": "multipart/form-data",
     "Accept": "application/json",
 };
 
-let body = {
-    "name": "b",
-    "email": "zbailey@example.net",
-    "phone": "+08s790-",
-    "description": "Quo omnis nostrum aut adipisci.",
-    "address": "p"
-};
+const body = new FormData();
+body.append('name', 'b');
+body.append('email', 'zbailey@example.net');
+body.append('phone', '+08s790-');
+body.append('description', 'Quo omnis nostrum aut adipisci.');
+body.append('address', 'p');
+body.append('logo', document.querySelector('input[name="logo"]').files[0]);
 
 fetch(url, {
     method: "PATCH",
     headers,
-    body: JSON.stringify(body),
+    body,
 }).then(response =&gt; response.json());</code></pre></div>
 
 </span>
@@ -677,7 +685,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <form id="form-PATCHapi-v1-organizations--id-" data-method="PATCH"
       data-path="api/v1/organizations/{id}"
       data-authed="1"
-      data-hasfiles="0"
+      data-hasfiles="1"
       data-isarraybody="0"
       autocomplete="off"
       onsubmit="event.preventDefault(); executeTryOut('PATCHapi-v1-organizations--id-', this);">
@@ -725,10 +733,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="Content-Type"                data-endpoint="PATCHapi-v1-organizations--id-"
-               value="application/json"
+               value="multipart/form-data"
                data-component="header">
     <br>
-<p>Example: <code>application/json</code></p>
+<p>Example: <code>multipart/form-data</code></p>
             </div>
                                 <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
@@ -815,6 +823,18 @@ You can check the Dev Tools console for debugging information.</code></pre>
                data-component="body">
     <br>
 <p>Must be at least 5 characters. Must not be greater than 255 characters. Example: <code>p</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>logo</code></b>&nbsp;&nbsp;
+<small>file</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="file" style="display: none"
+                              name="logo"                data-endpoint="PATCHapi-v1-organizations--id-"
+               value=""
+               data-component="body">
+    <br>
+<p>Must be an image. Must not be greater than 2048 kilobytes. Example: <code>C:\Users\wadah\AppData\Local\Temp\php122E.tmp</code></p>
         </div>
         </form>
 

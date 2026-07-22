@@ -32,9 +32,13 @@ class OrganizationController extends Controller
     public function store(StoreOrganizationRequest $request): JsonResponse
     {
         try {
-            $organization  = $this->organizationservice->createOrganization(
-                $request->validated()
-            );
+            $validatedData = $request->safe()->except(['logo']);
+
+            $validatedData['user_id'] = $request->user()->id;
+
+            $logoFile = $request->file('logo');
+
+            $organization  = $this->organizationservice->createOrganization($validatedData, $logoFile);
             return ApiResponse::response(new OrganizationResource($organization), 'The organization was created succsesfully', 201);
         } catch (\Exception $e) {
             return ApiResponse::error(null, "server error", 500);
@@ -50,10 +54,13 @@ class OrganizationController extends Controller
     public function update(UpdateOrganizationRequest $request, int $id): JsonResponse
     {
         try {
-            $organization = $this->organizationservice->updateOrg(
-                $id,
-                $request->validated()
-            );
+            $validatedData = $request->safe()->except(['logo']);
+
+            $validatedData['user_id'] = $request->user()->id;
+
+            $logoFile = $request->file('logo');
+
+            $organization = $this->organizationservice->updateOrg($id, $validatedData, $logoFile);
             return ApiResponse::response(new OrganizationResource($organization), 'The organization was updated succsesfully', 200);
         } catch (RecordNotFoundException $e) {
             return ApiResponse::error(null, "organization not found", 404);

@@ -120,7 +120,7 @@ endpoints:
       deprecated: false
     headers:
       Authorization: 'Bearer {ACCESS_TOKEN}'
-      Content-Type: application/json
+      Content-Type: multipart/form-data
       Accept: application/json
     urlParameters: []
     cleanUrlParameters: []
@@ -182,13 +182,25 @@ endpoints:
         exampleWasSpecified: false
         nullable: false
         deprecated: false
+      logo:
+        custom: []
+        name: logo
+        description: 'Must be an image. Must not be greater than 2048 kilobytes.'
+        required: false
+        example: null
+        type: file
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
     cleanBodyParameters:
       name: b
       email: zbailey@example.net
       phone: +08s790-
       description: 'Quo omnis nostrum aut adipisci.'
       address: p
-    fileParameters: []
+    fileParameters:
+      logo: null
     responses: []
     responseFields: []
     auth:
@@ -217,7 +229,7 @@ endpoints:
       deprecated: false
     headers:
       Authorization: 'Bearer {ACCESS_TOKEN}'
-      Content-Type: application/json
+      Content-Type: multipart/form-data
       Accept: application/json
     urlParameters:
       id:
@@ -291,13 +303,25 @@ endpoints:
         exampleWasSpecified: false
         nullable: false
         deprecated: false
+      logo:
+        custom: []
+        name: logo
+        description: 'Must be an image. Must not be greater than 2048 kilobytes.'
+        required: false
+        example: null
+        type: file
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
     cleanBodyParameters:
       name: b
       email: zbailey@example.net
       phone: +08s790-
       description: 'Quo omnis nostrum aut adipisci.'
       address: p
-    fileParameters: []
+    fileParameters:
+      logo: null
     responses: []
     responseFields: []
     auth:

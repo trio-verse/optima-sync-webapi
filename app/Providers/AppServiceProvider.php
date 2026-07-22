@@ -2,8 +2,11 @@
 
 namespace App\Providers;
 
+use App\Contracts\FileStorageInterface;
+use App\Services\LocalStorageService;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\URL;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -11,7 +14,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $storage = config('filesystems.default') === 's3'
+            ? S3StorageService::class
+            : LocalStorageService::class;
+
+        $this->app->bind(FileStorageInterface::class, $storage);
     }
 
     /**

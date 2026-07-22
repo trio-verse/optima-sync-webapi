@@ -17,6 +17,7 @@ class Organization extends Model
         'phone',
         'description',
         'address',
+        'logo',
     ];
 
     // relations
