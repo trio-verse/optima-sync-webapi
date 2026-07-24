@@ -453,3 +453,88 @@ endpoints:
     controller: null
     method: null
     route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: 'api/v1/organizations/{organization_id}/logo'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: Organizations
+      subgroupDescription: ''
+      title: 'Upload Organization Logo (Step 2)'
+      description: 'Upload or update the organization logo after creation.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {ACCESS_TOKEN}'
+      Content-Type: multipart/form-data
+      Accept: application/json
+    urlParameters:
+      organization_id:
+        custom: []
+        name: organization_id
+        description: 'The ID of the organization.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      organization:
+        custom: []
+        name: organization
+        description: 'The organization ID from Step 1.'
+        required: true
+        example: 5
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      organization_id: 1
+      organization: 5
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      file:
+        custom: []
+        name: file
+        description: 'The logo file (max 2MB).'
+        required: true
+        example: null
+        type: file
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters: []
+    fileParameters:
+      file: null
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "message": "The organization logo was uploaded successfully",
+            "data": {
+              "id": 5,
+              "name": "Acme Corp",
+              "logo": "http://localhost/storage/organizations/5/logos/abc123.webp"
+            }
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 3|efSywObt2701QhmLad5K8ueCu1w736YZCG7Svyfw3d9ef386'
+    controller: null
+    method: null
+    route: null

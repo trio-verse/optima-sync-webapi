@@ -70,6 +70,7 @@
                 <li class="tocify-item level-1" data-unique="endpoints">
                     <a href="#endpoints">Endpoints</a>
                 </li>
+<<<<<<< HEAD
                 <ul id="tocify-subheader-endpoints" class="tocify-subheader">
                     <li class="tocify-item level-2" data-unique="endpoints-POSTapi-v1-register-email">
                         <a href="#endpoints-POSTapi-v1-register-email">send email for authentication.</a>
@@ -96,6 +97,32 @@
                 </ul>
             </ul>
         </div>
+=======
+                                    <ul id="tocify-subheader-endpoints" class="tocify-subheader">
+                                                    <li class="tocify-item level-2" data-unique="endpoints-POSTapi-v1-register-email">
+                                <a href="#endpoints-POSTapi-v1-register-email">send email for authentication.</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-POSTapi-v1-verify-otp">
+                                <a href="#endpoints-POSTapi-v1-verify-otp">verify otp to authenticate user.</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-POSTapi-v1-organizations">
+                                <a href="#endpoints-POSTapi-v1-organizations">create organization</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-PATCHapi-v1-organizations--id-">
+                                <a href="#endpoints-PATCHapi-v1-organizations--id-">Update organization</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-organizations">
+                                <a href="#endpoints-organizations">Organizations</a>
+                            </li>
+                                                            <ul id="tocify-subheader-endpoints-organizations" class="tocify-subheader">
+                                                                            <li class="tocify-item level-3" data-unique="endpoints-POSTapi-v1-organizations--organization_id--logo">
+                                            <a href="#endpoints-POSTapi-v1-organizations--organization_id--logo">Upload Organization Logo (Step 2)</a>
+                                        </li>
+                                                                    </ul>
+                                                                        </ul>
+                            </ul>
+            </div>
+>>>>>>> de4d004f8e2c294c8808e3a378cbfddc3c827f56
 
         <ul class="toc-footer" id="toc-footer">
             <li style="padding-bottom: 5px;"><a href="{{ route('scribe.postman') }}">View Postman collection</a></li>
@@ -103,10 +130,17 @@
             <li><a href="http://github.com/knuckleswtf/scribe">Documentation powered by Scribe ✍</a></li>
         </ul>
 
+<<<<<<< HEAD
         <ul class="toc-footer" id="last-updated">
             <li>Last updated: July 21, 2026</li>
         </ul>
     </div>
+=======
+    <ul class="toc-footer" id="last-updated">
+        <li>Last updated: July 24, 2026</li>
+    </ul>
+</div>
+>>>>>>> de4d004f8e2c294c8808e3a378cbfddc3c827f56
 
     <div class="page-wrapper">
         <div class="dark-box"></div>
@@ -777,7 +811,194 @@ You can check the Dev Tools console for debugging information.</code></pre>
                 </div>
             </form>
 
+<<<<<<< HEAD
             <h2 id="endpoints-POSTapi-v1-organizations--organizationId--members">Add member to organization</h2>
+=======
+                                <h2 id="endpoints-organizations">Organizations</h2>
+                                                    <h2 id="endpoints-POSTapi-v1-organizations--organization_id--logo">Upload Organization Logo (Step 2)</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Upload or update the organization logo after creation.</p>
+
+<span id="example-requests-POSTapi-v1-organizations--organization_id--logo">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "http://127.0.0.1:8000/api/v1/organizations/1/logo" \
+    --header "Authorization: Bearer {ACCESS_TOKEN}" \
+    --header "Content-Type: multipart/form-data" \
+    --header "Accept: application/json" \
+    --form "file=@C:\Users\wadah\AppData\Local\Temp\phpFC23.tmp" </code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://127.0.0.1:8000/api/v1/organizations/1/logo"
+);
+
+const headers = {
+    "Authorization": "Bearer {ACCESS_TOKEN}",
+    "Content-Type": "multipart/form-data",
+    "Accept": "application/json",
+};
+
+const body = new FormData();
+body.append('file', document.querySelector('input[name="file"]').files[0]);
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-v1-organizations--organization_id--logo">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;The organization logo was uploaded successfully&quot;,
+    &quot;data&quot;: {
+        &quot;id&quot;: 5,
+        &quot;name&quot;: &quot;Acme Corp&quot;,
+        &quot;logo&quot;: &quot;http://localhost/storage/organizations/5/logos/abc123.webp&quot;
+    }
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-v1-organizations--organization_id--logo" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-v1-organizations--organization_id--logo"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-v1-organizations--organization_id--logo"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-v1-organizations--organization_id--logo" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-v1-organizations--organization_id--logo">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-v1-organizations--organization_id--logo" data-method="POST"
+      data-path="api/v1/organizations/{organization_id}/logo"
+      data-authed="1"
+      data-hasfiles="1"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-v1-organizations--organization_id--logo', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-v1-organizations--organization_id--logo"
+                    onclick="tryItOut('POSTapi-v1-organizations--organization_id--logo');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-v1-organizations--organization_id--logo"
+                    onclick="cancelTryOut('POSTapi-v1-organizations--organization_id--logo');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-v1-organizations--organization_id--logo"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/v1/organizations/{organization_id}/logo</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-v1-organizations--organization_id--logo"
+               value="Bearer {ACCESS_TOKEN}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {ACCESS_TOKEN}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-v1-organizations--organization_id--logo"
+               value="multipart/form-data"
+               data-component="header">
+    <br>
+<p>Example: <code>multipart/form-data</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-v1-organizations--organization_id--logo"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>organization_id</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="organization_id"                data-endpoint="POSTapi-v1-organizations--organization_id--logo"
+               value="1"
+               data-component="url">
+    <br>
+<p>The ID of the organization. Example: <code>1</code></p>
+            </div>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>organization</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="organization"                data-endpoint="POSTapi-v1-organizations--organization_id--logo"
+               value="5"
+               data-component="url">
+    <br>
+<p>The organization ID from Step 1. Example: <code>5</code></p>
+            </div>
+                            <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>file</code></b>&nbsp;&nbsp;
+<small>file</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="file" style="display: none"
+                              name="file"                data-endpoint="POSTapi-v1-organizations--organization_id--logo"
+               value=""
+               data-component="body">
+    <br>
+<p>The logo file (max 2MB). Example: <code>C:\Users\wadah\AppData\Local\Temp\phpFC23.tmp</code></p>
+        </div>
+        </form>
+
+            
+>>>>>>> de4d004f8e2c294c8808e3a378cbfddc3c827f56
 
             <p>
                 <small class="badge badge-darkred">requires authentication</small>
