@@ -14,7 +14,7 @@ class UpdateOrganizationRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true ;
+        return true;
     }
 
     /**
@@ -26,12 +26,11 @@ class UpdateOrganizationRequest extends FormRequest
     {
         $organizationId = $this->route('id');
         return [
-            'name' => ['sometimes', 'string', 'min:3', 'max:255'],
-            'email' => ['sometimes', 'email', Rule::unique('organizations', 'email')->ignore($organizationId)],
-            'phone' => ['sometimes', 'string', 'regex:/^\+?[0-9\s\-\(\)]{7,20}$/', Rule::unique('organizations', 'phone')->ignore($organizationId)],
+            'name'        => ['sometimes', 'string', 'min:3', 'max:255'],
+            'email'       => ['sometimes', 'email', Rule::unique('organizations', 'email')->ignore($organizationId)],
+            'phone'       => ['sometimes', 'string', 'regex:/^\+?[0-9\s\-\(\)]{7,20}$/', Rule::unique('organizations', 'phone')->ignore($organizationId)],
             'description' => ['nullable', 'string', 'min:10', 'max:500'],
-            'address' => ['sometimes', 'string', 'min:5', 'max:255'],
-            'logo'        => ['sometimes', 'nullable', 'image', 'mimes:webp', 'max:2048'],
+            'address'     => ['sometimes', 'string', 'min:5', 'max:255'],
         ];
     }
 }

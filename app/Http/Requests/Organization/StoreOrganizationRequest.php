@@ -14,8 +14,7 @@ class StoreOrganizationRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        $user = $this->user();
-        return isset($user) === true ? true : false;
+        return true;
     }
 
     /**
@@ -31,7 +30,6 @@ class StoreOrganizationRequest extends FormRequest
             'phone'       => ['required', 'string', 'regex:/^\+?[0-9\s\-\(\)]{7,20}$/',  Rule::unique('organizations', 'phone')],
             'description' => ['nullable', 'string', 'min:10', 'max:500'],
             'address'     => ['required', 'string', 'min:5', 'max:255'],
-            'logo'        => ['nullable', 'image', 'mimes:webp,jpeg,png,jpg', 'max:2048'],
         ];
     }
 }

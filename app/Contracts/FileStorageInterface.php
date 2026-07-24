@@ -13,9 +13,9 @@ interface FileStorageInterface
      * @param string $directory
      * @return string
      */
-    public function storeImageAsWebp(UploadedFile $file, string $directory): string;
+    public function upload(UploadedFile $file, string $directory): string;
 
-    /**
+     /**
      * Store an image as WebP and return the stored path.
      */
     public function getUrl(string $path): string;
@@ -24,4 +24,5 @@ interface FileStorageInterface
      * Delete a file from storage.
      */
     public function delete(?string $path): bool;
+   
 }

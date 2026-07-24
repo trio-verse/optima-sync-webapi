@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\V1\OtpAuthenticationController;
 use App\Http\Controllers\Api\V1\OrganizationController;
+use App\Http\Controllers\Api\V1\UploadController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
@@ -11,9 +12,9 @@ Route::prefix('v1')->group(function () {
     Route::post('verify-otp', [OtpAuthenticationController::class, 'verify']);
 
     // Organization
-    Route::middleware(['auth:sanctum'])->group(function(){
-        Route::post('/organizations' , [OrganizationController::class, 'store']);
-        Route::patch('/organizations/{id}' , [OrganizationController::class, 'update']);
+    Route::middleware(['auth:sanctum'])->group(function () {
+        Route::post('/organizations', [OrganizationController::class, 'store']);
+        Route::patch('/organizations/{id}', [OrganizationController::class, 'update']);
+        Route::post('organizations/{organization}/logo', [UploadController::class, 'upload']);
     });
-
 });

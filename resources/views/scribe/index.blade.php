@@ -83,6 +83,14 @@
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-PATCHapi-v1-organizations--id-">
                                 <a href="#endpoints-PATCHapi-v1-organizations--id-">Update organization</a>
                             </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-organizations">
+                                <a href="#endpoints-organizations">Organizations</a>
+                            </li>
+                                                            <ul id="tocify-subheader-endpoints-organizations" class="tocify-subheader">
+                                                                            <li class="tocify-item level-3" data-unique="endpoints-POSTapi-v1-organizations--organization_id--logo">
+                                            <a href="#endpoints-POSTapi-v1-organizations--organization_id--logo">Upload Organization Logo (Step 2)</a>
+                                        </li>
+                                                                    </ul>
                                                                         </ul>
                             </ul>
             </div>
@@ -94,7 +102,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: July 22, 2026</li>
+        <li>Last updated: July 24, 2026</li>
     </ul>
 </div>
 
@@ -414,14 +422,16 @@ response new organization</p>
     <pre><code class="language-bash">curl --request POST \
     "http://127.0.0.1:8000/api/v1/organizations" \
     --header "Authorization: Bearer {ACCESS_TOKEN}" \
-    --header "Content-Type: multipart/form-data" \
+    --header "Content-Type: application/json" \
     --header "Accept: application/json" \
-    --form "name=b"\
-    --form "email=zbailey@example.net"\
-    --form "phone=+08s790-"\
-    --form "description=Quo omnis nostrum aut adipisci."\
-    --form "address=p"\
-    --form "logo=@C:\Users\wadah\AppData\Local\Temp\php11FE.tmp" </code></pre></div>
+    --data "{
+    \"name\": \"b\",
+    \"email\": \"zbailey@example.net\",
+    \"phone\": \"+08s790-\",
+    \"description\": \"Quo omnis nostrum aut adipisci.\",
+    \"address\": \"p\"
+}"
+</code></pre></div>
 
 
 <div class="javascript-example">
@@ -431,22 +441,22 @@ response new organization</p>
 
 const headers = {
     "Authorization": "Bearer {ACCESS_TOKEN}",
-    "Content-Type": "multipart/form-data",
+    "Content-Type": "application/json",
     "Accept": "application/json",
 };
 
-const body = new FormData();
-body.append('name', 'b');
-body.append('email', 'zbailey@example.net');
-body.append('phone', '+08s790-');
-body.append('description', 'Quo omnis nostrum aut adipisci.');
-body.append('address', 'p');
-body.append('logo', document.querySelector('input[name="logo"]').files[0]);
+let body = {
+    "name": "b",
+    "email": "zbailey@example.net",
+    "phone": "+08s790-",
+    "description": "Quo omnis nostrum aut adipisci.",
+    "address": "p"
+};
 
 fetch(url, {
     method: "POST",
     headers,
-    body,
+    body: JSON.stringify(body),
 }).then(response =&gt; response.json());</code></pre></div>
 
 </span>
@@ -471,7 +481,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <form id="form-POSTapi-v1-organizations" data-method="POST"
       data-path="api/v1/organizations"
       data-authed="1"
-      data-hasfiles="1"
+      data-hasfiles="0"
       data-isarraybody="0"
       autocomplete="off"
       onsubmit="event.preventDefault(); executeTryOut('POSTapi-v1-organizations', this);">
@@ -519,10 +529,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="Content-Type"                data-endpoint="POSTapi-v1-organizations"
-               value="multipart/form-data"
+               value="application/json"
                data-component="header">
     <br>
-<p>Example: <code>multipart/form-data</code></p>
+<p>Example: <code>application/json</code></p>
             </div>
                                 <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
@@ -597,18 +607,6 @@ You can check the Dev Tools console for debugging information.</code></pre>
     <br>
 <p>Must be at least 5 characters. Must not be greater than 255 characters. Example: <code>p</code></p>
         </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>logo</code></b>&nbsp;&nbsp;
-<small>file</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="file" style="display: none"
-                              name="logo"                data-endpoint="POSTapi-v1-organizations"
-               value=""
-               data-component="body">
-    <br>
-<p>Must be an image. Must not be greater than 2048 kilobytes. Example: <code>C:\Users\wadah\AppData\Local\Temp\php11FE.tmp</code></p>
-        </div>
         </form>
 
                     <h2 id="endpoints-PATCHapi-v1-organizations--id-">Update organization</h2>
@@ -628,14 +626,16 @@ response updated organization data</p>
     <pre><code class="language-bash">curl --request PATCH \
     "http://127.0.0.1:8000/api/v1/organizations/architecto" \
     --header "Authorization: Bearer {ACCESS_TOKEN}" \
-    --header "Content-Type: multipart/form-data" \
+    --header "Content-Type: application/json" \
     --header "Accept: application/json" \
-    --form "name=b"\
-    --form "email=zbailey@example.net"\
-    --form "phone=+08s790-"\
-    --form "description=Quo omnis nostrum aut adipisci."\
-    --form "address=p"\
-    --form "logo=@C:\Users\wadah\AppData\Local\Temp\php122E.tmp" </code></pre></div>
+    --data "{
+    \"name\": \"b\",
+    \"email\": \"zbailey@example.net\",
+    \"phone\": \"+08s790-\",
+    \"description\": \"Quo omnis nostrum aut adipisci.\",
+    \"address\": \"p\"
+}"
+</code></pre></div>
 
 
 <div class="javascript-example">
@@ -645,22 +645,22 @@ response updated organization data</p>
 
 const headers = {
     "Authorization": "Bearer {ACCESS_TOKEN}",
-    "Content-Type": "multipart/form-data",
+    "Content-Type": "application/json",
     "Accept": "application/json",
 };
 
-const body = new FormData();
-body.append('name', 'b');
-body.append('email', 'zbailey@example.net');
-body.append('phone', '+08s790-');
-body.append('description', 'Quo omnis nostrum aut adipisci.');
-body.append('address', 'p');
-body.append('logo', document.querySelector('input[name="logo"]').files[0]);
+let body = {
+    "name": "b",
+    "email": "zbailey@example.net",
+    "phone": "+08s790-",
+    "description": "Quo omnis nostrum aut adipisci.",
+    "address": "p"
+};
 
 fetch(url, {
     method: "PATCH",
     headers,
-    body,
+    body: JSON.stringify(body),
 }).then(response =&gt; response.json());</code></pre></div>
 
 </span>
@@ -685,7 +685,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <form id="form-PATCHapi-v1-organizations--id-" data-method="PATCH"
       data-path="api/v1/organizations/{id}"
       data-authed="1"
-      data-hasfiles="1"
+      data-hasfiles="0"
       data-isarraybody="0"
       autocomplete="off"
       onsubmit="event.preventDefault(); executeTryOut('PATCHapi-v1-organizations--id-', this);">
@@ -733,10 +733,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="Content-Type"                data-endpoint="PATCHapi-v1-organizations--id-"
-               value="multipart/form-data"
+               value="application/json"
                data-component="header">
     <br>
-<p>Example: <code>multipart/form-data</code></p>
+<p>Example: <code>application/json</code></p>
             </div>
                                 <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
@@ -824,17 +824,188 @@ You can check the Dev Tools console for debugging information.</code></pre>
     <br>
 <p>Must be at least 5 characters. Must not be greater than 255 characters. Example: <code>p</code></p>
         </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>logo</code></b>&nbsp;&nbsp;
+        </form>
+
+                                <h2 id="endpoints-organizations">Organizations</h2>
+                                                    <h2 id="endpoints-POSTapi-v1-organizations--organization_id--logo">Upload Organization Logo (Step 2)</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Upload or update the organization logo after creation.</p>
+
+<span id="example-requests-POSTapi-v1-organizations--organization_id--logo">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "http://127.0.0.1:8000/api/v1/organizations/1/logo" \
+    --header "Authorization: Bearer {ACCESS_TOKEN}" \
+    --header "Content-Type: multipart/form-data" \
+    --header "Accept: application/json" \
+    --form "file=@C:\Users\wadah\AppData\Local\Temp\phpFC23.tmp" </code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://127.0.0.1:8000/api/v1/organizations/1/logo"
+);
+
+const headers = {
+    "Authorization": "Bearer {ACCESS_TOKEN}",
+    "Content-Type": "multipart/form-data",
+    "Accept": "application/json",
+};
+
+const body = new FormData();
+body.append('file', document.querySelector('input[name="file"]').files[0]);
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-v1-organizations--organization_id--logo">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;The organization logo was uploaded successfully&quot;,
+    &quot;data&quot;: {
+        &quot;id&quot;: 5,
+        &quot;name&quot;: &quot;Acme Corp&quot;,
+        &quot;logo&quot;: &quot;http://localhost/storage/organizations/5/logos/abc123.webp&quot;
+    }
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-v1-organizations--organization_id--logo" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-v1-organizations--organization_id--logo"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-v1-organizations--organization_id--logo"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-v1-organizations--organization_id--logo" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-v1-organizations--organization_id--logo">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-v1-organizations--organization_id--logo" data-method="POST"
+      data-path="api/v1/organizations/{organization_id}/logo"
+      data-authed="1"
+      data-hasfiles="1"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-v1-organizations--organization_id--logo', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-v1-organizations--organization_id--logo"
+                    onclick="tryItOut('POSTapi-v1-organizations--organization_id--logo');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-v1-organizations--organization_id--logo"
+                    onclick="cancelTryOut('POSTapi-v1-organizations--organization_id--logo');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-v1-organizations--organization_id--logo"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/v1/organizations/{organization_id}/logo</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-v1-organizations--organization_id--logo"
+               value="Bearer {ACCESS_TOKEN}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {ACCESS_TOKEN}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-v1-organizations--organization_id--logo"
+               value="multipart/form-data"
+               data-component="header">
+    <br>
+<p>Example: <code>multipart/form-data</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-v1-organizations--organization_id--logo"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>organization_id</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="organization_id"                data-endpoint="POSTapi-v1-organizations--organization_id--logo"
+               value="1"
+               data-component="url">
+    <br>
+<p>The ID of the organization. Example: <code>1</code></p>
+            </div>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>organization</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="organization"                data-endpoint="POSTapi-v1-organizations--organization_id--logo"
+               value="5"
+               data-component="url">
+    <br>
+<p>The organization ID from Step 1. Example: <code>5</code></p>
+            </div>
+                            <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>file</code></b>&nbsp;&nbsp;
 <small>file</small>&nbsp;
-<i>optional</i> &nbsp;
+ &nbsp;
  &nbsp;
                 <input type="file" style="display: none"
-                              name="logo"                data-endpoint="PATCHapi-v1-organizations--id-"
+                              name="file"                data-endpoint="POSTapi-v1-organizations--organization_id--logo"
                value=""
                data-component="body">
     <br>
-<p>Must be an image. Must not be greater than 2048 kilobytes. Example: <code>C:\Users\wadah\AppData\Local\Temp\php122E.tmp</code></p>
+<p>The logo file (max 2MB). Example: <code>C:\Users\wadah\AppData\Local\Temp\phpFC23.tmp</code></p>
         </div>
         </form>
 

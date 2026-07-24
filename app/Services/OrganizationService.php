@@ -21,24 +21,21 @@ class OrganizationService
 
     public function createOrganization(array $data, ?UploadedFile $logoFile = null): Organization
     {
-        return DB::transaction(function () use ($data, $logoFile) {
-
-            if ($logoFile) {
-                $data['logo'] = $this->file_storage->storeImageAsWebp($logoFile, 'logos');
-            }
+        return DB::transaction(function () use ($data) {
+            $data['logo'] = null; 
             return Organization::create($data);
         });
     }
 
     public function updateOrg(int $id, array $data, ?UploadedFile $logoFile = null): Organization|false
     {
-        $org = Organization::find($id)->firstOrFail();
+        $org = Organization::findOrFail($id);
 
         Gate::authorize('update', $org);
 
         DB::transaction(function () use ($org, $data, $logoFile) {
             if ($logoFile) {
-                $newLogoPath = $this->file_storage->storeImageAsWebp($logoFile, 'logos');
+                $newLogoPath = $this->file_storage->upload($logoFile, 'logos');
                 $data['logo'] = $newLogoPath;
 
                 if ($org->logo) {
@@ -49,5 +46,23 @@ class OrganizationService
         });
 
         return $org;
+    }
+
+    public function updateLogo(Organization $organization, UploadedFile $file): Organization
+    {
+        Gate::authorize('update', $organization);
+
+        return DB::transaction(function () use ($organization, $file) {
+            if ($organization->logo) {
+                $this->file_storage->delete($organization->logo);
+            }
+
+            $directory = "organizations/{$organization->id}/logos";
+            $newPath = $this->file_storage->upload($file, $directory);
+
+            $organization->update(['logo' => $newPath]);
+
+            return $organization;
+        });
     }
 }
