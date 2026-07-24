@@ -2,15 +2,23 @@
 
 namespace App\Services;
 
+use App\Contracts\FileStorageInterface;
 use App\Helper\V1\ApiResponse;
 use App\Models\Organization;
 use App\Models\OrganizationMember;
 use App\Policies\OrganizationPolicy;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 
 class OrganizationService
 {
+
+    public function __construct(private FileStorageInterface $file_storage)
+    {
+    }
+
     public function createOrganization(array $data): Organization
     {
         return DB::transaction(function () use ($data) {
@@ -28,14 +36,11 @@ class OrganizationService
 
     public function updateOrg(int $id, array $data): Organization|false
     {
-        $org = Organization::find($id)->firstOrFail();
-
+        $org = Organization::findOrFail($id);
         Gate::authorize('update', $org);
-
-        DB::transaction(function () use ($org, $data) {
+        DB::transaction(function () use ($org, $data ) {
             $org->update($data);
         });
-
         return $org;
     }
 
