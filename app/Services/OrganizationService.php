@@ -23,12 +23,7 @@ class OrganizationService
     {
         return DB::transaction(function () use ($data) {
             $organization = Organization::create([
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'phone' => $data['phone'],
-                'description' => $data['description'] ?? null,
-                'address' => $data['address'],
-                'user_id' => request()->user()->id,
+                $data
             ]);
             return $organization;
         });
@@ -38,7 +33,7 @@ class OrganizationService
     {
         $org = Organization::findOrFail($id);
         Gate::authorize('update', $org);
-        DB::transaction(function () use ($org, $data ) {
+        DB::transaction(function () use ($org, $data) {
             $org->update($data);
         });
         return $org;
