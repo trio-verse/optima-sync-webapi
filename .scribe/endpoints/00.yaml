@@ -462,10 +462,10 @@ endpoints:
       custom: []
       groupName: Endpoints
       groupDescription: ''
-      subgroup: Organizations
+      subgroup: ''
       subgroupDescription: ''
-      title: 'Upload Organization Logo (Step 2)'
-      description: 'Upload or update the organization logo after creation.'
+      title: 'Upload logo to Organization'
+      description: ''
       authenticated: true
       deprecated: false
     headers:
@@ -478,33 +478,21 @@ endpoints:
         name: organization_id
         description: 'The ID of the organization.'
         required: true
-        example: 1
+        example: 16
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
-      organization:
-        custom: []
-        name: organization
-        description: 'The organization ID from Step 1.'
-        required: true
-        example: 5
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        deprecated: false
     cleanUrlParameters:
-      organization_id: 1
-      organization: 5
+      organization_id: 16
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
-      file:
+      logo:
         custom: []
-        name: file
-        description: 'The logo file (max 2MB).'
+        name: logo
+        description: 'Must be a file. Must not be greater than 5120 kilobytes.'
         required: true
         example: null
         type: file
@@ -514,27 +502,13 @@ endpoints:
         deprecated: false
     cleanBodyParameters: []
     fileParameters:
-      file: null
-    responses:
-      -
-        custom: []
-        status: 200
-        content: |-
-          {
-            "message": "The organization logo was uploaded successfully",
-            "data": {
-              "id": 5,
-              "name": "Acme Corp",
-              "logo": "http://localhost/storage/organizations/5/logos/abc123.webp"
-            }
-          }
-        headers: []
-        description: ''
+      logo: null
+    responses: []
     responseFields: []
     auth:
       - headers
       - Authorization
-      - 'Bearer 3|efSywObt2701QhmLad5K8ueCu1w736YZCG7Svyfw3d9ef386'
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
     controller: null
     method: null
     route: null

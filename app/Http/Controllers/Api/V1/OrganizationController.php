@@ -30,13 +30,17 @@ class OrganizationController extends Controller
      */
     public function store(StoreOrganizationRequest $request): JsonResponse
     {
+        $validatedData = $request->validated();
+
+        $validatedData['user_id'] = $request->user()->id;
+
         try {
-            $organization  = $this->organizationservice->createOrganization(
-                $request->validated(),
+            $organization = $this->organizationservice->createOrganization(
+                $validatedData,
             );
             return ApiResponse::response(new OrganizationResource($organization), 'The organization was created succsesfully', 201);
         } catch (\Exception $e) {
-            return ApiResponse::error(null, $e->getMessage(), 500);
+            return ApiResponse::error(null, "server error", 500);
         }
     }
 

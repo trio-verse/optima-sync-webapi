@@ -1,6 +1,5 @@
 <!doctype html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
@@ -9,12 +8,13 @@
 
     <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="{{ asset('/vendor/scribe/css/theme-default.style.css') }}" media="screen">
-    <link rel="stylesheet" href="{{ asset('/vendor/scribe/css/theme-default.print.css') }}" media="print">
+    <link rel="stylesheet" href="{{ asset("/vendor/scribe/css/theme-default.style.css") }}" media="screen">
+    <link rel="stylesheet" href="{{ asset("/vendor/scribe/css/theme-default.print.css") }}" media="print">
 
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.10/lodash.min.js"></script>
 
-    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@11.6.0/styles/obsidian.min.css">
+    <link rel="stylesheet"
+          href="https://unpkg.com/@highlightjs/cdn-assets@11.6.0/styles/obsidian.min.css">
     <script src="https://unpkg.com/@highlightjs/cdn-assets@11.6.0/highlight.min.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jets/0.14.1/jets.min.js"></script>
@@ -26,7 +26,7 @@
             </style>
 
     <script>
-        var tryItOutBaseUrl = "http://127.0.0.1:8000";
+        var tryItOutBaseUrl = "http://localhost:8000";
         var useCsrf = Boolean();
         var csrfUrl = "/sanctum/csrf-cookie";
     </script>
@@ -45,59 +45,31 @@
     </span>
 </a>
 <div class="tocify-wrapper">
-
+    
             <div class="lang-selector">
                                             <button type="button" class="lang-button" data-language-name="bash">bash</button>
                                             <button type="button" class="lang-button" data-language-name="javascript">javascript</button>
                     </div>
-
+    
     <div class="search">
         <input type="text" class="search" id="input-search" placeholder="Search">
     </div>
 
-        <div id="toc">
-            <ul id="tocify-header-introduction" class="tocify-header">
+    <div id="toc">
+                    <ul id="tocify-header-introduction" class="tocify-header">
                 <li class="tocify-item level-1" data-unique="introduction">
                     <a href="#introduction">Introduction</a>
                 </li>
-            </ul>
-            <ul id="tocify-header-authenticating-requests" class="tocify-header">
+                            </ul>
+                    <ul id="tocify-header-authenticating-requests" class="tocify-header">
                 <li class="tocify-item level-1" data-unique="authenticating-requests">
                     <a href="#authenticating-requests">Authenticating requests</a>
                 </li>
-            </ul>
-            <ul id="tocify-header-endpoints" class="tocify-header">
+                            </ul>
+                    <ul id="tocify-header-endpoints" class="tocify-header">
                 <li class="tocify-item level-1" data-unique="endpoints">
                     <a href="#endpoints">Endpoints</a>
                 </li>
-<<<<<<< HEAD
-                <ul id="tocify-subheader-endpoints" class="tocify-subheader">
-                    <li class="tocify-item level-2" data-unique="endpoints-POSTapi-v1-register-email">
-                        <a href="#endpoints-POSTapi-v1-register-email">send email for authentication.</a>
-                    </li>
-                    <li class="tocify-item level-2" data-unique="endpoints-POSTapi-v1-verify-otp">
-                        <a href="#endpoints-POSTapi-v1-verify-otp">verify otp to authenticate user.</a>
-                    </li>
-                    <li class="tocify-item level-2" data-unique="endpoints-POSTapi-v1-organizations">
-                        <a href="#endpoints-POSTapi-v1-organizations">create organization</a>
-                    </li>
-                    <li class="tocify-item level-2" data-unique="endpoints-PATCHapi-v1-organizations--id-">
-                        <a href="#endpoints-PATCHapi-v1-organizations--id-">Update organization</a>
-                    </li>
-                    <li class="tocify-item level-2"
-                        data-unique="endpoints-POSTapi-v1-organizations--organizationId--members">
-                        <a href="#endpoints-POSTapi-v1-organizations--organizationId--members">Add member to
-                            organization</a>
-                    </li>
-                    <li class="tocify-item level-2"
-                        data-unique="endpoints-PATCHapi-v1-organizations--organizationId--members--memberId-">
-                        <a href="#endpoints-PATCHapi-v1-organizations--organizationId--members--memberId-">update member
-                            role in organization</a>
-                    </li>
-                </ul>
-            </ul>
-        </div>
-=======
                                     <ul id="tocify-subheader-endpoints" class="tocify-subheader">
                                                     <li class="tocify-item level-2" data-unique="endpoints-POSTapi-v1-register-email">
                                 <a href="#endpoints-POSTapi-v1-register-email">send email for authentication.</a>
@@ -111,85 +83,75 @@
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-PATCHapi-v1-organizations--id-">
                                 <a href="#endpoints-PATCHapi-v1-organizations--id-">Update organization</a>
                             </li>
-                                                                                <li class="tocify-item level-2" data-unique="endpoints-organizations">
-                                <a href="#endpoints-organizations">Organizations</a>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-POSTapi-v1-organizations--organizationId--members">
+                                <a href="#endpoints-POSTapi-v1-organizations--organizationId--members">Add member to organization</a>
                             </li>
-                                                            <ul id="tocify-subheader-endpoints-organizations" class="tocify-subheader">
-                                                                            <li class="tocify-item level-3" data-unique="endpoints-POSTapi-v1-organizations--organization_id--logo">
-                                            <a href="#endpoints-POSTapi-v1-organizations--organization_id--logo">Upload Organization Logo (Step 2)</a>
-                                        </li>
-                                                                    </ul>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-PATCHapi-v1-organizations--organizationId--members--memberId-">
+                                <a href="#endpoints-PATCHapi-v1-organizations--organizationId--members--memberId-">update member role in organization</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-POSTapi-v1-organizations--organization_id--logo">
+                                <a href="#endpoints-POSTapi-v1-organizations--organization_id--logo">Upload logo to Organization</a>
+                            </li>
                                                                         </ul>
                             </ul>
             </div>
->>>>>>> de4d004f8e2c294c8808e3a378cbfddc3c827f56
 
-        <ul class="toc-footer" id="toc-footer">
-            <li style="padding-bottom: 5px;"><a href="{{ route('scribe.postman') }}">View Postman collection</a></li>
-            <li style="padding-bottom: 5px;"><a href="{{ route('scribe.openapi') }}">View OpenAPI spec</a></li>
-            <li><a href="http://github.com/knuckleswtf/scribe">Documentation powered by Scribe ✍</a></li>
-        </ul>
+    <ul class="toc-footer" id="toc-footer">
+                    <li style="padding-bottom: 5px;"><a href="{{ route("scribe.postman") }}">View Postman collection</a></li>
+                            <li style="padding-bottom: 5px;"><a href="{{ route("scribe.openapi") }}">View OpenAPI spec</a></li>
+                <li><a href="http://github.com/knuckleswtf/scribe">Documentation powered by Scribe ✍</a></li>
+    </ul>
 
-<<<<<<< HEAD
-        <ul class="toc-footer" id="last-updated">
-            <li>Last updated: July 21, 2026</li>
-        </ul>
-    </div>
-=======
     <ul class="toc-footer" id="last-updated">
         <li>Last updated: July 24, 2026</li>
     </ul>
 </div>
->>>>>>> de4d004f8e2c294c8808e3a378cbfddc3c827f56
 
-    <div class="page-wrapper">
-        <div class="dark-box"></div>
-        <div class="content">
-            <h1 id="introduction">Introduction</h1>
-            <aside>
-                <strong>Base URL</strong>: <code>http://localhost:8000</code>
-            </aside>
-            <pre><code>This documentation aims to provide all the information you need to work with our API.
+<div class="page-wrapper">
+    <div class="dark-box"></div>
+    <div class="content">
+        <h1 id="introduction">Introduction</h1>
+<aside>
+    <strong>Base URL</strong>: <code>http://127.0.0.1:8000</code>
+</aside>
+<pre><code>This documentation aims to provide all the information you need to work with our API.
 
 &lt;aside&gt;As you scroll, you'll see code examples for working with the API in different programming languages in the dark area to the right (or as part of the content on mobile).
 You can switch the language used with the tabs at the top right (or from the nav menu at the top left on mobile).&lt;/aside&gt;</code></pre>
 
-            <h1 id="authenticating-requests">Authenticating requests</h1>
-            <p>To authenticate requests, include an <strong><code>Authorization</code></strong> header with the value
-                <strong><code>"Bearer {ACCESS_TOKEN}"</code></strong>.</p>
-            <p>All authenticated endpoints are marked with a <code>requires authentication</code> badge in the
-                documentation below.</p>
-            <p>You can retrieve your token by visiting your dashboard and clicking <b>Generate API token</b>.</p>
+        <h1 id="authenticating-requests">Authenticating requests</h1>
+<p>To authenticate requests, include an <strong><code>Authorization</code></strong> header with the value <strong><code>"Bearer {ACCESS_TOKEN}"</code></strong>.</p>
+<p>All authenticated endpoints are marked with a <code>requires authentication</code> badge in the documentation below.</p>
+<p>You can retrieve your token by visiting your dashboard and clicking <b>Generate API token</b>.</p>
 
-            <h1 id="endpoints">Endpoints</h1>
+        <h1 id="endpoints">Endpoints</h1>
 
+    
 
+                                <h2 id="endpoints-POSTapi-v1-register-email">send email for authentication.</h2>
 
-            <h2 id="endpoints-POSTapi-v1-register-email">send email for authentication.</h2>
+<p>
+</p>
 
-            <p>
-            </p>
+<p>Store a newly created email in storage &amp; OTP sent to your email</p>
 
-            <p>Store a newly created email in storage &amp; OTP sent to your email</p>
-
-            <span id="example-requests-POSTapi-v1-register-email">
-                <blockquote>Example request:</blockquote>
+<span id="example-requests-POSTapi-v1-register-email">
+<blockquote>Example request:</blockquote>
 
 
-                <div class="bash-example">
-                    <pre><code class="language-bash">curl --request POST \
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
     "http://localhost:8000/api/v1/register-email" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
     \"email\": \"gbailey@example.net\"
 }"
-</code></pre>
-                </div>
+</code></pre></div>
 
 
-                <div class="javascript-example">
-                    <pre><code class="language-javascript">const url = new URL(
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
     "http://localhost:8000/api/v1/register-email"
 );
 
@@ -206,99 +168,111 @@ fetch(url, {
     method: "POST",
     headers,
     body: JSON.stringify(body),
-}).then(response =&gt; response.json());</code></pre>
-                </div>
+}).then(response =&gt; response.json());</code></pre></div>
 
-            </span>
+</span>
 
-            <span id="example-responses-POSTapi-v1-register-email">
-            </span>
-            <span id="execution-results-POSTapi-v1-register-email" hidden>
-                <blockquote>Received response<span id="execution-response-status-POSTapi-v1-register-email"></span>:
-                </blockquote>
-                <pre class="json"><code id="execution-response-content-POSTapi-v1-register-email"
+<span id="example-responses-POSTapi-v1-register-email">
+</span>
+<span id="execution-results-POSTapi-v1-register-email" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-v1-register-email"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-v1-register-email"
       data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
-            </span>
-            <span id="execution-error-POSTapi-v1-register-email" hidden>
-                <blockquote>Request failed with error:</blockquote>
-                <pre><code id="execution-error-message-POSTapi-v1-register-email">
+</span>
+<span id="execution-error-POSTapi-v1-register-email" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-v1-register-email">
 
 Tip: Check that you&#039;re properly connected to the network.
 If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
 You can check the Dev Tools console for debugging information.</code></pre>
-            </span>
-            <form id="form-POSTapi-v1-register-email" data-method="POST" data-path="api/v1/register-email"
-                data-authed="0" data-hasfiles="0" data-isarraybody="0" autocomplete="off"
-                onsubmit="event.preventDefault(); executeTryOut('POSTapi-v1-register-email', this);">
-                <h3>
-                    Request&nbsp;&nbsp;&nbsp;
+</span>
+<form id="form-POSTapi-v1-register-email" data-method="POST"
+      data-path="api/v1/register-email"
+      data-authed="0"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-v1-register-email', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
                     <button type="button"
-                        style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                        id="btn-tryout-POSTapi-v1-register-email" onclick="tryItOut('POSTapi-v1-register-email');">Try
-                        it out ⚡
-                    </button>
-                    <button type="button"
-                        style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                        id="btn-canceltryout-POSTapi-v1-register-email"
-                        onclick="cancelTryOut('POSTapi-v1-register-email');" hidden>Cancel 🛑
-                    </button>&nbsp;&nbsp;
-                    <button type="submit"
-                        style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                        id="btn-executetryout-POSTapi-v1-register-email" data-initial-text="Send Request 💥"
-                        data-loading-text="⏱ Sending..." hidden>Send Request 💥
-                    </button>
-                </h3>
-                <p>
-                    <small class="badge badge-black">POST</small>
-                    <b><code>api/v1/register-email</code></b>
-                </p>
-                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
-                <div style="padding-left: 28px; clear: unset;">
-                    <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
-                    &nbsp;
-                    &nbsp;
-                    &nbsp;
-                    <input type="text" style="display: none" name="Content-Type"
-                        data-endpoint="POSTapi-v1-register-email" value="application/json" data-component="header">
-                    <br>
-                    <p>Example: <code>application/json</code></p>
-                </div>
-                <div style="padding-left: 28px; clear: unset;">
-                    <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
-                    &nbsp;
-                    &nbsp;
-                    &nbsp;
-                    <input type="text" style="display: none" name="Accept"
-                        data-endpoint="POSTapi-v1-register-email" value="application/json" data-component="header">
-                    <br>
-                    <p>Example: <code>application/json</code></p>
-                </div>
-                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
-                <div style=" padding-left: 28px;  clear: unset;">
-                    <b style="line-height: 2;"><code>email</code></b>&nbsp;&nbsp;
-                    <small>string</small>&nbsp;
-                    &nbsp;
-                    &nbsp;
-                    <input type="text" style="display: none" name="email"
-                        data-endpoint="POSTapi-v1-register-email" value="gbailey@example.net" data-component="body">
-                    <br>
-                    <p>Must be a valid email address. Example: <code>gbailey@example.net</code></p>
-                </div>
-            </form>
-
-            <h2 id="endpoints-POSTapi-v1-verify-otp">verify otp to authenticate user.</h2>
-
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-v1-register-email"
+                    onclick="tryItOut('POSTapi-v1-register-email');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-v1-register-email"
+                    onclick="cancelTryOut('POSTapi-v1-register-email');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-v1-register-email"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
             <p>
-            </p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/v1/register-email</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-v1-register-email"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-v1-register-email"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>email</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="email"                data-endpoint="POSTapi-v1-register-email"
+               value="gbailey@example.net"
+               data-component="body">
+    <br>
+<p>Must be a valid email address. Example: <code>gbailey@example.net</code></p>
+        </div>
+        </form>
 
-            <p>login or register the user via otp</p>
+                    <h2 id="endpoints-POSTapi-v1-verify-otp">verify otp to authenticate user.</h2>
 
-            <span id="example-requests-POSTapi-v1-verify-otp">
-                <blockquote>Example request:</blockquote>
+<p>
+</p>
+
+<p>login or register the user via otp</p>
+
+<span id="example-requests-POSTapi-v1-verify-otp">
+<blockquote>Example request:</blockquote>
 
 
-                <div class="bash-example">
-                    <pre><code class="language-bash">curl --request POST \
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
     "http://localhost:8000/api/v1/verify-otp" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -306,12 +280,11 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"email\": \"gbailey@example.net\",
     \"otp\": \"miyv\"
 }"
-</code></pre>
-                </div>
+</code></pre></div>
 
 
-                <div class="javascript-example">
-                    <pre><code class="language-javascript">const url = new URL(
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
     "http://localhost:8000/api/v1/verify-otp"
 );
 
@@ -329,112 +302,125 @@ fetch(url, {
     method: "POST",
     headers,
     body: JSON.stringify(body),
-}).then(response =&gt; response.json());</code></pre>
-                </div>
+}).then(response =&gt; response.json());</code></pre></div>
 
-            </span>
+</span>
 
-            <span id="example-responses-POSTapi-v1-verify-otp">
-            </span>
-            <span id="execution-results-POSTapi-v1-verify-otp" hidden>
-                <blockquote>Received response<span id="execution-response-status-POSTapi-v1-verify-otp"></span>:
-                </blockquote>
-                <pre class="json"><code id="execution-response-content-POSTapi-v1-verify-otp"
+<span id="example-responses-POSTapi-v1-verify-otp">
+</span>
+<span id="execution-results-POSTapi-v1-verify-otp" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-v1-verify-otp"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-v1-verify-otp"
       data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
-            </span>
-            <span id="execution-error-POSTapi-v1-verify-otp" hidden>
-                <blockquote>Request failed with error:</blockquote>
-                <pre><code id="execution-error-message-POSTapi-v1-verify-otp">
+</span>
+<span id="execution-error-POSTapi-v1-verify-otp" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-v1-verify-otp">
 
 Tip: Check that you&#039;re properly connected to the network.
 If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
 You can check the Dev Tools console for debugging information.</code></pre>
-            </span>
-            <form id="form-POSTapi-v1-verify-otp" data-method="POST" data-path="api/v1/verify-otp" data-authed="0"
-                data-hasfiles="0" data-isarraybody="0" autocomplete="off"
-                onsubmit="event.preventDefault(); executeTryOut('POSTapi-v1-verify-otp', this);">
-                <h3>
-                    Request&nbsp;&nbsp;&nbsp;
+</span>
+<form id="form-POSTapi-v1-verify-otp" data-method="POST"
+      data-path="api/v1/verify-otp"
+      data-authed="0"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-v1-verify-otp', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
                     <button type="button"
-                        style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                        id="btn-tryout-POSTapi-v1-verify-otp" onclick="tryItOut('POSTapi-v1-verify-otp');">Try it out
-                        ⚡
-                    </button>
-                    <button type="button"
-                        style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                        id="btn-canceltryout-POSTapi-v1-verify-otp" onclick="cancelTryOut('POSTapi-v1-verify-otp');"
-                        hidden>Cancel 🛑
-                    </button>&nbsp;&nbsp;
-                    <button type="submit"
-                        style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                        id="btn-executetryout-POSTapi-v1-verify-otp" data-initial-text="Send Request 💥"
-                        data-loading-text="⏱ Sending..." hidden>Send Request 💥
-                    </button>
-                </h3>
-                <p>
-                    <small class="badge badge-black">POST</small>
-                    <b><code>api/v1/verify-otp</code></b>
-                </p>
-                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
-                <div style="padding-left: 28px; clear: unset;">
-                    <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
-                    &nbsp;
-                    &nbsp;
-                    &nbsp;
-                    <input type="text" style="display: none" name="Content-Type"
-                        data-endpoint="POSTapi-v1-verify-otp" value="application/json" data-component="header">
-                    <br>
-                    <p>Example: <code>application/json</code></p>
-                </div>
-                <div style="padding-left: 28px; clear: unset;">
-                    <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
-                    &nbsp;
-                    &nbsp;
-                    &nbsp;
-                    <input type="text" style="display: none" name="Accept" data-endpoint="POSTapi-v1-verify-otp"
-                        value="application/json" data-component="header">
-                    <br>
-                    <p>Example: <code>application/json</code></p>
-                </div>
-                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
-                <div style=" padding-left: 28px;  clear: unset;">
-                    <b style="line-height: 2;"><code>email</code></b>&nbsp;&nbsp;
-                    <small>string</small>&nbsp;
-                    &nbsp;
-                    &nbsp;
-                    <input type="text" style="display: none" name="email" data-endpoint="POSTapi-v1-verify-otp"
-                        value="gbailey@example.net" data-component="body">
-                    <br>
-                    <p>Must be a valid email address. Example: <code>gbailey@example.net</code></p>
-                </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-                    <b style="line-height: 2;"><code>otp</code></b>&nbsp;&nbsp;
-                    <small>string</small>&nbsp;
-                    &nbsp;
-                    &nbsp;
-                    <input type="text" style="display: none" name="otp" data-endpoint="POSTapi-v1-verify-otp"
-                        value="miyv" data-component="body">
-                    <br>
-                    <p>Must be at least 6 characters. Must not be greater than 6 characters. Example: <code>miyv</code>
-                    </p>
-                </div>
-            </form>
-
-            <h2 id="endpoints-POSTapi-v1-organizations">create organization</h2>
-
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-v1-verify-otp"
+                    onclick="tryItOut('POSTapi-v1-verify-otp');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-v1-verify-otp"
+                    onclick="cancelTryOut('POSTapi-v1-verify-otp');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-v1-verify-otp"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
             <p>
-                <small class="badge badge-darkred">requires authentication</small>
-            </p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/v1/verify-otp</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-v1-verify-otp"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-v1-verify-otp"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>email</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="email"                data-endpoint="POSTapi-v1-verify-otp"
+               value="gbailey@example.net"
+               data-component="body">
+    <br>
+<p>Must be a valid email address. Example: <code>gbailey@example.net</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>otp</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="otp"                data-endpoint="POSTapi-v1-verify-otp"
+               value="miyv"
+               data-component="body">
+    <br>
+<p>Must be at least 6 characters. Must not be greater than 6 characters. Example: <code>miyv</code></p>
+        </div>
+        </form>
 
-            <p>this endpoint create new organization
-                response new organization</p>
+                    <h2 id="endpoints-POSTapi-v1-organizations">create organization</h2>
 
-            <span id="example-requests-POSTapi-v1-organizations">
-                <blockquote>Example request:</blockquote>
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>this endpoint create new organization
+response new organization</p>
+
+<span id="example-requests-POSTapi-v1-organizations">
+<blockquote>Example request:</blockquote>
 
 
-                <div class="bash-example">
-                    <pre><code class="language-bash">curl --request POST \
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
     "http://localhost:8000/api/v1/organizations" \
     --header "Authorization: Bearer {ACCESS_TOKEN}" \
     --header "Content-Type: application/json" \
@@ -446,12 +432,11 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"description\": \"Quo omnis nostrum aut adipisci.\",
     \"address\": \"p\"
 }"
-</code></pre>
-                </div>
+</code></pre></div>
 
 
-                <div class="javascript-example">
-                    <pre><code class="language-javascript">const url = new URL(
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
     "http://localhost:8000/api/v1/organizations"
 );
 
@@ -473,156 +458,173 @@ fetch(url, {
     method: "POST",
     headers,
     body: JSON.stringify(body),
-}).then(response =&gt; response.json());</code></pre>
-                </div>
+}).then(response =&gt; response.json());</code></pre></div>
 
-            </span>
+</span>
 
-            <span id="example-responses-POSTapi-v1-organizations">
-            </span>
-            <span id="execution-results-POSTapi-v1-organizations" hidden>
-                <blockquote>Received response<span id="execution-response-status-POSTapi-v1-organizations"></span>:
-                </blockquote>
-                <pre class="json"><code id="execution-response-content-POSTapi-v1-organizations"
+<span id="example-responses-POSTapi-v1-organizations">
+</span>
+<span id="execution-results-POSTapi-v1-organizations" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-v1-organizations"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-v1-organizations"
       data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
-            </span>
-            <span id="execution-error-POSTapi-v1-organizations" hidden>
-                <blockquote>Request failed with error:</blockquote>
-                <pre><code id="execution-error-message-POSTapi-v1-organizations">
+</span>
+<span id="execution-error-POSTapi-v1-organizations" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-v1-organizations">
 
 Tip: Check that you&#039;re properly connected to the network.
 If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
 You can check the Dev Tools console for debugging information.</code></pre>
-            </span>
-            <form id="form-POSTapi-v1-organizations" data-method="POST" data-path="api/v1/organizations"
-                data-authed="1" data-hasfiles="0" data-isarraybody="0" autocomplete="off"
-                onsubmit="event.preventDefault(); executeTryOut('POSTapi-v1-organizations', this);">
-                <h3>
-                    Request&nbsp;&nbsp;&nbsp;
+</span>
+<form id="form-POSTapi-v1-organizations" data-method="POST"
+      data-path="api/v1/organizations"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-v1-organizations', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
                     <button type="button"
-                        style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                        id="btn-tryout-POSTapi-v1-organizations" onclick="tryItOut('POSTapi-v1-organizations');">Try
-                        it out ⚡
-                    </button>
-                    <button type="button"
-                        style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                        id="btn-canceltryout-POSTapi-v1-organizations"
-                        onclick="cancelTryOut('POSTapi-v1-organizations');" hidden>Cancel 🛑
-                    </button>&nbsp;&nbsp;
-                    <button type="submit"
-                        style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                        id="btn-executetryout-POSTapi-v1-organizations" data-initial-text="Send Request 💥"
-                        data-loading-text="⏱ Sending..." hidden>Send Request 💥
-                    </button>
-                </h3>
-                <p>
-                    <small class="badge badge-black">POST</small>
-                    <b><code>api/v1/organizations</code></b>
-                </p>
-                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
-                <div style="padding-left: 28px; clear: unset;">
-                    <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
-                    &nbsp;
-                    &nbsp;
-                    &nbsp;
-                    <input type="text" style="display: none" name="Authorization" class="auth-value"
-                        data-endpoint="POSTapi-v1-organizations" value="Bearer {ACCESS_TOKEN}"
-                        data-component="header">
-                    <br>
-                    <p>Example: <code>Bearer {ACCESS_TOKEN}</code></p>
-                </div>
-                <div style="padding-left: 28px; clear: unset;">
-                    <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
-                    &nbsp;
-                    &nbsp;
-                    &nbsp;
-                    <input type="text" style="display: none" name="Content-Type"
-                        data-endpoint="POSTapi-v1-organizations" value="application/json" data-component="header">
-                    <br>
-                    <p>Example: <code>application/json</code></p>
-                </div>
-                <div style="padding-left: 28px; clear: unset;">
-                    <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
-                    &nbsp;
-                    &nbsp;
-                    &nbsp;
-                    <input type="text" style="display: none" name="Accept"
-                        data-endpoint="POSTapi-v1-organizations" value="application/json" data-component="header">
-                    <br>
-                    <p>Example: <code>application/json</code></p>
-                </div>
-                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
-                <div style=" padding-left: 28px;  clear: unset;">
-                    <b style="line-height: 2;"><code>name</code></b>&nbsp;&nbsp;
-                    <small>string</small>&nbsp;
-                    &nbsp;
-                    &nbsp;
-                    <input type="text" style="display: none" name="name"
-                        data-endpoint="POSTapi-v1-organizations" value="b" data-component="body">
-                    <br>
-                    <p>Must be at least 3 characters. Must not be greater than 255 characters. Example: <code>b</code>
-                    </p>
-                </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-                    <b style="line-height: 2;"><code>email</code></b>&nbsp;&nbsp;
-                    <small>string</small>&nbsp;
-                    &nbsp;
-                    &nbsp;
-                    <input type="text" style="display: none" name="email"
-                        data-endpoint="POSTapi-v1-organizations" value="zbailey@example.net" data-component="body">
-                    <br>
-                    <p>Must be a valid email address. Example: <code>zbailey@example.net</code></p>
-                </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-                    <b style="line-height: 2;"><code>phone</code></b>&nbsp;&nbsp;
-                    <small>string</small>&nbsp;
-                    &nbsp;
-                    &nbsp;
-                    <input type="text" style="display: none" name="phone"
-                        data-endpoint="POSTapi-v1-organizations" value="+08s790-" data-component="body">
-                    <br>
-                    <p>Must match the regex /^+?[0-9\s-()]{7,20}$/. Example: <code>+08s790-</code></p>
-                </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-                    <b style="line-height: 2;"><code>description</code></b>&nbsp;&nbsp;
-                    <small>string</small>&nbsp;
-                    <i>optional</i> &nbsp;
-                    &nbsp;
-                    <input type="text" style="display: none" name="description"
-                        data-endpoint="POSTapi-v1-organizations" value="Quo omnis nostrum aut adipisci."
-                        data-component="body">
-                    <br>
-                    <p>Must be at least 10 characters. Must not be greater than 500 characters. Example: <code>Quo omnis
-                            nostrum aut adipisci.</code></p>
-                </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-                    <b style="line-height: 2;"><code>address</code></b>&nbsp;&nbsp;
-                    <small>string</small>&nbsp;
-                    &nbsp;
-                    &nbsp;
-                    <input type="text" style="display: none" name="address"
-                        data-endpoint="POSTapi-v1-organizations" value="p" data-component="body">
-                    <br>
-                    <p>Must be at least 5 characters. Must not be greater than 255 characters. Example: <code>p</code>
-                    </p>
-                </div>
-            </form>
-
-            <h2 id="endpoints-PATCHapi-v1-organizations--id-">Update organization</h2>
-
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-v1-organizations"
+                    onclick="tryItOut('POSTapi-v1-organizations');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-v1-organizations"
+                    onclick="cancelTryOut('POSTapi-v1-organizations');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-v1-organizations"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
             <p>
-                <small class="badge badge-darkred">requires authentication</small>
-            </p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/v1/organizations</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-v1-organizations"
+               value="Bearer {ACCESS_TOKEN}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {ACCESS_TOKEN}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-v1-organizations"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-v1-organizations"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>name</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="name"                data-endpoint="POSTapi-v1-organizations"
+               value="b"
+               data-component="body">
+    <br>
+<p>Must be at least 3 characters. Must not be greater than 255 characters. Example: <code>b</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>email</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="email"                data-endpoint="POSTapi-v1-organizations"
+               value="zbailey@example.net"
+               data-component="body">
+    <br>
+<p>Must be a valid email address. Example: <code>zbailey@example.net</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>phone</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="phone"                data-endpoint="POSTapi-v1-organizations"
+               value="+08s790-"
+               data-component="body">
+    <br>
+<p>Must match the regex /^+?[0-9\s-()]{7,20}$/. Example: <code>+08s790-</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>description</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="description"                data-endpoint="POSTapi-v1-organizations"
+               value="Quo omnis nostrum aut adipisci."
+               data-component="body">
+    <br>
+<p>Must be at least 10 characters. Must not be greater than 500 characters. Example: <code>Quo omnis nostrum aut adipisci.</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>address</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="address"                data-endpoint="POSTapi-v1-organizations"
+               value="p"
+               data-component="body">
+    <br>
+<p>Must be at least 5 characters. Must not be greater than 255 characters. Example: <code>p</code></p>
+        </div>
+        </form>
 
-            <p>this endpoint update organization data
-                response updated organization data</p>
+                    <h2 id="endpoints-PATCHapi-v1-organizations--id-">Update organization</h2>
 
-            <span id="example-requests-PATCHapi-v1-organizations--id-">
-                <blockquote>Example request:</blockquote>
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>this endpoint update organization data
+response updated organization data</p>
+
+<span id="example-requests-PATCHapi-v1-organizations--id-">
+<blockquote>Example request:</blockquote>
 
 
-                <div class="bash-example">
-                    <pre><code class="language-bash">curl --request PATCH \
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request PATCH \
     "http://localhost:8000/api/v1/organizations/architecto" \
     --header "Authorization: Bearer {ACCESS_TOKEN}" \
     --header "Content-Type: application/json" \
@@ -634,12 +636,11 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"description\": \"Quo omnis nostrum aut adipisci.\",
     \"address\": \"p\"
 }"
-</code></pre>
-                </div>
+</code></pre></div>
 
 
-                <div class="javascript-example">
-                    <pre><code class="language-javascript">const url = new URL(
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
     "http://localhost:8000/api/v1/organizations/architecto"
 );
 
@@ -661,167 +662,529 @@ fetch(url, {
     method: "PATCH",
     headers,
     body: JSON.stringify(body),
-}).then(response =&gt; response.json());</code></pre>
-                </div>
+}).then(response =&gt; response.json());</code></pre></div>
 
-            </span>
+</span>
 
-            <span id="example-responses-PATCHapi-v1-organizations--id-">
-            </span>
-            <span id="execution-results-PATCHapi-v1-organizations--id-" hidden>
-                <blockquote>Received response<span
-                        id="execution-response-status-PATCHapi-v1-organizations--id-"></span>:
-                </blockquote>
-                <pre class="json"><code id="execution-response-content-PATCHapi-v1-organizations--id-"
+<span id="example-responses-PATCHapi-v1-organizations--id-">
+</span>
+<span id="execution-results-PATCHapi-v1-organizations--id-" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-PATCHapi-v1-organizations--id-"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-PATCHapi-v1-organizations--id-"
       data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
-            </span>
-            <span id="execution-error-PATCHapi-v1-organizations--id-" hidden>
-                <blockquote>Request failed with error:</blockquote>
-                <pre><code id="execution-error-message-PATCHapi-v1-organizations--id-">
+</span>
+<span id="execution-error-PATCHapi-v1-organizations--id-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-PATCHapi-v1-organizations--id-">
 
 Tip: Check that you&#039;re properly connected to the network.
 If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
 You can check the Dev Tools console for debugging information.</code></pre>
-            </span>
-            <form id="form-PATCHapi-v1-organizations--id-" data-method="PATCH" data-path="api/v1/organizations/{id}"
-                data-authed="1" data-hasfiles="0" data-isarraybody="0" autocomplete="off"
-                onsubmit="event.preventDefault(); executeTryOut('PATCHapi-v1-organizations--id-', this);">
-                <h3>
-                    Request&nbsp;&nbsp;&nbsp;
+</span>
+<form id="form-PATCHapi-v1-organizations--id-" data-method="PATCH"
+      data-path="api/v1/organizations/{id}"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('PATCHapi-v1-organizations--id-', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
                     <button type="button"
-                        style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                        id="btn-tryout-PATCHapi-v1-organizations--id-"
-                        onclick="tryItOut('PATCHapi-v1-organizations--id-');">Try it out ⚡
-                    </button>
-                    <button type="button"
-                        style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                        id="btn-canceltryout-PATCHapi-v1-organizations--id-"
-                        onclick="cancelTryOut('PATCHapi-v1-organizations--id-');" hidden>Cancel 🛑
-                    </button>&nbsp;&nbsp;
-                    <button type="submit"
-                        style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                        id="btn-executetryout-PATCHapi-v1-organizations--id-" data-initial-text="Send Request 💥"
-                        data-loading-text="⏱ Sending..." hidden>Send Request 💥
-                    </button>
-                </h3>
-                <p>
-                    <small class="badge badge-purple">PATCH</small>
-                    <b><code>api/v1/organizations/{id}</code></b>
-                </p>
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-PATCHapi-v1-organizations--id-"
+                    onclick="tryItOut('PATCHapi-v1-organizations--id-');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-PATCHapi-v1-organizations--id-"
+                    onclick="cancelTryOut('PATCHapi-v1-organizations--id-');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-PATCHapi-v1-organizations--id-"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-purple">PATCH</small>
+            <b><code>api/v1/organizations/{id}</code></b>
+        </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
-                <div style="padding-left: 28px; clear: unset;">
-                    <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
-                    &nbsp;
-                    &nbsp;
-                    &nbsp;
-                    <input type="text" style="display: none" name="Authorization" class="auth-value"
-                        data-endpoint="PATCHapi-v1-organizations--id-" value="Bearer {ACCESS_TOKEN}"
-                        data-component="header">
-                    <br>
-                    <p>Example: <code>Bearer {ACCESS_TOKEN}</code></p>
-                </div>
-                <div style="padding-left: 28px; clear: unset;">
-                    <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
-                    &nbsp;
-                    &nbsp;
-                    &nbsp;
-                    <input type="text" style="display: none" name="Content-Type"
-                        data-endpoint="PATCHapi-v1-organizations--id-" value="application/json"
-                        data-component="header">
-                    <br>
-                    <p>Example: <code>application/json</code></p>
-                </div>
-                <div style="padding-left: 28px; clear: unset;">
-                    <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
-                    &nbsp;
-                    &nbsp;
-                    &nbsp;
-                    <input type="text" style="display: none" name="Accept"
-                        data-endpoint="PATCHapi-v1-organizations--id-" value="application/json"
-                        data-component="header">
-                    <br>
-                    <p>Example: <code>application/json</code></p>
-                </div>
-                <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
-                <div style="padding-left: 28px; clear: unset;">
-                    <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
-                    <small>string</small>&nbsp;
-                    &nbsp;
-                    &nbsp;
-                    <input type="text" style="display: none" name="id"
-                        data-endpoint="PATCHapi-v1-organizations--id-" value="architecto" data-component="url">
-                    <br>
-                    <p>The ID of the organization. Example: <code>architecto</code></p>
-                </div>
-                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="PATCHapi-v1-organizations--id-"
+               value="Bearer {ACCESS_TOKEN}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {ACCESS_TOKEN}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="PATCHapi-v1-organizations--id-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="PATCHapi-v1-organizations--id-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="id"                data-endpoint="PATCHapi-v1-organizations--id-"
+               value="architecto"
+               data-component="url">
+    <br>
+<p>The ID of the organization. Example: <code>architecto</code></p>
+            </div>
+                            <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>name</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="name"                data-endpoint="PATCHapi-v1-organizations--id-"
+               value="b"
+               data-component="body">
+    <br>
+<p>Must be at least 3 characters. Must not be greater than 255 characters. Example: <code>b</code></p>
+        </div>
                 <div style=" padding-left: 28px;  clear: unset;">
-                    <b style="line-height: 2;"><code>name</code></b>&nbsp;&nbsp;
-                    <small>string</small>&nbsp;
-                    <i>optional</i> &nbsp;
-                    &nbsp;
-                    <input type="text" style="display: none" name="name"
-                        data-endpoint="PATCHapi-v1-organizations--id-" value="b" data-component="body">
-                    <br>
-                    <p>Must be at least 3 characters. Must not be greater than 255 characters. Example: <code>b</code>
-                    </p>
-                </div>
+            <b style="line-height: 2;"><code>email</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="email"                data-endpoint="PATCHapi-v1-organizations--id-"
+               value="zbailey@example.net"
+               data-component="body">
+    <br>
+<p>Must be a valid email address. Example: <code>zbailey@example.net</code></p>
+        </div>
                 <div style=" padding-left: 28px;  clear: unset;">
-                    <b style="line-height: 2;"><code>email</code></b>&nbsp;&nbsp;
-                    <small>string</small>&nbsp;
-                    <i>optional</i> &nbsp;
-                    &nbsp;
-                    <input type="text" style="display: none" name="email"
-                        data-endpoint="PATCHapi-v1-organizations--id-" value="zbailey@example.net"
-                        data-component="body">
-                    <br>
-                    <p>Must be a valid email address. Example: <code>zbailey@example.net</code></p>
-                </div>
+            <b style="line-height: 2;"><code>phone</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="phone"                data-endpoint="PATCHapi-v1-organizations--id-"
+               value="+08s790-"
+               data-component="body">
+    <br>
+<p>Must match the regex /^+?[0-9\s-()]{7,20}$/. Example: <code>+08s790-</code></p>
+        </div>
                 <div style=" padding-left: 28px;  clear: unset;">
-                    <b style="line-height: 2;"><code>phone</code></b>&nbsp;&nbsp;
-                    <small>string</small>&nbsp;
-                    <i>optional</i> &nbsp;
-                    &nbsp;
-                    <input type="text" style="display: none" name="phone"
-                        data-endpoint="PATCHapi-v1-organizations--id-" value="+08s790-" data-component="body">
-                    <br>
-                    <p>Must match the regex /^+?[0-9\s-()]{7,20}$/. Example: <code>+08s790-</code></p>
-                </div>
+            <b style="line-height: 2;"><code>description</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="description"                data-endpoint="PATCHapi-v1-organizations--id-"
+               value="Quo omnis nostrum aut adipisci."
+               data-component="body">
+    <br>
+<p>Must be at least 10 characters. Must not be greater than 500 characters. Example: <code>Quo omnis nostrum aut adipisci.</code></p>
+        </div>
                 <div style=" padding-left: 28px;  clear: unset;">
-                    <b style="line-height: 2;"><code>description</code></b>&nbsp;&nbsp;
-                    <small>string</small>&nbsp;
-                    <i>optional</i> &nbsp;
-                    &nbsp;
-                    <input type="text" style="display: none" name="description"
-                        data-endpoint="PATCHapi-v1-organizations--id-" value="Quo omnis nostrum aut adipisci."
-                        data-component="body">
-                    <br>
-                    <p>Must be at least 10 characters. Must not be greater than 500 characters. Example: <code>Quo omnis
-                            nostrum aut adipisci.</code></p>
-                </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-                    <b style="line-height: 2;"><code>address</code></b>&nbsp;&nbsp;
-                    <small>string</small>&nbsp;
-                    <i>optional</i> &nbsp;
-                    &nbsp;
-                    <input type="text" style="display: none" name="address"
-                        data-endpoint="PATCHapi-v1-organizations--id-" value="p" data-component="body">
-                    <br>
-                    <p>Must be at least 5 characters. Must not be greater than 255 characters. Example: <code>p</code>
-                    </p>
-                </div>
-            </form>
+            <b style="line-height: 2;"><code>address</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="address"                data-endpoint="PATCHapi-v1-organizations--id-"
+               value="p"
+               data-component="body">
+    <br>
+<p>Must be at least 5 characters. Must not be greater than 255 characters. Example: <code>p</code></p>
+        </div>
+        </form>
 
-<<<<<<< HEAD
-            <h2 id="endpoints-POSTapi-v1-organizations--organizationId--members">Add member to organization</h2>
-=======
-                                <h2 id="endpoints-organizations">Organizations</h2>
-                                                    <h2 id="endpoints-POSTapi-v1-organizations--organization_id--logo">Upload Organization Logo (Step 2)</h2>
+                    <h2 id="endpoints-POSTapi-v1-organizations--organizationId--members">Add member to organization</h2>
 
 <p>
 <small class="badge badge-darkred">requires authentication</small>
 </p>
 
-<p>Upload or update the organization logo after creation.</p>
+<p>this endpoint add new member to organization
+response updated organization data</p>
+
+<span id="example-requests-POSTapi-v1-organizations--organizationId--members">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "http://localhost:8000/api/v1/organizations/architecto/members" \
+    --header "Authorization: Bearer {ACCESS_TOKEN}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"user_id\": \"architecto\",
+    \"role\": \"member\"
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost:8000/api/v1/organizations/architecto/members"
+);
+
+const headers = {
+    "Authorization": "Bearer {ACCESS_TOKEN}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "user_id": "architecto",
+    "role": "member"
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-v1-organizations--organizationId--members">
+</span>
+<span id="execution-results-POSTapi-v1-organizations--organizationId--members" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-v1-organizations--organizationId--members"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-v1-organizations--organizationId--members"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-v1-organizations--organizationId--members" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-v1-organizations--organizationId--members">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-v1-organizations--organizationId--members" data-method="POST"
+      data-path="api/v1/organizations/{organizationId}/members"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-v1-organizations--organizationId--members', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-v1-organizations--organizationId--members"
+                    onclick="tryItOut('POSTapi-v1-organizations--organizationId--members');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-v1-organizations--organizationId--members"
+                    onclick="cancelTryOut('POSTapi-v1-organizations--organizationId--members');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-v1-organizations--organizationId--members"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/v1/organizations/{organizationId}/members</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-v1-organizations--organizationId--members"
+               value="Bearer {ACCESS_TOKEN}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {ACCESS_TOKEN}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-v1-organizations--organizationId--members"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-v1-organizations--organizationId--members"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>organizationId</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="organizationId"                data-endpoint="POSTapi-v1-organizations--organizationId--members"
+               value="architecto"
+               data-component="url">
+    <br>
+<p>Example: <code>architecto</code></p>
+            </div>
+                            <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>user_id</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="user_id"                data-endpoint="POSTapi-v1-organizations--organizationId--members"
+               value="architecto"
+               data-component="body">
+    <br>
+<p>Must match an existing stored value. Example: <code>architecto</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>role</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="role"                data-endpoint="POSTapi-v1-organizations--organizationId--members"
+               value="member"
+               data-component="body">
+    <br>
+<p>Example: <code>member</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>admin</code></li> <li><code>member</code></li></ul>
+        </div>
+        </form>
+
+                    <h2 id="endpoints-PATCHapi-v1-organizations--organizationId--members--memberId-">update member role in organization</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+
+
+<span id="example-requests-PATCHapi-v1-organizations--organizationId--members--memberId-">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request PATCH \
+    "http://localhost:8000/api/v1/organizations/architecto/members/architecto" \
+    --header "Authorization: Bearer {ACCESS_TOKEN}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"role\": \"admin\"
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost:8000/api/v1/organizations/architecto/members/architecto"
+);
+
+const headers = {
+    "Authorization": "Bearer {ACCESS_TOKEN}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "role": "admin"
+};
+
+fetch(url, {
+    method: "PATCH",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-PATCHapi-v1-organizations--organizationId--members--memberId-">
+</span>
+<span id="execution-results-PATCHapi-v1-organizations--organizationId--members--memberId-" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-PATCHapi-v1-organizations--organizationId--members--memberId-"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-PATCHapi-v1-organizations--organizationId--members--memberId-"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-PATCHapi-v1-organizations--organizationId--members--memberId-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-PATCHapi-v1-organizations--organizationId--members--memberId-">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-PATCHapi-v1-organizations--organizationId--members--memberId-" data-method="PATCH"
+      data-path="api/v1/organizations/{organizationId}/members/{memberId}"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('PATCHapi-v1-organizations--organizationId--members--memberId-', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-PATCHapi-v1-organizations--organizationId--members--memberId-"
+                    onclick="tryItOut('PATCHapi-v1-organizations--organizationId--members--memberId-');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-PATCHapi-v1-organizations--organizationId--members--memberId-"
+                    onclick="cancelTryOut('PATCHapi-v1-organizations--organizationId--members--memberId-');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-PATCHapi-v1-organizations--organizationId--members--memberId-"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-purple">PATCH</small>
+            <b><code>api/v1/organizations/{organizationId}/members/{memberId}</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="PATCHapi-v1-organizations--organizationId--members--memberId-"
+               value="Bearer {ACCESS_TOKEN}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {ACCESS_TOKEN}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="PATCHapi-v1-organizations--organizationId--members--memberId-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="PATCHapi-v1-organizations--organizationId--members--memberId-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>organizationId</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="organizationId"                data-endpoint="PATCHapi-v1-organizations--organizationId--members--memberId-"
+               value="architecto"
+               data-component="url">
+    <br>
+<p>Example: <code>architecto</code></p>
+            </div>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>memberId</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="memberId"                data-endpoint="PATCHapi-v1-organizations--organizationId--members--memberId-"
+               value="architecto"
+               data-component="url">
+    <br>
+<p>Example: <code>architecto</code></p>
+            </div>
+                            <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>role</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="role"                data-endpoint="PATCHapi-v1-organizations--organizationId--members--memberId-"
+               value="admin"
+               data-component="body">
+    <br>
+<p>Example: <code>admin</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>admin</code></li> <li><code>member</code></li></ul>
+        </div>
+        </form>
+
+                    <h2 id="endpoints-POSTapi-v1-organizations--organization_id--logo">Upload logo to Organization</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+
 
 <span id="example-requests-POSTapi-v1-organizations--organization_id--logo">
 <blockquote>Example request:</blockquote>
@@ -829,16 +1192,16 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://127.0.0.1:8000/api/v1/organizations/1/logo" \
+    "http://localhost:8000/api/v1/organizations/16/logo" \
     --header "Authorization: Bearer {ACCESS_TOKEN}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "file=@C:\Users\wadah\AppData\Local\Temp\phpFC23.tmp" </code></pre></div>
+    --form "logo=@C:\Users\qosuy\AppData\Local\Temp\php389F.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://127.0.0.1:8000/api/v1/organizations/1/logo"
+    "http://localhost:8000/api/v1/organizations/16/logo"
 );
 
 const headers = {
@@ -848,7 +1211,7 @@ const headers = {
 };
 
 const body = new FormData();
-body.append('file', document.querySelector('input[name="file"]').files[0]);
+body.append('logo', document.querySelector('input[name="logo"]').files[0]);
 
 fetch(url, {
     method: "POST",
@@ -859,21 +1222,7 @@ fetch(url, {
 </span>
 
 <span id="example-responses-POSTapi-v1-organizations--organization_id--logo">
-            <blockquote>
-            <p>Example response (200):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;The organization logo was uploaded successfully&quot;,
-    &quot;data&quot;: {
-        &quot;id&quot;: 5,
-        &quot;name&quot;: &quot;Acme Corp&quot;,
-        &quot;logo&quot;: &quot;http://localhost/storage/organizations/5/logos/abc123.webp&quot;
-    }
-}</code>
- </pre>
-    </span>
+</span>
 <span id="execution-results-POSTapi-v1-organizations--organization_id--logo" hidden>
     <blockquote>Received response<span
                 id="execution-response-status-POSTapi-v1-organizations--organization_id--logo"></span>:
@@ -965,392 +1314,36 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="organization_id"                data-endpoint="POSTapi-v1-organizations--organization_id--logo"
-               value="1"
+               value="16"
                data-component="url">
     <br>
-<p>The ID of the organization. Example: <code>1</code></p>
-            </div>
-                    <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>organization</code></b>&nbsp;&nbsp;
-<small>integer</small>&nbsp;
- &nbsp;
- &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="organization"                data-endpoint="POSTapi-v1-organizations--organization_id--logo"
-               value="5"
-               data-component="url">
-    <br>
-<p>The organization ID from Step 1. Example: <code>5</code></p>
+<p>The ID of the organization. Example: <code>16</code></p>
             </div>
                             <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
         <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>file</code></b>&nbsp;&nbsp;
+            <b style="line-height: 2;"><code>logo</code></b>&nbsp;&nbsp;
 <small>file</small>&nbsp;
  &nbsp;
  &nbsp;
                 <input type="file" style="display: none"
-                              name="file"                data-endpoint="POSTapi-v1-organizations--organization_id--logo"
+                              name="logo"                data-endpoint="POSTapi-v1-organizations--organization_id--logo"
                value=""
                data-component="body">
     <br>
-<p>The logo file (max 2MB). Example: <code>C:\Users\wadah\AppData\Local\Temp\phpFC23.tmp</code></p>
+<p>Must be a file. Must not be greater than 5120 kilobytes. Example: <code>C:\Users\qosuy\AppData\Local\Temp\php389F.tmp</code></p>
         </div>
         </form>
 
             
->>>>>>> de4d004f8e2c294c8808e3a378cbfddc3c827f56
 
-            <p>
-                <small class="badge badge-darkred">requires authentication</small>
-            </p>
-
-            <p>this endpoint add new member to organization
-                response updated organization data</p>
-
-            <span id="example-requests-POSTapi-v1-organizations--organizationId--members">
-                <blockquote>Example request:</blockquote>
-
-
-                <div class="bash-example">
-                    <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/v1/organizations/architecto/members" \
-    --header "Authorization: Bearer {ACCESS_TOKEN}" \
-    --header "Content-Type: application/json" \
-    --header "Accept: application/json" \
-    --data "{
-    \"user_id\": \"architecto\",
-    \"role\": \"member\"
-}"
-</code></pre>
-                </div>
-
-
-                <div class="javascript-example">
-                    <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/v1/organizations/architecto/members"
-);
-
-const headers = {
-    "Authorization": "Bearer {ACCESS_TOKEN}",
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-};
-
-let body = {
-    "user_id": "architecto",
-    "role": "member"
-};
-
-fetch(url, {
-    method: "POST",
-    headers,
-    body: JSON.stringify(body),
-}).then(response =&gt; response.json());</code></pre>
-                </div>
-
-            </span>
-
-            <span id="example-responses-POSTapi-v1-organizations--organizationId--members">
-            </span>
-            <span id="execution-results-POSTapi-v1-organizations--organizationId--members" hidden>
-                <blockquote>Received response<span
-                        id="execution-response-status-POSTapi-v1-organizations--organizationId--members"></span>:
-                </blockquote>
-                <pre class="json"><code id="execution-response-content-POSTapi-v1-organizations--organizationId--members"
-      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
-            </span>
-            <span id="execution-error-POSTapi-v1-organizations--organizationId--members" hidden>
-                <blockquote>Request failed with error:</blockquote>
-                <pre><code id="execution-error-message-POSTapi-v1-organizations--organizationId--members">
-
-Tip: Check that you&#039;re properly connected to the network.
-If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
-You can check the Dev Tools console for debugging information.</code></pre>
-            </span>
-            <form id="form-POSTapi-v1-organizations--organizationId--members" data-method="POST"
-                data-path="api/v1/organizations/{organizationId}/members" data-authed="1" data-hasfiles="0"
-                data-isarraybody="0" autocomplete="off"
-                onsubmit="event.preventDefault(); executeTryOut('POSTapi-v1-organizations--organizationId--members', this);">
-                <h3>
-                    Request&nbsp;&nbsp;&nbsp;
-                    <button type="button"
-                        style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                        id="btn-tryout-POSTapi-v1-organizations--organizationId--members"
-                        onclick="tryItOut('POSTapi-v1-organizations--organizationId--members');">Try it out ⚡
-                    </button>
-                    <button type="button"
-                        style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                        id="btn-canceltryout-POSTapi-v1-organizations--organizationId--members"
-                        onclick="cancelTryOut('POSTapi-v1-organizations--organizationId--members');" hidden>Cancel 🛑
-                    </button>&nbsp;&nbsp;
-                    <button type="submit"
-                        style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                        id="btn-executetryout-POSTapi-v1-organizations--organizationId--members"
-                        data-initial-text="Send Request 💥" data-loading-text="⏱ Sending..." hidden>Send Request 💥
-                    </button>
-                </h3>
-                <p>
-                    <small class="badge badge-black">POST</small>
-                    <b><code>api/v1/organizations/{organizationId}/members</code></b>
-                </p>
-                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
-                <div style="padding-left: 28px; clear: unset;">
-                    <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
-                    &nbsp;
-                    &nbsp;
-                    &nbsp;
-                    <input type="text" style="display: none" name="Authorization" class="auth-value"
-                        data-endpoint="POSTapi-v1-organizations--organizationId--members"
-                        value="Bearer {ACCESS_TOKEN}" data-component="header">
-                    <br>
-                    <p>Example: <code>Bearer {ACCESS_TOKEN}</code></p>
-                </div>
-                <div style="padding-left: 28px; clear: unset;">
-                    <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
-                    &nbsp;
-                    &nbsp;
-                    &nbsp;
-                    <input type="text" style="display: none" name="Content-Type"
-                        data-endpoint="POSTapi-v1-organizations--organizationId--members" value="application/json"
-                        data-component="header">
-                    <br>
-                    <p>Example: <code>application/json</code></p>
-                </div>
-                <div style="padding-left: 28px; clear: unset;">
-                    <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
-                    &nbsp;
-                    &nbsp;
-                    &nbsp;
-                    <input type="text" style="display: none" name="Accept"
-                        data-endpoint="POSTapi-v1-organizations--organizationId--members" value="application/json"
-                        data-component="header">
-                    <br>
-                    <p>Example: <code>application/json</code></p>
-                </div>
-                <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
-                <div style="padding-left: 28px; clear: unset;">
-                    <b style="line-height: 2;"><code>organizationId</code></b>&nbsp;&nbsp;
-                    <small>string</small>&nbsp;
-                    &nbsp;
-                    &nbsp;
-                    <input type="text" style="display: none" name="organizationId"
-                        data-endpoint="POSTapi-v1-organizations--organizationId--members" value="architecto"
-                        data-component="url">
-                    <br>
-                    <p>Example: <code>architecto</code></p>
-                </div>
-                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
-                <div style=" padding-left: 28px;  clear: unset;">
-                    <b style="line-height: 2;"><code>user_id</code></b>&nbsp;&nbsp;
-                    <small>string</small>&nbsp;
-                    &nbsp;
-                    &nbsp;
-                    <input type="text" style="display: none" name="user_id"
-                        data-endpoint="POSTapi-v1-organizations--organizationId--members" value="architecto"
-                        data-component="body">
-                    <br>
-                    <p>Must match an existing stored value. Example: <code>architecto</code></p>
-                </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-                    <b style="line-height: 2;"><code>role</code></b>&nbsp;&nbsp;
-                    <small>string</small>&nbsp;
-                    &nbsp;
-                    &nbsp;
-                    <input type="text" style="display: none" name="role"
-                        data-endpoint="POSTapi-v1-organizations--organizationId--members" value="member"
-                        data-component="body">
-                    <br>
-                    <p>Example: <code>member</code></p>
-                    Must be one of:
-                    <ul style="list-style-type: square;">
-                        <li><code>admin</code></li>
-                        <li><code>member</code></li>
-                    </ul>
-                </div>
-            </form>
-
-            <h2 id="endpoints-PATCHapi-v1-organizations--organizationId--members--memberId-">update member role in
-                organization</h2>
-
-            <p>
-                <small class="badge badge-darkred">requires authentication</small>
-            </p>
-
-
-
-            <span id="example-requests-PATCHapi-v1-organizations--organizationId--members--memberId-">
-                <blockquote>Example request:</blockquote>
-
-
-                <div class="bash-example">
-                    <pre><code class="language-bash">curl --request PATCH \
-    "http://localhost:8000/api/v1/organizations/architecto/members/architecto" \
-    --header "Authorization: Bearer {ACCESS_TOKEN}" \
-    --header "Content-Type: application/json" \
-    --header "Accept: application/json" \
-    --data "{
-    \"role\": \"admin\"
-}"
-</code></pre>
-                </div>
-
-
-                <div class="javascript-example">
-                    <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/v1/organizations/architecto/members/architecto"
-);
-
-const headers = {
-    "Authorization": "Bearer {ACCESS_TOKEN}",
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-};
-
-let body = {
-    "role": "admin"
-};
-
-fetch(url, {
-    method: "PATCH",
-    headers,
-    body: JSON.stringify(body),
-}).then(response =&gt; response.json());</code></pre>
-                </div>
-
-            </span>
-
-            <span id="example-responses-PATCHapi-v1-organizations--organizationId--members--memberId-">
-            </span>
-            <span id="execution-results-PATCHapi-v1-organizations--organizationId--members--memberId-" hidden>
-                <blockquote>Received response<span
-                        id="execution-response-status-PATCHapi-v1-organizations--organizationId--members--memberId-"></span>:
-                </blockquote>
-                <pre class="json"><code id="execution-response-content-PATCHapi-v1-organizations--organizationId--members--memberId-"
-      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
-            </span>
-            <span id="execution-error-PATCHapi-v1-organizations--organizationId--members--memberId-" hidden>
-                <blockquote>Request failed with error:</blockquote>
-                <pre><code id="execution-error-message-PATCHapi-v1-organizations--organizationId--members--memberId-">
-
-Tip: Check that you&#039;re properly connected to the network.
-If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
-You can check the Dev Tools console for debugging information.</code></pre>
-            </span>
-            <form id="form-PATCHapi-v1-organizations--organizationId--members--memberId-" data-method="PATCH"
-                data-path="api/v1/organizations/{organizationId}/members/{memberId}" data-authed="1"
-                data-hasfiles="0" data-isarraybody="0" autocomplete="off"
-                onsubmit="event.preventDefault(); executeTryOut('PATCHapi-v1-organizations--organizationId--members--memberId-', this);">
-                <h3>
-                    Request&nbsp;&nbsp;&nbsp;
-                    <button type="button"
-                        style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                        id="btn-tryout-PATCHapi-v1-organizations--organizationId--members--memberId-"
-                        onclick="tryItOut('PATCHapi-v1-organizations--organizationId--members--memberId-');">Try it out
-                        ⚡
-                    </button>
-                    <button type="button"
-                        style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                        id="btn-canceltryout-PATCHapi-v1-organizations--organizationId--members--memberId-"
-                        onclick="cancelTryOut('PATCHapi-v1-organizations--organizationId--members--memberId-');"
-                        hidden>Cancel 🛑
-                    </button>&nbsp;&nbsp;
-                    <button type="submit"
-                        style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                        id="btn-executetryout-PATCHapi-v1-organizations--organizationId--members--memberId-"
-                        data-initial-text="Send Request 💥" data-loading-text="⏱ Sending..." hidden>Send Request 💥
-                    </button>
-                </h3>
-                <p>
-                    <small class="badge badge-purple">PATCH</small>
-                    <b><code>api/v1/organizations/{organizationId}/members/{memberId}</code></b>
-                </p>
-                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
-                <div style="padding-left: 28px; clear: unset;">
-                    <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
-                    &nbsp;
-                    &nbsp;
-                    &nbsp;
-                    <input type="text" style="display: none" name="Authorization" class="auth-value"
-                        data-endpoint="PATCHapi-v1-organizations--organizationId--members--memberId-"
-                        value="Bearer {ACCESS_TOKEN}" data-component="header">
-                    <br>
-                    <p>Example: <code>Bearer {ACCESS_TOKEN}</code></p>
-                </div>
-                <div style="padding-left: 28px; clear: unset;">
-                    <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
-                    &nbsp;
-                    &nbsp;
-                    &nbsp;
-                    <input type="text" style="display: none" name="Content-Type"
-                        data-endpoint="PATCHapi-v1-organizations--organizationId--members--memberId-"
-                        value="application/json" data-component="header">
-                    <br>
-                    <p>Example: <code>application/json</code></p>
-                </div>
-                <div style="padding-left: 28px; clear: unset;">
-                    <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
-                    &nbsp;
-                    &nbsp;
-                    &nbsp;
-                    <input type="text" style="display: none" name="Accept"
-                        data-endpoint="PATCHapi-v1-organizations--organizationId--members--memberId-"
-                        value="application/json" data-component="header">
-                    <br>
-                    <p>Example: <code>application/json</code></p>
-                </div>
-                <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
-                <div style="padding-left: 28px; clear: unset;">
-                    <b style="line-height: 2;"><code>organizationId</code></b>&nbsp;&nbsp;
-                    <small>string</small>&nbsp;
-                    &nbsp;
-                    &nbsp;
-                    <input type="text" style="display: none" name="organizationId"
-                        data-endpoint="PATCHapi-v1-organizations--organizationId--members--memberId-"
-                        value="architecto" data-component="url">
-                    <br>
-                    <p>Example: <code>architecto</code></p>
-                </div>
-                <div style="padding-left: 28px; clear: unset;">
-                    <b style="line-height: 2;"><code>memberId</code></b>&nbsp;&nbsp;
-                    <small>string</small>&nbsp;
-                    &nbsp;
-                    &nbsp;
-                    <input type="text" style="display: none" name="memberId"
-                        data-endpoint="PATCHapi-v1-organizations--organizationId--members--memberId-"
-                        value="architecto" data-component="url">
-                    <br>
-                    <p>Example: <code>architecto</code></p>
-                </div>
-                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
-                <div style=" padding-left: 28px;  clear: unset;">
-                    <b style="line-height: 2;"><code>role</code></b>&nbsp;&nbsp;
-                    <small>string</small>&nbsp;
-                    &nbsp;
-                    &nbsp;
-                    <input type="text" style="display: none" name="role"
-                        data-endpoint="PATCHapi-v1-organizations--organizationId--members--memberId-" value="admin"
-                        data-component="body">
-                    <br>
-                    <p>Example: <code>admin</code></p>
-                    Must be one of:
-                    <ul style="list-style-type: square;">
-                        <li><code>admin</code></li>
-                        <li><code>member</code></li>
-                    </ul>
-                </div>
-            </form>
-
-
-
-
-        </div>
-        <div class="dark-box">
-            <div class="lang-selector">
-                <button type="button" class="lang-button" data-language-name="bash">bash</button>
-                <button type="button" class="lang-button" data-language-name="javascript">javascript</button>
-            </div>
-        </div>
+        
     </div>
+    <div class="dark-box">
+                    <div class="lang-selector">
+                                                        <button type="button" class="lang-button" data-language-name="bash">bash</button>
+                                                        <button type="button" class="lang-button" data-language-name="javascript">javascript</button>
+                            </div>
+            </div>
+</div>
 </body>
-
 </html>
