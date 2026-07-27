@@ -27,7 +27,8 @@ class OrganizationResource extends JsonResource
 
             'createdAt' => $this->created_at->format('Y-m-d\TH:i:s\Z'), // ISO 8601
             'updatedAt' => $this->updated_at->format('Y-m-d\TH:i:s\Z'),
-            'user' => new UserResource($this->whenLoaded('user')),
+            'owner' => new UserResource($this->whenLoaded('user')),
+            'members' => $this->whenLoaded('members', OrganizationMemberResource::collection($this->members))
         ];
     }
 }
