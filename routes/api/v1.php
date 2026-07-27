@@ -13,9 +13,10 @@ Route::prefix('v1')->group(function () {
     Route::post('verify-otp', [OtpAuthenticationController::class, 'verify']);
 
     // Organization
-    Route::middleware(['auth:sanctum'])->group(function(){
-        Route::post('/organizations' , [OrganizationController::class, 'store']);
-        Route::patch('/organizations/{id}' , [OrganizationController::class, 'update']);
+    Route::middleware(['auth:sanctum'])->group(function () {
+        Route::post('/organizations', [OrganizationController::class, 'index']);
+        Route::post('/organizations', [OrganizationController::class, 'store']);
+        Route::patch('/organizations/{id}', [OrganizationController::class, 'update']);
         Route::get('/organizations/{id}', [OrganizationController::class, 'show']);
 
         // Org members
