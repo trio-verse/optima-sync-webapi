@@ -23,9 +23,19 @@ class OrganizationController extends Controller
     {
     }
 
-    public function index(){
-        $orgs = Organization::withCount('members')->simplePaginate(15);
-        // return ApiResponse::
+    /**
+     * get all Organizations
+     * @return JsonResponse
+     */
+    public function index()
+    {
+        try {
+            $orgs = Organization::withCount('members')->simplePaginate(15);
+            return ApiResponse::success(OrganizationResource::collection($orgs));
+        } catch (\Exception $e) {
+            Log::error($e->getMessage() . 'code : ' . $e->getCode());
+            return ApiResponse::serverError();
+        }
     }
 
 
@@ -43,6 +53,7 @@ class OrganizationController extends Controller
         } catch (RecordNotFoundException $e) {
             return ApiResponse::notFound('organization not found');
         } catch (\Exception $e) {
+            Log::error($e->getMessage() . 'code : ' . $e->getCode());
             return ApiResponse::serverError();
         }
     }

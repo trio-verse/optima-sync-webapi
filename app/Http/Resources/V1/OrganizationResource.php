@@ -22,14 +22,18 @@ class OrganizationResource extends JsonResource
             'email' => $this->email,
             'address' => $this->address,
             'description' => $this->description,
-            // 'logo' => $this->logo ? $this->logo->file_path : null,
-            'logo' => $this->when($this->logo, Storage::url($this->logo->file_path)),
-            'owner' => new UserResource($this->whenLoaded('user')),
-            'members_count' => $this->whenCounted('members' , $this->members->count),
-            'members' => $this->whenLoaded('members', OrganizationMemberResource::collection($this->members)),
-
-            'createdAt' => $this->created_at->format('Y-m-d\TH:i:s\Z'), // ISO 8601
-            'updatedAt' => $this->updated_at->format('Y-m-d\TH:i:s\Z'),
+            'logo' => $this->whenLoaded('logo', function () {
+                return $this->logo ? Storage::url($this->logo->file_path) : null;
+            }),
+            'owner' => $this->whenLoaded('user', function () {
+                return new UserResource($this->user);
+            }),
+            'members_count' => $this->whenCounted('members', $this->members_count),
+            'members' => $this->whenLoaded('members', function () {
+                return OrganizationMemberResource::collection($this->members);
+            }),
+            'createdAt' => $this->created_at?->format('Y-m-d\TH:i:s\Z'),
+            'updatedAt' => $this->updated_at?->format('Y-m-d\TH:i:s\Z'),
         ];
     }
 }

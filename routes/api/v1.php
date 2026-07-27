@@ -14,8 +14,8 @@ Route::prefix('v1')->group(function () {
 
     // Organization
     Route::middleware(['auth:sanctum'])->group(function () {
-        Route::post('/organizations', [OrganizationController::class, 'index']);
-        Route::post('/organizations', [OrganizationController::class, 'store']);
+        Route::get('/organizations', [OrganizationController::class, 'index']);
+        Route::post('/organizations', [OrganizationController::class, 'store'])->middleware(['throttle:50,1']);
         Route::patch('/organizations/{id}', [OrganizationController::class, 'update']);
         Route::get('/organizations/{id}', [OrganizationController::class, 'show']);
 
