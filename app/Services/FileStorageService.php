@@ -7,6 +7,7 @@ use App\Enums\enMediaMimeTypes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Image;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Str;
 
@@ -41,6 +42,7 @@ class FileStorageService implements FileStorageInterface
         if ($this->isImage($file)) {
             $path = $this->uploadAndConvertToWebp($file, $directory);
             $mimeType = 'image/webp';
+            Log::info('enterd to image');
         } else {
             $extension = $file->getClientOriginalExtension();
             $fileName = Str::uuid() . '.' . $extension;
@@ -51,14 +53,14 @@ class FileStorageService implements FileStorageInterface
 
         // delete the existing attachment file first in 1-to-1 relations
         if ($isSingle) {
-            $existing = $model->attachments()->where('file_type', $fileType)->first();
+            $existing = $model->medias()->where('file_type', $fileType)->first();
             if ($existing) {
                 $this->delete($path);
             }
         }
 
         // 3. Create and return the new attachment
-        $model->attachments()->create([
+        $model->medias()->create([
             'file_path' => $path,
             'file_name' => $file->getClientOriginalName(),
             'file_type' => $fileType,

@@ -39,7 +39,7 @@ class OrganizationLogoController extends Controller
 
         return ApiResponse::success(
             [
-                'logo_path' => $logo_path
+                'logo_url' => $this->storage->getUrl($logo_path)
             ],
             'Organization logo uploaded successfully.'
         );

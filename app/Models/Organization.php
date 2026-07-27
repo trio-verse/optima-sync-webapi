@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -24,14 +25,20 @@ class Organization extends Model
     ];
 
     // relations
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
-    public function members() {
+    public function members()
+    {
         return $this->hasMany(OrganizationMember::class);
     }
 
-    public function logo(): MorphOne
+    public function medias(): MorphMany
+    {
+        return $this->morphMany(Media::class, 'mediable');
+    }
+    public function logo() : MorphOne
     {
         return $this->morphOne(Media::class, 'mediable')
             ->where('file_type', 'logo');
