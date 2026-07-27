@@ -23,6 +23,12 @@ class OrganizationController extends Controller
     {
     }
 
+    public function index(){
+        $orgs = Organization::withCount('members')->simplePaginate(15);
+        // return ApiResponse::
+    }
+
+
 
     /**
      * show the Organization
