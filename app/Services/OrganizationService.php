@@ -19,6 +19,11 @@ class OrganizationService
     {
     }
 
+    public function show(int $id){
+        $org = Organization::findOrFail($id)->with('members');
+        return $org ;
+    }
+
     public function createOrganization(array $data): Organization
     {
         return DB::transaction(function () use ($data) {

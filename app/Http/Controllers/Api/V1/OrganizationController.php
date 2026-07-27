@@ -22,6 +22,18 @@ class OrganizationController extends Controller
     public function __construct(private OrganizationService $organizationservice)
     {
     }
+
+    public function show(int $id)
+    {
+        try {
+            $org = $this->organizationservice->show($id);
+            return ApiResponse::success(new OrganizationResource($org));
+        } catch (RecordNotFoundException $e) {
+            return ApiResponse::notFound('organization not found');
+        } catch (\Exception $e) {
+            return ApiResponse::serverError();
+        }
+    }
     /**
      * create organization
      *
