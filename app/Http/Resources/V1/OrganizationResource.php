@@ -24,11 +24,12 @@ class OrganizationResource extends JsonResource
             'description' => $this->description,
             // 'logo' => $this->logo ? $this->logo->file_path : null,
             'logo' => $this->when($this->logo, Storage::url($this->logo->file_path)),
+            'owner' => new UserResource($this->whenLoaded('user')),
+            'members_count' => $this->whenCounted('members' , $this->members->count),
+            'members' => $this->whenLoaded('members', OrganizationMemberResource::collection($this->members)),
 
             'createdAt' => $this->created_at->format('Y-m-d\TH:i:s\Z'), // ISO 8601
             'updatedAt' => $this->updated_at->format('Y-m-d\TH:i:s\Z'),
-            'owner' => new UserResource($this->whenLoaded('user')),
-            'members' => $this->whenLoaded('members', OrganizationMemberResource::collection($this->members))
         ];
     }
 }

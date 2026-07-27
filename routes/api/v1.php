@@ -15,6 +15,9 @@ Route::prefix('v1')->group(function () {
 
     // Organization
     Route::middleware(['auth:sanctum'])->group(function () {
+
+        Route::post('/organizations', [OrganizationController::class, 'index']);
+
         Route::post('/organizations', [OrganizationController::class, 'store']);
         Route::patch('/organizations/{id}', [OrganizationController::class, 'update']);
         Route::get('/organizations/{id}', [OrganizationController::class, 'show']);
