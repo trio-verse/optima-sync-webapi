@@ -20,7 +20,7 @@ class OrganizationService
     }
 
     public function show(int $id){
-        $org = Organization::findOrFail($id)->with('members');
+        $org = Organization::findOrFail($id)->with(['members' , 'members.user'])->first();
         return $org ;
     }
 
