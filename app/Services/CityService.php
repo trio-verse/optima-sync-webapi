@@ -12,4 +12,8 @@ class CityService
 
         return City::create($data);
     }
+
+    public function update(array $data , City $city):bool{
+        return $city->update($data);
+    }
 }
