@@ -28,7 +28,6 @@ Route::prefix('v1')->group(function () {
             ->name('organizations.logo.store');
 
         //City
-        Route::post('/city', [CityController::class, 'store']);
-        Route::patch('/city/{city}', [CityController::class, 'update']);
+        Route::apiResource('cities', CityController::class);
     });
 });

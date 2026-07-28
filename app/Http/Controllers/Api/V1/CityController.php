@@ -17,11 +17,14 @@ class CityController extends Controller
 
     public function __construct(protected CityService $city_service) {}
     /**
-     * Display a listing of the resource.
+     * Display a listing of the cities
+     * this endpoint display all cities from DB
+     * response get all cities
      */
     public function index()
     {
-        //
+        $cities = $this->city_service->getAllCities();
+        return ApiResponse::success(CityResource::collection($cities), 'Cities fetched succsesfully');
     }
 
 
@@ -53,10 +56,18 @@ class CityController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Delete city
+     * this endpoint delete city data from DB
+     * response remove the specified city from DB
      */
     public function destroy(City $city)
     {
-        //
+        $this->city_service->deleteCity($city);
+
+        return ApiResponse::success(
+            null,
+            'City deleted successfully',
+            200
+        );
     }
 }
