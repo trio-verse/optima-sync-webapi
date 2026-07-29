@@ -194,7 +194,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 3|efSywObt2701QhmLad5K8ueCu1w736YZCG7Svyfw3d9ef386'
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
     controller: null
     method: null
     route: null
@@ -303,63 +303,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 3|efSywObt2701QhmLad5K8ueCu1w736YZCG7Svyfw3d9ef386'
-    controller: null
-    method: null
-    route: null
-  -
-    custom: []
-    httpMethods:
-      - GET
-    uri: 'api/v1/organizations/{id}'
-    metadata:
-      custom: []
-      groupName: Endpoints
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'show the Organization'
-      description: ''
-      authenticated: true
-      deprecated: false
-    headers:
-      Authorization: 'Bearer {ACCESS_TOKEN}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters:
-      id:
-        custom: []
-        name: id
-        description: 'The ID of the organization.'
-        required: true
-        example: architecto
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-    cleanUrlParameters:
-      id: architecto
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses:
-      -
-        custom: []
-        status: 401
-        content: '{"message":"Unauthenticated."}'
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          access-control-allow-origin: '*'
-        description: null
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 3|efSywObt2701QhmLad5K8ueCu1w736YZCG7Svyfw3d9ef386'
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
     controller: null
     method: null
     route: null
@@ -434,7 +378,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 3|efSywObt2701QhmLad5K8ueCu1w736YZCG7Svyfw3d9ef386'
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
     controller: null
     method: null
     route: null
@@ -507,7 +451,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 3|efSywObt2701QhmLad5K8ueCu1w736YZCG7Svyfw3d9ef386'
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
     controller: null
     method: null
     route: null
@@ -536,14 +480,14 @@ endpoints:
         name: organization_id
         description: 'The ID of the organization.'
         required: true
-        example: 1
+        example: 16
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      organization_id: 1
+      organization_id: 16
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
@@ -566,7 +510,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 3|efSywObt2701QhmLad5K8ueCu1w736YZCG7Svyfw3d9ef386'
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
     controller: null
     method: null
     route: null
@@ -750,7 +694,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 3|efSywObt2701QhmLad5K8ueCu1w736YZCG7Svyfw3d9ef386'
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
     controller: null
     method: null
     route: null

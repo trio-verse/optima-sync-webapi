@@ -3,14 +3,10 @@
 namespace App\Services;
 
 use App\Contracts\FileStorageInterface;
-use App\Helper\V1\ApiResponse;
 use App\Models\Organization;
 use App\Models\OrganizationMember;
-use App\Policies\OrganizationPolicy;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Storage;
 
 class OrganizationService
 {
@@ -19,27 +15,38 @@ class OrganizationService
     {
     }
 
-    public function show(int $id){
-        $org = Organization::findOrFail($id)->with(['members' , 'members.user'])->first();
-        return $org ;
+    public function show(int $id)
+    {
+        $org = Organization::findOrFail($id)->with(['members', 'members.user'])->first();
+        return $org;
     }
 
     public function createOrganization(array $data): Organization
     {
+
         return DB::transaction(function () use ($data) {
+            // dd($data['address']);
+
             $organization = Organization::create([
-                $data
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'phone' => $data['phone'],
+                'description' => $data['description'],
+                'address' => $data['address'],
+                'user_id' => $data['user_id'],
             ]);
+            // dd($data);
             return $organization;
         });
     }
 
     public function updateOrg(int $id, array $data): Organization|false
     {
+        // dd($data);
         $org = Organization::findOrFail($id);
         Gate::authorize('update', $org);
         DB::transaction(function () use ($org, $data) {
-            $org->update($data);
+            $org->fill($data)->saveOrFail();
         });
         return $org;
     }

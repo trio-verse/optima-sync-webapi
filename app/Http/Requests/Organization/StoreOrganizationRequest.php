@@ -26,7 +26,7 @@ class StoreOrganizationRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'min:3', 'max:255'],
-            'email' => ['required', 'email', 'unique:organization,email'],
+            'email' => ['required', 'email', 'unique:organizations,email'],
             'phone' => ['required', 'string', 'regex:/^\+?[0-9\s\-\(\)]{7,20}$/', Rule::unique('organizations', 'phone')],
             'description' => ['nullable', 'string', 'min:10', 'max:500'],
             'address' => ['required', 'string', 'min:5', 'max:255'],

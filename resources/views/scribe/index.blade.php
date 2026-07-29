@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>OptimaSync API Documentation</title>
+    <title>optimaSync API Documentation</title>
 
     <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
 
@@ -1379,7 +1379,7 @@ Must be one of:
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://127.0.0.1:8000/api/v1/organizations/1/logo"
+    "http://127.0.0.1:8000/api/v1/organizations/16/logo"
 );
 
 const headers = {
@@ -1492,10 +1492,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="organization_id"                data-endpoint="POSTapi-v1-organizations--organization_id--logo"
-               value="1"
+               value="16"
                data-component="url">
     <br>
-<p>The ID of the organization. Example: <code>1</code></p>
+<p>The ID of the organization. Example: <code>16</code></p>
             </div>
                             <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
         <div style=" padding-left: 28px;  clear: unset;">
