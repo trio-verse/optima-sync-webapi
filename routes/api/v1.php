@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\ChannelController;
 use App\Http\Controllers\Api\V1\CityController;
 use App\Http\Controllers\Api\V1\IndustryController;
 use App\Http\Controllers\Api\V1\OrganizationController;
@@ -33,6 +34,16 @@ Route::prefix('v1')->group(function () {
             ->name('organizations.logo.store');
 
         //City
+        Route::get('cities', [CityController::class, 'index']);
+        Route::post('cities', [CityController::class, 'store']);
+        Route::patch('cities/{city}', [CityController::class, 'update']);
+        Route::delete('cities/{city}', [CityController::class, 'destroy']);
+
+        //Channel
+        Route::get('channels', [ChannelController::class, 'index']);
+        Route::post('channels', [ChannelController::class, 'store']);
+        Route::patch('channels/{channel}', [ChannelController::class, 'update']);
+        Route::delete('channels/{channel}', [ChannelController::class, 'destroy']);
         Route::apiResource('cities', CityController::class);
 
         // Industry

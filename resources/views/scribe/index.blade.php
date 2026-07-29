@@ -99,14 +99,19 @@
                                 <a href="#endpoints-POSTapi-v1-organizations--organization_id--logo">Upload logo to Organization</a>
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-GETapi-v1-cities">
-                                <a href="#endpoints-GETapi-v1-cities">Display a listing of the cities
-this endpoint display all cities from DB
-response get all cities</a>
+                                <a href="#endpoints-GETapi-v1-cities">Display a listing of the cities.</a>
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-POSTapi-v1-cities">
-                                <a href="#endpoints-POSTapi-v1-cities">create city
-this endpoint create new city
-response new city</a>
+                                <a href="#endpoints-POSTapi-v1-cities">create city.</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-PATCHapi-v1-cities--city_id-">
+                                <a href="#endpoints-PATCHapi-v1-cities--city_id-">Update city.</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-DELETEapi-v1-cities--city_id-">
+                                <a href="#endpoints-DELETEapi-v1-cities--city_id-">Delete city.</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-GETapi-v1-channels">
+                                <a href="#endpoints-GETapi-v1-channels">Display a listing of the channels.</a>
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-DELETEapi-v1-cities--id-">
                                 <a href="#endpoints-DELETEapi-v1-cities--id-">Delete city
@@ -1177,7 +1182,7 @@ response updated organization data</p>
     --header "Accept: application/json" \
     --data "{
     \"user_id\": \"architecto\",
-    \"role\": \"member\"
+    \"role\": \"admin\"
 }"
 </code></pre></div>
 
@@ -1195,7 +1200,7 @@ const headers = {
 
 let body = {
     "user_id": "architecto",
-    "role": "member"
+    "role": "admin"
 };
 
 fetch(url, {
@@ -1324,10 +1329,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="role"                data-endpoint="POSTapi-v1-organizations--organizationId--members"
-               value="member"
+               value="admin"
                data-component="body">
     <br>
-<p>Example: <code>member</code></p>
+<p>Example: <code>admin</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>admin</code></li> <li><code>member</code></li></ul>
         </div>
@@ -1663,15 +1668,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
         </div>
         </form>
 
-                    <h2 id="endpoints-GETapi-v1-cities">Display a listing of the cities
-this endpoint display all cities from DB
-response get all cities</h2>
+                    <h2 id="endpoints-GETapi-v1-cities">Display a listing of the cities.</h2>
 
 <p>
 <small class="badge badge-darkred">requires authentication</small>
 </p>
 
-
+<p>this endpoint display all cities from DB
+response get all cities</p>
 
 <span id="example-requests-GETapi-v1-cities">
 <blockquote>Example request:</blockquote>
@@ -1808,15 +1812,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                         </form>
 
-                    <h2 id="endpoints-POSTapi-v1-cities">create city
-this endpoint create new city
-response new city</h2>
+                    <h2 id="endpoints-POSTapi-v1-cities">create city.</h2>
 
 <p>
 <small class="badge badge-darkred">requires authentication</small>
 </p>
 
-
+<p>this endpoint create new city
+response new city</p>
 
 <span id="example-requests-POSTapi-v1-cities">
 <blockquote>Example request:</blockquote>
@@ -1979,6 +1982,8 @@ response remove the specified city from DB</h2>
 <small class="badge badge-darkred">requires authentication</small>
 </p>
 
+<p>this endpoint update city data
+response updated city data</p>
 
 
 <span id="example-requests-DELETEapi-v1-cities--id-">
@@ -2099,7 +2104,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
+                <b style="line-height: 2;"><code>city_id</code></b>&nbsp;&nbsp;
 <small>integer</small>&nbsp;
  &nbsp;
  &nbsp;
@@ -2422,6 +2427,8 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <small class="badge badge-darkred">requires authentication</small>
 </p>
 
+<p>this endpoint delete city data from DB
+response remove the specified city from DB</p>
 
 
 <span id="example-requests-DELETEapi-v1-industries--industry_id-">

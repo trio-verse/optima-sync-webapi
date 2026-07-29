@@ -130,6 +130,8 @@ endpoints:
     responses:
       -
         custom: []
+        status: 401
+        content: '{"message":"Unauthenticated."}'
         status: 500
         content: '{"success":false,"message":"Unauthenticated."}'
         headers:
@@ -238,7 +240,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer 3|efSywObt2701QhmLad5K8ueCu1w736YZCG7Svyfw3d9ef386'
     controller: null
     method: null
     route: null
@@ -347,7 +349,63 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer 3|efSywObt2701QhmLad5K8ueCu1w736YZCG7Svyfw3d9ef386'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/v1/organizations/{id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'show the Organization'
+      description: ''
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {ACCESS_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the organization.'
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: architecto
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 3|efSywObt2701QhmLad5K8ueCu1w736YZCG7Svyfw3d9ef386'
     controller: null
     method: null
     route: null
@@ -461,7 +519,7 @@ endpoints:
         name: role
         description: ''
         required: true
-        example: member
+        example: admin
         type: string
         enumValues:
           - admin
@@ -471,14 +529,14 @@ endpoints:
         deprecated: false
     cleanBodyParameters:
       user_id: architecto
-      role: member
+      role: admin
     fileParameters: []
     responses: []
     responseFields: []
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer 3|efSywObt2701QhmLad5K8ueCu1w736YZCG7Svyfw3d9ef386'
     controller: null
     method: null
     route: null
@@ -551,7 +609,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer 3|efSywObt2701QhmLad5K8ueCu1w736YZCG7Svyfw3d9ef386'
     controller: null
     method: null
     route: null
@@ -580,6 +638,7 @@ endpoints:
         name: organization_id
         description: 'The ID of the organization.'
         required: true
+        
         example: 2
         type: integer
         enumValues: []
@@ -610,7 +669,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer 3|efSywObt2701QhmLad5K8ueCu1w736YZCG7Svyfw3d9ef386'
     controller: null
     method: null
     route: null
@@ -625,11 +684,10 @@ endpoints:
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: |-
-        Display a listing of the cities
+      title: 'Display a listing of the cities.'
+      description: |-
         this endpoint display all cities from DB
         response get all cities
-      description: ''
       authenticated: true
       deprecated: false
     headers:
@@ -672,11 +730,10 @@ endpoints:
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: |-
-        create city
+      title: 'create city.'
+      description: |-
         this endpoint create new city
         response new city
-      description: ''
       authenticated: true
       deprecated: false
     headers:
@@ -726,6 +783,8 @@ endpoints:
   -
     custom: []
     httpMethods:
+      - PATCH
+    uri: 'api/v1/cities/{city_id}'
       - DELETE
     uri: 'api/v1/cities/{id}'
     metadata:
@@ -734,6 +793,10 @@ endpoints:
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
+      title: 'Update city.'
+      description: |-
+        this endpoint update city data
+        response updated city data
       title: |-
         Delete city
         this endpoint delete city data from DB
@@ -746,9 +809,9 @@ endpoints:
       Content-Type: application/json
       Accept: application/json
     urlParameters:
-      id:
+      city_id:
         custom: []
-        name: id
+        name: city_id
         description: 'The ID of the city.'
         required: true
         example: 16
@@ -872,7 +935,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+      - 'Bearer 3|efSywObt2701QhmLad5K8ueCu1w736YZCG7Svyfw3d9ef386'
     controller: null
     method: null
     route: null
