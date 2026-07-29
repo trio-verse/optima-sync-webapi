@@ -1,11 +1,12 @@
 <?php
 
 use App\Http\Controllers\Api\V1\CityController;
+use App\Http\Controllers\Api\V1\IndustryController;
 use App\Http\Controllers\Api\V1\OrganizationController;
 use App\Http\Controllers\Api\V1\OrganizationLogoController;
 use App\Http\Controllers\Api\V1\OtpAuthenticationController;
 use App\Http\Controllers\Api\V1\UploadController;
-use App\Http\Controllers\Api\V1\CityController;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
@@ -33,9 +34,11 @@ Route::prefix('v1')->group(function () {
 
         //City
         Route::apiResource('cities', CityController::class);
-        Route::post('/city', [CityController::class, 'store']);
 
-        //
-        Route::patch('/city/{city}', [CityController::class, 'update']);
+        // Industry
+        Route::get('/industries', [IndustryController::class, 'index']);
+        Route::post('/industries', [IndustryController::class, 'store']);
+        Route::patch('/industries/{industry}', [IndustryController::class, 'update']);
+        Route::delete('/industries/{industry}', [IndustryController::class, 'delete']);
     });
 });
