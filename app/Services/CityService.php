@@ -13,13 +13,13 @@ class CityService
         return City::latest()->simplePaginate($perPage);
     }
 
-    public function create(array $data): City
+    public function createcity(array $data): City
     {
 
         return City::create($data);
     }
 
-    public function update(array $data, City $city): bool
+    public function updatecity(array $data, City $city): bool
     {
 
         return $city->update($data);
