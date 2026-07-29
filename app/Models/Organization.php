@@ -17,11 +17,12 @@ class Organization extends Model
     use HasApiTokens, HasFactory, Notifiable;
     protected $fillable = [
         'name',
-        'user_id',
         'email',
         'phone',
         'description',
         'address',
+        'user_id',
+
     ];
 
     // relations
