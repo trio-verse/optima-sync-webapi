@@ -95,15 +95,25 @@
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-POSTapi-v1-organizations--organization_id--logo">
                                 <a href="#endpoints-POSTapi-v1-organizations--organization_id--logo">Upload logo to Organization</a>
                             </li>
-                                                                                <li class="tocify-item level-2" data-unique="endpoints-POSTapi-v1-city">
-                                <a href="#endpoints-POSTapi-v1-city">create city
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-GETapi-v1-cities">
+                                <a href="#endpoints-GETapi-v1-cities">Display a listing of the cities
+this endpoint display all cities from DB
+response get all cities</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-POSTapi-v1-cities">
+                                <a href="#endpoints-POSTapi-v1-cities">create city
 this endpoint create new city
 response new city</a>
                             </li>
-                                                                                <li class="tocify-item level-2" data-unique="endpoints-PATCHapi-v1-city--city_id-">
-                                <a href="#endpoints-PATCHapi-v1-city--city_id-">Update city
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-PUTapi-v1-cities--id-">
+                                <a href="#endpoints-PUTapi-v1-cities--id-">Update city
 this endpoint update city data
 response updated city data</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-DELETEapi-v1-cities--id-">
+                                <a href="#endpoints-DELETEapi-v1-cities--id-">Delete city
+this endpoint delete city data from DB
+response remove the specified city from DB</a>
                             </li>
                                                                         </ul>
                             </ul>
@@ -1191,7 +1201,7 @@ Must be one of:
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"role\": \"admin\"
+    \"role\": \"member\"
 }"
 </code></pre></div>
 
@@ -1208,7 +1218,7 @@ const headers = {
 };
 
 let body = {
-    "role": "admin"
+    "role": "member"
 };
 
 fetch(url, {
@@ -1337,10 +1347,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="role"                data-endpoint="PATCHapi-v1-organizations--organizationId--members--memberId-"
-               value="admin"
+               value="member"
                data-component="body">
     <br>
-<p>Example: <code>admin</code></p>
+<p>Example: <code>member</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>admin</code></li> <li><code>member</code></li></ul>
         </div>
@@ -1364,7 +1374,7 @@ Must be one of:
     --header "Authorization: Bearer {ACCESS_TOKEN}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "logo=@C:\Users\wadah\AppData\Local\Temp\phpA721.tmp" </code></pre></div>
+    --form "logo=@C:\Users\wadah\AppData\Local\Temp\phpC747.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -1498,11 +1508,155 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Must be a file. Must not be greater than 5120 kilobytes. Example: <code>C:\Users\wadah\AppData\Local\Temp\phpA721.tmp</code></p>
+<p>Must be a file. Must not be greater than 5120 kilobytes. Example: <code>C:\Users\wadah\AppData\Local\Temp\phpC747.tmp</code></p>
         </div>
         </form>
 
-                    <h2 id="endpoints-POSTapi-v1-city">create city
+                    <h2 id="endpoints-GETapi-v1-cities">Display a listing of the cities
+this endpoint display all cities from DB
+response get all cities</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+
+
+<span id="example-requests-GETapi-v1-cities">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "http://127.0.0.1:8000/api/v1/cities" \
+    --header "Authorization: Bearer {ACCESS_TOKEN}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://127.0.0.1:8000/api/v1/cities"
+);
+
+const headers = {
+    "Authorization": "Bearer {ACCESS_TOKEN}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-v1-cities">
+            <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <details class="annotation">
+            <summary style="cursor: pointer;">
+                <small onclick="textContent = parentElement.parentElement.open ? 'Show headers' : 'Hide headers'">Show headers</small>
+            </summary>
+            <pre><code class="language-http">cache-control: no-cache, private
+content-type: application/json
+access-control-allow-origin: *
+ </code></pre></details>         <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Unauthenticated.&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-v1-cities" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-v1-cities"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-v1-cities"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-v1-cities" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-v1-cities">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-v1-cities" data-method="GET"
+      data-path="api/v1/cities"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-v1-cities', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-v1-cities"
+                    onclick="tryItOut('GETapi-v1-cities');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-v1-cities"
+                    onclick="cancelTryOut('GETapi-v1-cities');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-v1-cities"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/v1/cities</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="GETapi-v1-cities"
+               value="Bearer {ACCESS_TOKEN}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {ACCESS_TOKEN}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-v1-cities"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-v1-cities"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        </form>
+
+                    <h2 id="endpoints-POSTapi-v1-cities">create city
 this endpoint create new city
 response new city</h2>
 
@@ -1512,13 +1666,13 @@ response new city</h2>
 
 
 
-<span id="example-requests-POSTapi-v1-city">
+<span id="example-requests-POSTapi-v1-cities">
 <blockquote>Example request:</blockquote>
 
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://127.0.0.1:8000/api/v1/city" \
+    "http://127.0.0.1:8000/api/v1/cities" \
     --header "Authorization: Bearer {ACCESS_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -1531,7 +1685,7 @@ response new city</h2>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://127.0.0.1:8000/api/v1/city"
+    "http://127.0.0.1:8000/api/v1/cities"
 );
 
 const headers = {
@@ -1553,45 +1707,45 @@ fetch(url, {
 
 </span>
 
-<span id="example-responses-POSTapi-v1-city">
+<span id="example-responses-POSTapi-v1-cities">
 </span>
-<span id="execution-results-POSTapi-v1-city" hidden>
+<span id="execution-results-POSTapi-v1-cities" hidden>
     <blockquote>Received response<span
-                id="execution-response-status-POSTapi-v1-city"></span>:
+                id="execution-response-status-POSTapi-v1-cities"></span>:
     </blockquote>
-    <pre class="json"><code id="execution-response-content-POSTapi-v1-city"
+    <pre class="json"><code id="execution-response-content-POSTapi-v1-cities"
       data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
 </span>
-<span id="execution-error-POSTapi-v1-city" hidden>
+<span id="execution-error-POSTapi-v1-cities" hidden>
     <blockquote>Request failed with error:</blockquote>
-    <pre><code id="execution-error-message-POSTapi-v1-city">
+    <pre><code id="execution-error-message-POSTapi-v1-cities">
 
 Tip: Check that you&#039;re properly connected to the network.
 If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
 You can check the Dev Tools console for debugging information.</code></pre>
 </span>
-<form id="form-POSTapi-v1-city" data-method="POST"
-      data-path="api/v1/city"
+<form id="form-POSTapi-v1-cities" data-method="POST"
+      data-path="api/v1/cities"
       data-authed="1"
       data-hasfiles="0"
       data-isarraybody="0"
       autocomplete="off"
-      onsubmit="event.preventDefault(); executeTryOut('POSTapi-v1-city', this);">
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-v1-cities', this);">
     <h3>
         Request&nbsp;&nbsp;&nbsp;
                     <button type="button"
                     style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-tryout-POSTapi-v1-city"
-                    onclick="tryItOut('POSTapi-v1-city');">Try it out ⚡
+                    id="btn-tryout-POSTapi-v1-cities"
+                    onclick="tryItOut('POSTapi-v1-cities');">Try it out ⚡
             </button>
             <button type="button"
                     style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-canceltryout-POSTapi-v1-city"
-                    onclick="cancelTryOut('POSTapi-v1-city');" hidden>Cancel 🛑
+                    id="btn-canceltryout-POSTapi-v1-cities"
+                    onclick="cancelTryOut('POSTapi-v1-cities');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
                     style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-executetryout-POSTapi-v1-city"
+                    id="btn-executetryout-POSTapi-v1-cities"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
                     hidden>Send Request 💥
@@ -1599,7 +1753,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </h3>
             <p>
             <small class="badge badge-black">POST</small>
-            <b><code>api/v1/city</code></b>
+            <b><code>api/v1/cities</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
                                 <div style="padding-left: 28px; clear: unset;">
@@ -1608,7 +1762,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-v1-city"
+                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-v1-cities"
                value="Bearer {ACCESS_TOKEN}"
                data-component="header">
     <br>
@@ -1620,7 +1774,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="Content-Type"                data-endpoint="POSTapi-v1-city"
+                              name="Content-Type"                data-endpoint="POSTapi-v1-cities"
                value="application/json"
                data-component="header">
     <br>
@@ -1632,7 +1786,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="Accept"                data-endpoint="POSTapi-v1-city"
+                              name="Accept"                data-endpoint="POSTapi-v1-cities"
                value="application/json"
                data-component="header">
     <br>
@@ -1645,7 +1799,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="name"                data-endpoint="POSTapi-v1-city"
+                              name="name"                data-endpoint="POSTapi-v1-cities"
                value="b"
                data-component="body">
     <br>
@@ -1657,7 +1811,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="color"                data-endpoint="POSTapi-v1-city"
+                              name="color"                data-endpoint="POSTapi-v1-cities"
                value="architecto"
                data-component="body">
     <br>
@@ -1665,7 +1819,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
         </div>
         </form>
 
-                    <h2 id="endpoints-PATCHapi-v1-city--city_id-">Update city
+                    <h2 id="endpoints-PUTapi-v1-cities--id-">Update city
 this endpoint update city data
 response updated city data</h2>
 
@@ -1675,13 +1829,13 @@ response updated city data</h2>
 
 
 
-<span id="example-requests-PATCHapi-v1-city--city_id-">
+<span id="example-requests-PUTapi-v1-cities--id-">
 <blockquote>Example request:</blockquote>
 
 
 <div class="bash-example">
-    <pre><code class="language-bash">curl --request PATCH \
-    "http://127.0.0.1:8000/api/v1/city/1" \
+    <pre><code class="language-bash">curl --request PUT \
+    "http://127.0.0.1:8000/api/v1/cities/1" \
     --header "Authorization: Bearer {ACCESS_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -1694,7 +1848,7 @@ response updated city data</h2>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://127.0.0.1:8000/api/v1/city/1"
+    "http://127.0.0.1:8000/api/v1/cities/1"
 );
 
 const headers = {
@@ -1709,60 +1863,64 @@ let body = {
 };
 
 fetch(url, {
-    method: "PATCH",
+    method: "PUT",
     headers,
     body: JSON.stringify(body),
 }).then(response =&gt; response.json());</code></pre></div>
 
 </span>
 
-<span id="example-responses-PATCHapi-v1-city--city_id-">
+<span id="example-responses-PUTapi-v1-cities--id-">
 </span>
-<span id="execution-results-PATCHapi-v1-city--city_id-" hidden>
+<span id="execution-results-PUTapi-v1-cities--id-" hidden>
     <blockquote>Received response<span
-                id="execution-response-status-PATCHapi-v1-city--city_id-"></span>:
+                id="execution-response-status-PUTapi-v1-cities--id-"></span>:
     </blockquote>
-    <pre class="json"><code id="execution-response-content-PATCHapi-v1-city--city_id-"
+    <pre class="json"><code id="execution-response-content-PUTapi-v1-cities--id-"
       data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
 </span>
-<span id="execution-error-PATCHapi-v1-city--city_id-" hidden>
+<span id="execution-error-PUTapi-v1-cities--id-" hidden>
     <blockquote>Request failed with error:</blockquote>
-    <pre><code id="execution-error-message-PATCHapi-v1-city--city_id-">
+    <pre><code id="execution-error-message-PUTapi-v1-cities--id-">
 
 Tip: Check that you&#039;re properly connected to the network.
 If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
 You can check the Dev Tools console for debugging information.</code></pre>
 </span>
-<form id="form-PATCHapi-v1-city--city_id-" data-method="PATCH"
-      data-path="api/v1/city/{city_id}"
+<form id="form-PUTapi-v1-cities--id-" data-method="PUT"
+      data-path="api/v1/cities/{id}"
       data-authed="1"
       data-hasfiles="0"
       data-isarraybody="0"
       autocomplete="off"
-      onsubmit="event.preventDefault(); executeTryOut('PATCHapi-v1-city--city_id-', this);">
+      onsubmit="event.preventDefault(); executeTryOut('PUTapi-v1-cities--id-', this);">
     <h3>
         Request&nbsp;&nbsp;&nbsp;
                     <button type="button"
                     style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-tryout-PATCHapi-v1-city--city_id-"
-                    onclick="tryItOut('PATCHapi-v1-city--city_id-');">Try it out ⚡
+                    id="btn-tryout-PUTapi-v1-cities--id-"
+                    onclick="tryItOut('PUTapi-v1-cities--id-');">Try it out ⚡
             </button>
             <button type="button"
                     style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-canceltryout-PATCHapi-v1-city--city_id-"
-                    onclick="cancelTryOut('PATCHapi-v1-city--city_id-');" hidden>Cancel 🛑
+                    id="btn-canceltryout-PUTapi-v1-cities--id-"
+                    onclick="cancelTryOut('PUTapi-v1-cities--id-');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
                     style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-executetryout-PATCHapi-v1-city--city_id-"
+                    id="btn-executetryout-PUTapi-v1-cities--id-"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
                     hidden>Send Request 💥
             </button>
             </h3>
             <p>
+            <small class="badge badge-darkblue">PUT</small>
+            <b><code>api/v1/cities/{id}</code></b>
+        </p>
+            <p>
             <small class="badge badge-purple">PATCH</small>
-            <b><code>api/v1/city/{city_id}</code></b>
+            <b><code>api/v1/cities/{id}</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
                                 <div style="padding-left: 28px; clear: unset;">
@@ -1771,7 +1929,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="Authorization" class="auth-value"               data-endpoint="PATCHapi-v1-city--city_id-"
+                              name="Authorization" class="auth-value"               data-endpoint="PUTapi-v1-cities--id-"
                value="Bearer {ACCESS_TOKEN}"
                data-component="header">
     <br>
@@ -1783,7 +1941,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="Content-Type"                data-endpoint="PATCHapi-v1-city--city_id-"
+                              name="Content-Type"                data-endpoint="PUTapi-v1-cities--id-"
                value="application/json"
                data-component="header">
     <br>
@@ -1795,7 +1953,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="Accept"                data-endpoint="PATCHapi-v1-city--city_id-"
+                              name="Accept"                data-endpoint="PUTapi-v1-cities--id-"
                value="application/json"
                data-component="header">
     <br>
@@ -1803,12 +1961,12 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>city_id</code></b>&nbsp;&nbsp;
+                <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
 <small>integer</small>&nbsp;
  &nbsp;
  &nbsp;
                 <input type="number" style="display: none"
-               step="any"               name="city_id"                data-endpoint="PATCHapi-v1-city--city_id-"
+               step="any"               name="id"                data-endpoint="PUTapi-v1-cities--id-"
                value="1"
                data-component="url">
     <br>
@@ -1821,7 +1979,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="name"                data-endpoint="PATCHapi-v1-city--city_id-"
+                              name="name"                data-endpoint="PUTapi-v1-cities--id-"
                value="b"
                data-component="body">
     <br>
@@ -1833,13 +1991,154 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="color"                data-endpoint="PATCHapi-v1-city--city_id-"
+                              name="color"                data-endpoint="PUTapi-v1-cities--id-"
                value="architecto"
                data-component="body">
     <br>
 <p>Example: <code>architecto</code></p>
         </div>
         </form>
+
+                    <h2 id="endpoints-DELETEapi-v1-cities--id-">Delete city
+this endpoint delete city data from DB
+response remove the specified city from DB</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+
+
+<span id="example-requests-DELETEapi-v1-cities--id-">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request DELETE \
+    "http://127.0.0.1:8000/api/v1/cities/1" \
+    --header "Authorization: Bearer {ACCESS_TOKEN}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://127.0.0.1:8000/api/v1/cities/1"
+);
+
+const headers = {
+    "Authorization": "Bearer {ACCESS_TOKEN}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+
+fetch(url, {
+    method: "DELETE",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-DELETEapi-v1-cities--id-">
+</span>
+<span id="execution-results-DELETEapi-v1-cities--id-" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-DELETEapi-v1-cities--id-"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-DELETEapi-v1-cities--id-"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-DELETEapi-v1-cities--id-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-DELETEapi-v1-cities--id-">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-DELETEapi-v1-cities--id-" data-method="DELETE"
+      data-path="api/v1/cities/{id}"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('DELETEapi-v1-cities--id-', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-DELETEapi-v1-cities--id-"
+                    onclick="tryItOut('DELETEapi-v1-cities--id-');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-DELETEapi-v1-cities--id-"
+                    onclick="cancelTryOut('DELETEapi-v1-cities--id-');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-DELETEapi-v1-cities--id-"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-red">DELETE</small>
+            <b><code>api/v1/cities/{id}</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="DELETEapi-v1-cities--id-"
+               value="Bearer {ACCESS_TOKEN}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {ACCESS_TOKEN}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="DELETEapi-v1-cities--id-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="DELETEapi-v1-cities--id-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="id"                data-endpoint="DELETEapi-v1-cities--id-"
+               value="1"
+               data-component="url">
+    <br>
+<p>The ID of the city. Example: <code>1</code></p>
+            </div>
+                    </form>
 
             
 

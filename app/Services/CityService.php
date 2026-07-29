@@ -3,9 +3,15 @@
 namespace App\Services;
 
 use App\Models\City;
+use Illuminate\Pagination\Paginator;
 
 class CityService
 {
+
+    public function getAllCities(int $perPage = 15): Paginator
+    {
+        return City::latest()->simplePaginate($perPage);
+    }
 
     public function create(array $data): City
     {
@@ -13,7 +19,14 @@ class CityService
         return City::create($data);
     }
 
-    public function update(array $data , City $city):bool{
+    public function update(array $data, City $city): bool
+    {
+
         return $city->update($data);
+    }
+
+    public function deleteCity(City $city): bool
+    {
+        return $city->delete();
     }
 }

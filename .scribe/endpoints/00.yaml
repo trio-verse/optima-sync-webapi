@@ -433,7 +433,7 @@ endpoints:
         name: role
         description: ''
         required: true
-        example: admin
+        example: member
         type: string
         enumValues:
           - admin
@@ -442,7 +442,7 @@ endpoints:
         nullable: false
         deprecated: false
     cleanBodyParameters:
-      role: admin
+      role: member
     fileParameters: []
     responses: []
     responseFields: []
@@ -515,8 +515,55 @@ endpoints:
   -
     custom: []
     httpMethods:
+      - GET
+    uri: api/v1/cities
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: |-
+        Display a listing of the cities
+        this endpoint display all cities from DB
+        response get all cities
+      description: ''
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {ACCESS_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 3|efSywObt2701QhmLad5K8ueCu1w736YZCG7Svyfw3d9ef386'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
       - POST
-    uri: api/v1/city
+    uri: api/v1/cities
     metadata:
       custom: []
       groupName: Endpoints
@@ -577,8 +624,9 @@ endpoints:
   -
     custom: []
     httpMethods:
+      - PUT
       - PATCH
-    uri: 'api/v1/city/{city_id}'
+    uri: 'api/v1/cities/{id}'
     metadata:
       custom: []
       groupName: Endpoints
@@ -597,9 +645,9 @@ endpoints:
       Content-Type: application/json
       Accept: application/json
     urlParameters:
-      city_id:
+      id:
         custom: []
-        name: city_id
+        name: id
         description: 'The ID of the city.'
         required: true
         example: 1
@@ -609,7 +657,7 @@ endpoints:
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      city_id: 1
+      id: 1
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
@@ -645,6 +693,56 @@ endpoints:
       - headers
       - Authorization
       - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - DELETE
+    uri: 'api/v1/cities/{id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: |-
+        Delete city
+        this endpoint delete city data from DB
+        response remove the specified city from DB
+      description: ''
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {ACCESS_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the city.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 3|efSywObt2701QhmLad5K8ueCu1w736YZCG7Svyfw3d9ef386'
     controller: null
     method: null
     route: null
