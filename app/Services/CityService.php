@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\City;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\DB;
 
 class CityService
 {
@@ -13,20 +14,24 @@ class CityService
         return City::latest()->simplePaginate($perPage);
     }
 
-    public function create(array $data): City
+    public function createcity(array $data): City
     {
-
-        return City::create($data);
+        return DB::transaction(function () use ($data) {
+            return City::create($data);
+        });
     }
 
-    public function update(array $data, City $city): bool
+    public function updatecity(array $data, City $city): bool
     {
-
-        return $city->update($data);
+        return DB::transaction(function () use ($data, $city) {
+            return $city->update($data);
+        });
     }
 
     public function deleteCity(City $city): bool
     {
-        return $city->delete();
+        return DB::transaction(function () use ($city) {
+            return $city->delete();
+        });
     }
 }

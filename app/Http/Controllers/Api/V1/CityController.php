@@ -17,7 +17,8 @@ class CityController extends Controller
 
     public function __construct(protected CityService $city_service) {}
     /**
-     * Display a listing of the cities
+     * Display a listing of the cities.
+     * 
      * this endpoint display all cities from DB
      * response get all cities
      */
@@ -30,33 +31,36 @@ class CityController extends Controller
 
 
     /**
-     * create city
+     * create city.
+     * 
      * this endpoint create new city
      * response new city
      */
     public function store(StoreCityRequest $request)
     {
-        $city = $this->city_service->create($request->validated());
+        $city = $this->city_service->createcity($request->validated());
 
         return ApiResponse::response(new CityResource($city), 'The city was created succsesfully', 201);
     }
 
 
     /**
-     * Update city
+     * Update city.
+     * 
      * this endpoint update city data
      * response updated city data
      */
     public function update(UpdateCityRequest $request, City $city)
     {
-        $is_updated = $this->city_service->update($request->validated(), $city);
+        $is_updated = $this->city_service->updatecity($request->validated(), $city);
         if ($is_updated) {
             return ApiResponse::response(new CityResource($city), 'The city was updated succsesfully', 200);;
         } else   return ApiResponse::error(null, "bad request", 400);
     }
 
     /**
-     * Delete city
+     * Delete city.
+     * 
      * this endpoint delete city data from DB
      * response remove the specified city from DB
      */
