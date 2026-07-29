@@ -24,11 +24,12 @@ class UpdateOrganizationRequest extends FormRequest
      */
     public function rules(): array
     {
-        $organizationId = $this->route('id');
+        $organization = $this->route('organization') ?? $this->route('id');
+        $id = $organization instanceof Organization ? $organization->getKey() : $organization;
         return [
             'name' => ['sometimes', 'string', 'min:3', 'max:255'],
-            'email' => ['sometimes', 'email', Rule::unique('organizations', 'email')->ignore($organizationId)],
-            'phone' => ['sometimes', 'string', 'regex:/^\+?[0-9\s\-\(\)]{7,20}$/', Rule::unique('organizations', 'phone')->ignore($organizationId)],
+            'email' => ['sometimes', 'email', Rule::unique('organizations', 'email')->ignore($id, 'id')],
+            'phone' => ['sometimes', 'string', 'regex:/^\+?[0-9\s\-\(\)]{7,20}$/', Rule::unique('organizations', 'phone')->ignore($id, 'id')],
             'description' => ['nullable', 'string', 'min:10', 'max:500'],
             'address' => ['sometimes', 'string', 'min:5', 'max:255'],
         ];

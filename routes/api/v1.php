@@ -1,10 +1,10 @@
 <?php
 
+use App\Http\Controllers\Api\V1\CityController;
 use App\Http\Controllers\Api\V1\OrganizationController;
 use App\Http\Controllers\Api\V1\OrganizationLogoController;
 use App\Http\Controllers\Api\V1\OtpAuthenticationController;
 use App\Http\Controllers\Api\V1\UploadController;
-use App\Http\Controllers\CityController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
@@ -16,7 +16,7 @@ Route::prefix('v1')->group(function () {
     // Organization
     Route::middleware(['auth:sanctum'])->group(function () {
 
-        Route::post('/organizations', [OrganizationController::class, 'index']);
+        Route::get('/organizations', [OrganizationController::class, 'index']);
 
         Route::post('/organizations', [OrganizationController::class, 'store']);
         Route::patch('/organizations/{id}', [OrganizationController::class, 'update']);
@@ -32,5 +32,7 @@ Route::prefix('v1')->group(function () {
 
         //City
         Route::post('/city', [CityController::class, 'store']);
+
+        //
     });
 });

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>OptimaSync API Documentation</title>
+    <title>optimaSync API Documentation</title>
 
     <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
 
@@ -112,7 +112,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: July 27, 2026</li>
+        <li>Last updated: July 29, 2026</li>
     </ul>
 </div>
 
@@ -429,7 +429,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/v1/organizations" \
+    --get "http://127.0.0.1:8000/api/v1/organizations" \
     --header "Authorization: Bearer {ACCESS_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -437,7 +437,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/v1/organizations"
+    "http://127.0.0.1:8000/api/v1/organizations"
 );
 
 const headers = {
@@ -993,7 +993,6 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
     --get "http://127.0.0.1:8000/api/v1/organizations/architecto" \
-
     --header "Authorization: Bearer {ACCESS_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -1001,9 +1000,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-
     "http://127.0.0.1:8000/api/v1/organizations/architecto"
-
 );
 
 const headers = {
@@ -1332,7 +1329,7 @@ Must be one of:
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"role\": \"member\"
+    \"role\": \"admin\"
 }"
 </code></pre></div>
 
@@ -1349,7 +1346,7 @@ const headers = {
 };
 
 let body = {
-    "role": "member"
+    "role": "admin"
 };
 
 fetch(url, {
@@ -1478,10 +1475,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="role"                data-endpoint="PATCHapi-v1-organizations--organizationId--members--memberId-"
-               value="member"
+               value="admin"
                data-component="body">
     <br>
-<p>Example: <code>member</code></p>
+<p>Example: <code>admin</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>admin</code></li> <li><code>member</code></li></ul>
         </div>
@@ -1501,16 +1498,16 @@ Must be one of:
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/v1/organizations/1/logo" \
+    "http://127.0.0.1:8000/api/v1/organizations/16/logo" \
     --header "Authorization: Bearer {ACCESS_TOKEN}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "logo=@C:\Users\qosuy\AppData\Local\Temp\phpD204.tmp" </code></pre></div>
+    --form "logo=@C:\Users\qosuy\AppData\Local\Temp\phpE889.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://127.0.0.1:8000/api/v1/organizations/1/logo"
+    "http://127.0.0.1:8000/api/v1/organizations/16/logo"
 );
 
 const headers = {
@@ -1623,10 +1620,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="organization_id"                data-endpoint="POSTapi-v1-organizations--organization_id--logo"
-               value="1"
+               value="16"
                data-component="url">
     <br>
-<p>The ID of the organization. Example: <code>1</code></p>
+<p>The ID of the organization. Example: <code>16</code></p>
             </div>
                             <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
         <div style=" padding-left: 28px;  clear: unset;">
@@ -1639,7 +1636,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Must be a file. Must not be greater than 5120 kilobytes. Example: <code>C:\Users\wadah\AppData\Local\Temp\phpE32F.tmp</code></p>
+<p>Must be a file. Must not be greater than 5120 kilobytes. Example: <code>C:\Users\qosuy\AppData\Local\Temp\phpE889.tmp</code></p>
         </div>
         </form>
 

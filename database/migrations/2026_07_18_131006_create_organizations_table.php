@@ -14,12 +14,11 @@ return new class extends Migration
         Schema::create('organizations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->restrictOnDelete();
-            $table->string('name');
+            $table->string('name')->unique();
             $table->string('email')->unique();
             $table->string('phone')->unique();
             $table->text('description')->nullable();;
             $table->string('address');
-            $table->string('logo')->nullable();
             $table->timestamps();
         });
     }

@@ -13,6 +13,7 @@ use App\Http\Resources\V1\OrganizationResource;
 use App\Models\Organization;
 use App\Services\OrganizationService;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\RecordNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
@@ -50,8 +51,8 @@ class OrganizationController extends Controller
         try {
             $org = $this->organizationservice->show($id);
             return ApiResponse::success(new OrganizationResource($org));
-        } catch (RecordNotFoundException $e) {
-            return ApiResponse::notFound('organization not found');
+        } catch (ModelNotFoundException $e) {
+            return ApiResponse::notFound("organization not found");
         } catch (\Exception $e) {
             Log::error($e->getMessage() . 'code : ' . $e->getCode());
             return ApiResponse::serverError();
@@ -66,8 +67,9 @@ class OrganizationController extends Controller
     public function store(StoreOrganizationRequest $request): JsonResponse
     {
         $validatedData = $request->validated();
-
+        // $validatedData['user_id'] = $request->user()->id;
         $validatedData['user_id'] = $request->user()->id;
+
 
         try {
             $organization = $this->organizationservice->createOrganization(
@@ -75,7 +77,8 @@ class OrganizationController extends Controller
             );
             return ApiResponse::response(new OrganizationResource($organization), 'The organization was created succsesfully', 201);
         } catch (\Exception $e) {
-            return ApiResponse::error(null, "server error", 500);
+            Log::error("hellllo : " . $e->getMessage());
+            return ApiResponse::error(null, $e->getMessage(), 500);
         }
     }
 
@@ -94,6 +97,8 @@ class OrganizationController extends Controller
 
             $organization = $this->organizationservice->updateOrg($id, $validatedData);
             return ApiResponse::response(new OrganizationResource($organization), 'The organization was updated succsesfully', 200);
+        } catch (ModelNotFoundException $e) {
+            return ApiResponse::error(null, "organization not found", 404);
         } catch (RecordNotFoundException $e) {
             return ApiResponse::error(null, "organization not found", 404);
         } catch (AuthorizationException $e) {
