@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\City;
+namespace App\Http\Requests\Industry;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UpdateCityRequest extends FormRequest
+class StoreIndustryRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +24,8 @@ class UpdateCityRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255', Rule::unique('cities','name')->ignore($this->city->id)],
-            'color' => ['sometimes', 'string'],
+            'name' => ['required', 'string', 'max:255', Rule::unique('industries', 'name')],
+            'color' => "required|string"
         ];
     }
 }
