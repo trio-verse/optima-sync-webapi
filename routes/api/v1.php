@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\V1\ChannelController;
 use App\Http\Controllers\Api\V1\CityController;
+use App\Http\Controllers\Api\V1\ClientController;
 use App\Http\Controllers\Api\V1\IndustryController;
 use App\Http\Controllers\Api\V1\OrganizationController;
 use App\Http\Controllers\Api\V1\OrganizationLogoController;
@@ -51,5 +52,8 @@ Route::prefix('v1')->group(function () {
         Route::post('/industries', [IndustryController::class, 'store']);
         Route::patch('/industries/{industry}', [IndustryController::class, 'update']);
         Route::delete('/industries/{industry}', [IndustryController::class, 'delete']);
+
+        // Client
+        Route::get('/clients', [ClientController::class, 'index']);
     });
 });

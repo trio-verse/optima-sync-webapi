@@ -52,8 +52,7 @@ return [
             'headers' => [
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
-                // إذا كان الـ API يتطلب توكن (مثل Sanctum)، يمكنك إضافته هنا ليتم تجربته تلقائياً
-                'Authorization' => 'Bearer {token}',
+                'Authorization' => 'Bearer {ACCESS_TOKEN}',
             ],
              ],
         ],
