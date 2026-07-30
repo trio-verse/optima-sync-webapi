@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
 #[Fillable([
+    'organization_id',
     'name',
     'email',
     'phone',
@@ -18,7 +19,7 @@ use Illuminate\Database\Eloquent\Model;
     'website',
     'city_id',
     'industry_id',
-    'type',
+    'client_type',
     'notes'
 ])]
 class Client extends Model
@@ -28,7 +29,7 @@ class Client extends Model
     {
         return new ClientQuery($query);
     }
-    
+
     protected $appends = [
         'full_address',
         'city_name',

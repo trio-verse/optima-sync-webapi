@@ -10,10 +10,11 @@ class ClientResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-           
+
             'id' => $this->id,
             'name' => $this->name,
             'type' => $this->client_type,
+
             'contact_info' => [
                 'phone' => $this->phone,
                 'email' => $this->email,
@@ -21,13 +22,20 @@ class ClientResource extends JsonResource
                 'facebook' => $this->facebook,
                 'instagram' => $this->instagram,
                 'website' => $this->website,
-                'address' => $this->address,
             ],
-            'address' =>
-                $this->full_address,
+
+            'address' => [
+                'raw' => $this->address,
+                'full' => $this->full_address,
+                'city' => new CityResource($this->whenLoaded('city')),
+            ],
+
             'industry' => new IndustryResource($this->industry),
-            'stackholders' => [],
-            'createdAt' =>  $this->created_at
+
+            'notes' => $this->notes,
+            'stakeholders' => [],
+            'createdAt' => $this->created_at?->format('Y-m-d\TH:i:s\Z'),
+            'updatedAt' => $this->updated_at?->format('Y-m-d\TH:i:s\Z'),
         ];
     }
 }
