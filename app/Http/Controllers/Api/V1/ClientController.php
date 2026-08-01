@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Helper\V1\ApiResponse;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Client\StoreClientRequest;
+use App\Http\Requests\Client\UpdateClientRequest;
 use App\Http\Requests\Client\GetClientsListRequest;
 use App\Http\Resources\V1\ClientResource;
 use App\Models\Client;
@@ -12,17 +14,12 @@ use Illuminate\Http\Request;
 
 class ClientController extends Controller
 {
-    private ClientService $client_service;
-    public function __construct(ClientService $client_service)
-    {
-        $this->client_service = $client_service;
-    }
+    public function __construct(protected ClientService $client_service) {}
+
     /**
-     * Display a listing of Clients
-     * @param GetClientsListRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * Display a listing of the resource.
      */
-    public function index(GetClientsListRequest $request)
+    public function index()
     {
         $clients = $this->client_service->getClientsList($request->validated());
 
@@ -31,15 +28,33 @@ class ClientController extends Controller
             'Clients list fetched successfully'
         );
     }
-
     /**
-     * Store a newly created resource in storage.
+     * create client.
+     * 
+     * this endpoint create new client
+     * response new client
      */
-    public function store(Request $request)
+    public function store(StoreClientRequest $request)
     {
-        //
+        $is_create = $this->client_service->createClient($request->validated());
+        if ($is_create) {
+            return ApiResponse::success(null, 'The client was created successfully', 201);
+        } else   return ApiResponse::error(null, "bad request", 400);
     }
 
+     /**
+     * Update client.
+     * 
+     * this endpoint update client data
+     * response updated client data
+     */
+    public function update(Request $request, Client $client)
+    {
+         $is_updated = $this->client_service->updateClient($request->validated(), $client);
+        if ($is_updated) {
+            return ApiResponse::success(null, 'The client was updated successfully', 200);
+        } else   return ApiResponse::error(null, "bad request", 400);
+    }
     /**
      * Display the specified resource.
      */
@@ -47,15 +62,6 @@ class ClientController extends Controller
     {
         //
     }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Client $client)
-    {
-        //
-    }
-
     /**
      * Remove the specified resource from storage.
      */

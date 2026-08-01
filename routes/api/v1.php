@@ -53,6 +53,9 @@ Route::prefix('v1')->group(function () {
         Route::patch('/industries/{industry}', [IndustryController::class, 'update']);
         Route::delete('/industries/{industry}', [IndustryController::class, 'delete']);
 
+        //Client
+        Route::post('/clients', [ClientController::class, 'store']);
+        Route::patch('/clients/{client}', [ClientController::class, 'update']);
         // Client
         Route::get('/clients', [ClientController::class, 'index']);
     });

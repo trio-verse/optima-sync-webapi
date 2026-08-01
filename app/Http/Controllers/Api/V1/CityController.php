@@ -25,7 +25,7 @@ class CityController extends Controller
     public function index()
     {
         $cities = $this->city_service->getAllCities();
-        return ApiResponse::success(CityResource::collection($cities), 'Cities fetched succsesfully');
+        return ApiResponse::success(CityResource::collection($cities), 'Cities fetched successfully');
     }
 
 
@@ -40,7 +40,7 @@ class CityController extends Controller
     {
         $city = $this->city_service->createcity($request->validated());
 
-        return ApiResponse::response(new CityResource($city), 'The city was created succsesfully', 201);
+        return ApiResponse::response(new CityResource($city), 'The city was created successfully', 201);
     }
 
 
