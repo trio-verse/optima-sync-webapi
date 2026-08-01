@@ -24,7 +24,7 @@ class UpdateIndustryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required'  , 'string' , 'max:255' , Rule::unique('industries' , 'name')->ignore($this->industry->id)],
+            'name' => ['required', 'string', 'max:255', Rule::unique('industries', 'name')->ignore($this->industry)],
             'color' => "sometimes|string"
         ];
     }

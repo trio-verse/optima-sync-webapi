@@ -6,7 +6,7 @@ use App\Models\Client;
 
 class ClientService
 {
-    public function createClient(array $data): bool
+    public function createClient(array $data): Client
     {
         return Client::create($data);
     }
