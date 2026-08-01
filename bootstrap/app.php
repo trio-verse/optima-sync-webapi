@@ -9,6 +9,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Illuminate\Auth\AuthenticationException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -26,6 +27,11 @@ return Application::configure(basePath: dirname(__DIR__))
  $exceptions->shouldRenderJsonWhen(
             fn(Request $request) => $request->is('api/*') || $request->expectsJson()
         );
+
+        $exceptions->render(function (AuthenticationException $e) {
+            return ApiResponse::unauthorized('Unauthenticated.');
+        });
+
         $exceptions->render(function (ValidationException $e) {
             return ApiResponse::error($e->errors(), 'Validation failed', 422);
         });

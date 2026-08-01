@@ -56,5 +56,7 @@ Route::prefix('v1')->group(function () {
         //Client
         Route::post('/clients', [ClientController::class, 'store']);
         Route::patch('/clients/{client}', [ClientController::class, 'update']);
+        // Client
+        Route::get('/clients', [ClientController::class, 'index']);
     });
 });
