@@ -23,6 +23,7 @@ return new class extends Migration
                 'agency'
             ]);
             $table->foreignId('city_id')->constrained('cities')->onDelete('restrict');
+            $table->foreignId('industry_id')->constrained('industries')->onDelete('restrict');
             $table->string('phone', 50)->nullable();
             $table->string('email')->nullable();
             $table->string('whatsapp', 50)->nullable();
@@ -32,7 +33,6 @@ return new class extends Migration
             $table->text('address')->nullable();
 
             $table->text('notes')->nullable();
-
             $table->timestamps();
         });
     }

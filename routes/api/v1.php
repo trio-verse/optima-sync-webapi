@@ -45,7 +45,6 @@ Route::prefix('v1')->group(function () {
         Route::post('channels', [ChannelController::class, 'store']);
         Route::patch('channels/{channel}', [ChannelController::class, 'update']);
         Route::delete('channels/{channel}', [ChannelController::class, 'destroy']);
-        Route::apiResource('cities', CityController::class);
 
         // Industry
         Route::get('/industries', [IndustryController::class, 'index']);
@@ -56,7 +55,6 @@ Route::prefix('v1')->group(function () {
         //Client
         Route::post('/clients', [ClientController::class, 'store']);
         Route::patch('/clients/{client}', [ClientController::class, 'update']);
-        // Client
         Route::get('/clients', [ClientController::class, 'index']);
     });
 });

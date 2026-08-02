@@ -11,6 +11,7 @@
     "require": {
         "php": "^8.4",
         "intervention/image": "^4.2",
+        "intervention/image-laravel": "*",
         "knuckleswtf/scribe": "^5.11",
         "laravel/framework": "^13.8",
         "laravel/sanctum": "^4.0",

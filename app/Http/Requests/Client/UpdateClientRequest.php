@@ -34,7 +34,7 @@ class UpdateClientRequest extends FormRequest
             'industry_id' => ['sometimes', 'integer', 'exists:industries,id'],
             'city_id' => ['sometimes', 'integer', 'exists:cities,id'],
 
-            'phone' => ['sometimes', 'string', 'max:50'],
+            'phone' => ['sometimes', 'string', 'regex:/^\+?[0-9\s\-\(\)]{7,20}$/', 'max:50'],
             'email' => ['nullable', 'email', 'max:255'],
             'address' => ['nullable', 'string'],
             'whatsapp' => ['nullable', 'string', 'max:50'],

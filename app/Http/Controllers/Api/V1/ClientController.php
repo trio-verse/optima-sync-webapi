@@ -19,7 +19,7 @@ class ClientController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(GetClientsListRequest $request)
     {
         $clients = $this->client_service->getClientsList($request->validated());
 
@@ -36,23 +36,22 @@ class ClientController extends Controller
      */
     public function store(StoreClientRequest $request)
     {
-        $is_create = $this->client_service->createClient($request->validated());
-        if ($is_create) {
-            return ApiResponse::success(null, 'The client was created successfully', 201);
-        } else   return ApiResponse::error(null, "bad request", 400);
+        $client = $this->client_service->createClient($request->validated());
+
+        return ApiResponse::success(new ClientResource($client), 'The client was created successfully', 201);
     }
 
-     /**
+    /**
      * Update client.
      * 
      * this endpoint update client data
      * response updated client data
      */
-    public function update(Request $request, Client $client)
+    public function update(UpdateClientRequest $request, Client $client)
     {
-         $is_updated = $this->client_service->updateClient($request->validated(), $client);
+        $is_updated = $this->client_service->updateClient($request->validated(), $client);
         if ($is_updated) {
-            return ApiResponse::success(null, 'The client was updated successfully', 200);
+            return ApiResponse::success(new ClientResource($client), 'The client was updated successfully', 200);
         } else   return ApiResponse::error(null, "bad request", 400);
     }
     /**

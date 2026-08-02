@@ -34,7 +34,7 @@ class StoreClientRequest extends FormRequest
             'industry_id' => ['required', 'integer', 'exists:industries,id'],
             'city_id' => ['required', 'integer', 'exists:cities,id'],
 
-            'phone' => ['required', 'string', 'max:50'],
+            'phone' => ['required', 'string', 'regex:/^\+?[0-9\s\-\(\)]{7,20}$/', 'max:50'],
             'email' => ['nullable', 'email', 'max:255'],
             'address' => ['nullable', 'string'],
             'whatsapp' => ['nullable', 'string', 'max:50'],
@@ -44,6 +44,4 @@ class StoreClientRequest extends FormRequest
             'notes' => ['nullable', 'string'],
         ];
     }
-
-   
 }
