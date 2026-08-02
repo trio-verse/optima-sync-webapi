@@ -5,6 +5,7 @@ namespace App\Models;
 use App\QueriesBuilder\ClientQuery;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 #[Fillable([
@@ -24,6 +25,7 @@ use Illuminate\Database\Eloquent\Model;
 ])]
 class Client extends Model
 {
+    use HasFactory;
 
     public function newEloquentBuilder($query): ClientQuery
     {
@@ -36,7 +38,7 @@ class Client extends Model
         'industry_name',
     ];
     // Query Builder
-    
+
 
     // Relationships
     public function city()

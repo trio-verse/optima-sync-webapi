@@ -1,0 +1,24 @@
+<?php
+
+namespace Database\Factories;
+
+use App\Models\Organization;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+class OrganizationFactory extends Factory
+{
+    protected $model = Organization::class;
+
+    public function definition(): array
+    {
+        return [
+            'name' => $this->faker->company(),
+            'email' => $this->faker->unique()->companyEmail(),
+            'phone' => $this->faker->phoneNumber(),
+            'description' => $this->faker->paragraph(),
+            'address' => $this->faker->address(),
+            'user_id' => User::factory(),
+        ];
+    }
+}

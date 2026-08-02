@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Illuminate\Auth\AuthenticationException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -22,9 +24,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->trustProxies(at: '*');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-       
 
- $exceptions->shouldRenderJsonWhen(
+
+        $exceptions->shouldRenderJsonWhen(
             fn(Request $request) => $request->is('api/*') || $request->expectsJson()
         );
 
@@ -44,6 +46,16 @@ return Application::configure(basePath: dirname(__DIR__))
             return ApiResponse::forbidden('Not allowed');
         });
 
+        // 1. CATCH HTTP-SPECIFIC ERRORS FIRST (Bad headers, Method not allowed, etc.)
+        $exceptions->render(function (HttpExceptionInterface $e) {
+            return ApiResponse::error(
+                null,
+                $e->getMessage() ?: 'Bad Request',
+                $e->getStatusCode()
+            );
+        });
+
+        // 2. TRUE SERVER ERRORS FALLBACK
         $exceptions->render(function (Throwable $e) {
             report($e);
 
