@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\V1\IndustryController;
 use App\Http\Controllers\Api\V1\OrganizationController;
 use App\Http\Controllers\Api\V1\OrganizationLogoController;
 use App\Http\Controllers\Api\V1\OtpAuthenticationController;
+use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\UploadController;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
@@ -56,5 +57,8 @@ Route::prefix('v1')->group(function () {
         Route::post('/clients', [ClientController::class, 'store']);
         Route::patch('/clients/{client}', [ClientController::class, 'update']);
         Route::get('/clients', [ClientController::class, 'index']);
+
+        // Products
+        Route::apiResource('products', ProductController::class);
     });
 });
