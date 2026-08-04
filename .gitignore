@@ -25,3 +25,10 @@ _ide_helper.php
 Homestead.json
 Homestead.yaml
 Thumbs.db
+resources/views/scribe/index.blade.php
+.scribe/endpoints.cache/00.yaml
+.scribe/endpoints/custom.0.yaml
+.scribe/endpoints/00.yaml
+.scribe/intro.md 
+.scribe/auth.md
+.scribe/.filehashes
