@@ -27,19 +27,17 @@ class Client extends Model
 {
     use HasFactory;
 
-    public function newEloquentBuilder($query): ClientQuery
-    {
-        return new ClientQuery($query);
-    }
-
     protected $appends = [
         'full_address',
         'city_name',
         'industry_name',
     ];
-    // Query Builder
 
-
+    public function newEloquentBuilder($query): ClientQuery
+    {
+        return new ClientQuery($query);
+    }
+ 
     // Relationships
     public function city()
     {
@@ -52,10 +50,10 @@ class Client extends Model
     }
 
 
-    // public function projects()
-    // {
-    //     return $this->hasMany(Project::class);
-    // }
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
 
     //    public funcrtion stackholders(){
     //       return $this->hasMany(Stackholder::class);
