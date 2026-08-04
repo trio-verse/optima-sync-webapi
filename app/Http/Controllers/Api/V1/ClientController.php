@@ -14,7 +14,9 @@ use Illuminate\Http\Request;
 
 class ClientController extends Controller
 {
-    public function __construct(protected ClientService $client_service) {}
+    public function __construct(protected ClientService $client_service)
+    {
+    }
 
     /**
      * Display a listing of the resource.
@@ -52,7 +54,8 @@ class ClientController extends Controller
         $is_updated = $this->client_service->updateClient($request->validated(), $client);
         if ($is_updated) {
             return ApiResponse::success(new ClientResource($client), 'The client was updated successfully', 200);
-        } else   return ApiResponse::error(null, "bad request", 400);
+        } else
+            return ApiResponse::error(null, "bad request", 400);
     }
     /**
      * Display the specified resource.
