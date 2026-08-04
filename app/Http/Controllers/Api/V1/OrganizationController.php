@@ -46,7 +46,7 @@ class OrganizationController extends Controller
      * @param int $id
      * @return JsonResponse
      */
-    public function show(int $id)
+    public function show(string|int $id)
     {
         try {
             $org = $this->organizationservice->show($id);
@@ -157,5 +157,18 @@ class OrganizationController extends Controller
             Log::error($e->getMessage());
             return ApiResponse::error(null, "Server error", 500);
         }
+    }
+
+    /**
+     * MyOrgs.
+     * show a list of orginaztions that the user is a member of
+     */
+
+    public function getMyOrganizations(): JsonResponse
+    {
+        $user = request()->user();
+        $organizations = $this->organizationservice->getMyOrganizations($user);
+
+        return ApiResponse::response(OrganizationResource::collection($organizations), 'The organizations were retrieved successfully', 200);
     }
 }
