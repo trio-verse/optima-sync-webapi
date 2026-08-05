@@ -50,7 +50,7 @@ class ClientQuery extends Builder
                     Where('email', 'like', "%{$contactInfo}%")
                     ->orWhere('phone', 'like', "%{$contactInfo}%")
                     ->orWhere('whatsapp', 'like', "%{$contactInfo}%")
-                    ->orWhere('address', 'like', "%{$contactInfo}%")
+                    ->orWhere('address', 'like', "%{$contactInfo}%");
             });
         });
     }
