@@ -11,7 +11,7 @@ class ClientQuery extends Builder
     {
         return $this->when(
             filled($industryId),
-            fn(Builder $query, int $industryId) =>
+            fn(Builder $query) =>
             $query->where('industry_id', $industryId)
         );
     }
@@ -20,7 +20,7 @@ class ClientQuery extends Builder
     {
         return $this->when(
             filled($cityId),
-            fn(Builder $query, int $cityId) =>
+            fn(Builder $query) =>
             $query->where('city_id', $cityId)
         );
     }
@@ -28,8 +28,8 @@ class ClientQuery extends Builder
     {
         return $this->when(
             filled($name),
-            fn(Builder $query, string $name) =>
-            $query->where('name', "%" . $name . "%")
+            fn(Builder $query) =>
+            $query->where('name', "like", "%{$name}%")
         );
     }
 
@@ -37,19 +37,20 @@ class ClientQuery extends Builder
     {
         return $this->when(
             filled($type),
-            fn(Builder $query, string $type) =>
-            $query->where('type', "%" . $type . "%")
+            fn(Builder $query) =>
+            $query->where('type', "like", "%{$type}%")
         );
     }
 
-    public function contactInfoFilter(?array $contactInfo)
+    public function contactInfoFilter(string|null $contactInfo)
     {
-        return $this->when($contactInfo['search'] ?? null, function (Builder $query, string $search) {
-            $query->where(function (Builder $query) use ($search) {
+        return $this->when(is_string($contactInfo), function (Builder $query) use ($contactInfo) {
+            $query->where(function (Builder $query) use ($contactInfo) {
                 $query->
-                    Where('email', 'like', "%{$search}%")
-                    ->orWhere('phone', 'like', "%{$search}%")
-                    ->orWhere('address', 'like', "%{$search}%");
+                    Where('email', 'like', "%{$contactInfo}%")
+                    ->orWhere('phone', 'like', "%{$contactInfo}%")
+                    ->orWhere('whatsapp', 'like', "%{$contactInfo}%")
+                    ->orWhere('address', 'like', "%{$contactInfo}%")
             });
         });
     }
