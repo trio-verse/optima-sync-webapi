@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Contracts\FileStorageInterface;
 use App\Models\Organization;
 use App\Models\OrganizationMember;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 
@@ -17,7 +19,8 @@ class OrganizationService
 
     public function show(int $id)
     {
-        $org = Organization::findOrFail($id)->with(['members', 'members.user'])->first();
+
+        $org = Organization::with(['members.user'])->findOrFail($id);
         return $org;
     }
 
@@ -73,5 +76,10 @@ class OrganizationService
             $member->update($data);
             return $member;
         });
+    }
+    public function getMyOrganizations(User $user): Collection
+    {
+        Gate::authorize('getMyOrganizations' , Organization::class);
+        return $user->organizations()->get();
     }
 }

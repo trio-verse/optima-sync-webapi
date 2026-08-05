@@ -22,7 +22,7 @@ Route::prefix('v1')->group(function () {
     Route::middleware(['auth:sanctum'])->group(function () {
 
         Route::get('/organizations', [OrganizationController::class, 'index']);
-
+        Route::get('/organizations/myOrgs' , [OrganizationController::class , 'getMyOrganizations']);
         Route::post('/organizations', [OrganizationController::class, 'store']);
         Route::patch('/organizations/{id}', [OrganizationController::class, 'update']);
         Route::get('/organizations/{id}', [OrganizationController::class, 'show']);
