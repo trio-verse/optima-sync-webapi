@@ -61,7 +61,17 @@ class OrganizationService
         Gate::authorize('addMember', $org);
 
         return DB::transaction(function () use ($org, $data) {
-            return $org->members()->create($data);
+            $user = User::whereEmail($data['email'])->first();
+            if (!$user) {
+                $userService = new UserService();
+                $user = $userService->createUser($data['email']);
+            }
+            return $org->members()->create(
+                [
+                    'user_id' => $user->id,
+                    'role' => $data['role']
+                ]
+            );
         });
     }
 
@@ -79,7 +89,7 @@ class OrganizationService
     }
     public function getMyOrganizations(User $user): Collection
     {
-        Gate::authorize('getMyOrganizations' , Organization::class);
+        Gate::authorize('getMyOrganizations', Organization::class);
         return $user->organizations()->get();
     }
 }
