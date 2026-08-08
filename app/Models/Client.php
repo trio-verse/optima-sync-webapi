@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use App\Models\Connection;
 use App\Policies\ClientPolicy;
 use App\QueriesBuilder\ClientQuery;
-use Dba\Connection;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Casts\Attribute;

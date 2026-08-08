@@ -16,7 +16,7 @@ class ClientPolicy
         if ($user->is_admin) {
             return true;
         }
-        return $user->organizations()->where('id', $organizationId)->exists();
+        return $user->organizations()->find($organizationId) !== null;
     }
 
     /**
@@ -27,8 +27,7 @@ class ClientPolicy
         if ($user->is_admin) {
             return true;
         }
-        return $user->organizations()->where('id', $organizationId)->exists();
-
+        return $user->organizations()->find($organizationId) !== null;
     }
 
     /**

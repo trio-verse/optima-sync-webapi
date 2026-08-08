@@ -14,11 +14,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-#[Fillable(['name', 'email' , 'phone' , 'email_verified_at'])]
+#[Fillable(['name', 'email', 'phone', 'email_verified_at'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable , HasApiTokens;
+    use HasFactory, Notifiable, HasApiTokens;
 
     /**
      * Get the attributes that should be cast.
@@ -33,12 +33,14 @@ class User extends Authenticatable
     }
 
     // Attributes
-    public function isAdmin() : Attribute{
+    public function isAdmin(): Attribute
+    {
         return new Attribute(
             get: fn() => $this->pivot->role === 'admin'
         );
     }
-    public function isMember() : Attribute{
+    public function isMember(): Attribute
+    {
         return new Attribute(
             get: fn() => $this->pivot->role === "member"
         );
@@ -49,4 +51,23 @@ class User extends Authenticatable
         return $this->belongsToMany(Organization::class, 'organization_members')
             ->withPivot('role');
     }
+
+    /**
+     * get all clients that assigned to this user
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough<Client, Connection, User>
+     */
+    public function clients()
+    {
+        return $this->hasManyThrough(Client::class, Connection::class, 'assignee_id', 'id', 'id', 'client_id');
+    }
+    /**
+     * get all connections that assigned to this user
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Connection, User>
+     */
+    public function connections()
+    {
+        return $this->hasMany(Connection::class, 'assignee_id', 'id');
+    }
+
+
 }
