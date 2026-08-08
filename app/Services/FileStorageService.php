@@ -73,7 +73,7 @@ class FileStorageService implements FileStorageInterface
     // get the full file url
     public function getUrl(string $path): string
     {
-        return Storage::url($path);
+        return Storage::disk('public')->url($path);
     }
 
     // delete the file from the disk

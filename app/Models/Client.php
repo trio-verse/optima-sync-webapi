@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
+use App\Policies\ClientPolicy;
 use App\QueriesBuilder\ClientQuery;
+use Dba\Connection;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -23,6 +26,7 @@ use Illuminate\Database\Eloquent\Model;
     'client_type',
     'notes'
 ])]
+#[UsePolicy(ClientPolicy::class)]
 class Client extends Model
 {
     use HasFactory;
@@ -37,7 +41,7 @@ class Client extends Model
     {
         return new ClientQuery($query);
     }
- 
+
     // Relationships
     public function city()
     {
@@ -58,6 +62,16 @@ class Client extends Model
     //    public funcrtion stackholders(){
     //       return $this->hasMany(Stackholder::class);
     //    }
+
+
+    /**
+     * get all Client connections 
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Connection, Client>
+     */
+    public function connections()
+    {
+        return $this->hasMany(Connection::class , 'client_id' , 'id');
+    }
 
 
 

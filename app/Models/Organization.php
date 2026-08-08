@@ -24,6 +24,9 @@ class Organization extends Model
         'user_id',
 
     ];
+    protected $with = [
+        'logo'
+    ];
 
     // relations
     public function clients()
