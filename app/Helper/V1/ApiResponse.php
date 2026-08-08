@@ -3,6 +3,8 @@
 namespace App\Helper\V1;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Pagination\Paginator;
 
 class ApiResponse
 {
@@ -22,6 +24,50 @@ class ApiResponse
             'data' => $data,
         ], $code);
     }
+
+    /**
+     * Format paginated API Resource responses consistently.
+     *
+     * @param LengthAwarePaginator|AnonymousResourceCollection|null $data
+     * @param string $message
+     * @param int $code
+     * @return JsonResponse
+     */
+    public static function pagination($data = null, string $message = 'Success', int $code = 200): JsonResponse
+    {
+        // Handle empty or null paginator
+        if (!$data) {
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+                'data' => [],
+                'meta' => null,
+            ], $code);
+        }
+
+        // Extract underlying Paginator if wrapped inside an AnonymousResourceCollection
+        $paginator = $data instanceof AnonymousResourceCollection
+            ? $data->resource
+            : $data;
+
+        return response()->json([
+            'success' => true,
+            'message' => $message,
+            'data' => $data, // Preserves API Resource transformation
+            'meta' => [
+                'current_page' => $paginator->currentPage(),
+                'per_page' => $paginator->perPage(),
+                'total' => $paginator->total(),
+                'last_page' => $paginator->lastPage(),
+                'from' => $paginator->firstItem(),
+                'to' => $paginator->lastItem(),
+                'next_page' => $paginator->nextPageUrl(),
+                'prev_page' => $paginator->previousPageUrl(),
+                'path' => $paginator->path(),
+            ]
+        ], $code);
+    }
+
 
     public static function response($data = null, string $message, int $code): JsonResponse
     {
