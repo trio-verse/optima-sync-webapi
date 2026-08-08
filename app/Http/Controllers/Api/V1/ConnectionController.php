@@ -55,7 +55,8 @@ class ConnectionController extends Controller
      */
     public function show(Connection $connection)
     {
-        //
+        Gate::authorize('view', [Connection::class, $connection->id]);
+        return ApiResponse::success(new ConnectionResource($connection), "Connection retrieved successfully", 200);
     }
 
     /**

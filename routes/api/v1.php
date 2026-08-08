@@ -63,7 +63,8 @@ Route::prefix('v1')->group(function () {
         Route::post('/clients/{client}/connections', [ConnectionController::class, 'store']);
         Route::get('/connections', [ConnectionController::class, 'index']);
         Route::get('/clients/{client}/connections', [ConnectionController::class, 'getClientConnections']);
-
+        Route::get('connections/{connection}', [ConnectionController::class, 'show']);
+        Route::patch('connections/{connection}', [ConnectionController::class, 'update']);
         // Products
         Route::apiResource('products', ProductController::class);
     });
