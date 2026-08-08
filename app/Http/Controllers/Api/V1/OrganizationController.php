@@ -169,6 +169,6 @@ class OrganizationController extends Controller
         $user = request()->user();
         $organizations = $this->organizationservice->getMyOrganizations($user);
 
-        return ApiResponse::response(OrganizationResource::collection($organizations), 'The organizations were retrieved successfully', 200);
+        return ApiResponse::pagination(OrganizationResource::collection($organizations), 'The organizations were retrieved successfully', 200);
     }
 }

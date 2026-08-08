@@ -7,6 +7,7 @@ use App\Models\Organization;
 use App\Models\OrganizationMember;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 
@@ -77,7 +78,7 @@ class OrganizationService
 
     public function updateMemberRole(int $organizationId, int $memberId, array $data): OrganizationMember|false
     {
-        $org = Organization::find($organizationId)->firstOrFail();
+        $org = Organization::findOrFail($organizationId);
 
         Gate::authorize('updateMemberRole', $org);
 
@@ -87,9 +88,9 @@ class OrganizationService
             return $member;
         });
     }
-    public function getMyOrganizations(User $user): Collection
+    public function getMyOrganizations(User $user): LengthAwarePaginator
     {
         Gate::authorize('getMyOrganizations', Organization::class);
-        return $user->organizations()->get();
+        return $user->organizations()->withCount('members')->paginate(15);
     }
 }
