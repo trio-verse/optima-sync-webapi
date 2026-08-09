@@ -65,6 +65,8 @@ Route::prefix('v1')->group(function () {
         Route::get('/clients/{client}/connections', [ConnectionController::class, 'getClientConnections']);
         Route::get('connections/{connection}', [ConnectionController::class, 'show']);
         Route::patch('connections/{connection}', [ConnectionController::class, 'update']);
+        Route::delete('connections/{connection}', [ConnectionController::class, 'destroy']);
+
         // Products
         Route::apiResource('products', ProductController::class);
     });

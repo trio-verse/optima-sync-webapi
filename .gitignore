@@ -32,3 +32,4 @@ resources/views/scribe/index.blade.php
 .scribe/intro.md 
 .scribe/auth.md
 .scribe/.filehashes
+/.scribe
