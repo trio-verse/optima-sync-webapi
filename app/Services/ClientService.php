@@ -17,12 +17,10 @@ class ClientService
         return $client->update($data);
     }
 
-    public function getClientsList(array $filters, int $organizationId)
+    public function getClientsList(array $filters)
     {
           
-        return Organization::findOrFail($organizationId)
-            ->clients()
-            ->nameFilter($filters['search']['name'] ?? null)
+        return Client::nameFilter($filters['search']['name'] ?? null)
             ->contactInfoFilter($filters['search']['contact_info'] ?? null)
             ->cityFilter($filters['city_id'] ?? null)
             ->industryFilter($filters['industry_id'] ?? null)

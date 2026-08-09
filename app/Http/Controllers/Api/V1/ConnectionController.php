@@ -24,7 +24,7 @@ class ConnectionController extends Controller
      */
     public function index(Request $request)
     {
-        Gate::authorize('viewAny', $request->input('organization_id'));
+        Gate::authorize('viewAny' , Connection::class);
 
         $validated = $request->only([
             'per_page',
@@ -41,7 +41,7 @@ class ConnectionController extends Controller
      */
     public function store(StoreConnectionRequest $request, Client $client)
     {
-        Gate::authorize('create', $client->id);
+        Gate::authorize('create' , $client->id);
         $validated = $request->validated();
         if ($this->connectionService->storeConnection($client, $validated)) {
             return ApiResponse::success([], "Connection created successfully", 201);
@@ -55,7 +55,7 @@ class ConnectionController extends Controller
      */
     public function show(Connection $connection)
     {
-        Gate::authorize('view', $connection);
+        Gate::authorize('view', Connection::class);
         return ApiResponse::success(new ConnectionResource($connection), "Connection retrieved successfully", 200);
     }
 
@@ -64,7 +64,7 @@ class ConnectionController extends Controller
      */
     public function update(UpdateConnectionRequest $request, Connection $connection)
     {
-        Gate::authorize('update', $connection);
+        Gate::authorize('update', Connection::class);
         $validated = $request->validated();
 
         if ($this->connectionService->updateConnection($connection, $validated)) {

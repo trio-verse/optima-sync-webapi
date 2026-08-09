@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Organization;
 use App\Singleton\TenantManager;
 use Closure;
 use Illuminate\Http\Request;
@@ -11,7 +12,9 @@ use Symfony\Component\HttpFoundation\Response;
 class SetActiveOrganization
 {
 
-    protected function __construct(private TenantManager $tenantManager){}
+    public function __construct(protected TenantManager $tenantManager)
+    {
+    }
 
     /**
      * Handle an incoming request.
@@ -26,16 +29,16 @@ class SetActiveOrganization
         if (!$orgId) {
             return response()->json(['message' => 'Organization context required (X-Organization-Id header missing).'], 400);
         }
-        $user = $request->user() ;
+        $user = $request->user();
+        $isAdmin = Organization::where('user_id', $user->id)->exists();
+        $isMember = DB::table("organization_members")->where("organization_id", $orgId)->where("user_id", $user->id)->exists();
 
-        $isMember = DB::table("organization_members")->where("organization_id" , $orgId)->where("user_id" , $user->id)->exists();
-
-        if(!$isMember){
+        if (!$isMember && !$isAdmin) {
             return response()->json(['message' => 'Unauthorized access to this organization.'], 403);
         }
 
-        $this->tenantManager->setOrganizationId((int)$orgId);
-        
+        $this->tenantManager->setOrganizationId((int) $orgId);
+
         return $next($request);
     }
 }

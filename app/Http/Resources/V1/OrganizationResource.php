@@ -15,9 +15,10 @@ class OrganizationResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return [
+        $data =  [
             'id' => $this->id,
             'name' => $this->name,
+            'role' =>$this->user_id == auth()->id() ? 'owner' : 'member',
             'phone_number' => $this->phone,
             'email' => $this->email,
             'address' => $this->address,
@@ -35,5 +36,7 @@ class OrganizationResource extends JsonResource
             'createdAt' => $this->created_at?->format('Y-m-d\TH:i:s\Z'),
             'updatedAt' => $this->updated_at?->format('Y-m-d\TH:i:s\Z'),
         ];
+
+        return $data;
     }
 }

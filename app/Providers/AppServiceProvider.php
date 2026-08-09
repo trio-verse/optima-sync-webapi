@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Contracts\FileStorageInterface;
+use App\Http\Middleware\SetActiveOrganization;
 use App\Services\FileStorageService;
 use App\Services\LocalStorageService;
 use App\Services\S3StorageService;

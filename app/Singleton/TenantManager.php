@@ -4,7 +4,7 @@ namespace App\Singleton;
 
 class TenantManager
 {
-    protected ?int $organization_id;
+    protected ?int $organization_id = null;
     public function setOrganizationId(int $id): void
     {
         $this->organization_id = $id;
@@ -17,6 +17,6 @@ class TenantManager
 
     public function hasOrganizationId(): bool
     {
-        return !is_null($this->organization_id);
+        return $this->organization_id !== null;
     }
 }

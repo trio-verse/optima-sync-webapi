@@ -35,7 +35,7 @@ class OrganizationService
                 'name' => $data['name'],
                 'email' => $data['email'],
                 'phone' => $data['phone'],
-                'description' => $data['description'],
+                'description' => $data['description'] ?? null,
                 'address' => $data['address'],
                 'user_id' => $data['user_id'],
             ]);
@@ -91,6 +91,7 @@ class OrganizationService
     public function getMyOrganizations(User $user): LengthAwarePaginator
     {
         Gate::authorize('getMyOrganizations', Organization::class);
-        return $user->organizations()->withCount('members')->paginate(15);
+
+        return Organization::forUser($user)->withCount('members')->paginate(15);
     }
 }

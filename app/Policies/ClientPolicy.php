@@ -3,31 +3,33 @@
 namespace App\Policies;
 
 use App\Models\Client;
+use App\Models\Organization;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class ClientPolicy
 {
     /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(User $user, int $organizationId): bool
+    public function viewAny(User $user): bool
     {
         if ($user->is_admin) {
             return true;
         }
-        return $user->organizations()->find($organizationId) !== null;
+
+        return Organization::forUser($user)->clients()->exists();
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user , int $organizationId): bool
+    public function view(User $user, Client $client): bool
     {
         if ($user->is_admin) {
             return true;
         }
-        return $user->organizations()->find($organizationId) !== null;
+
+        return Organization::forUser($user)->clients()->where('clients.id', $client->id)->exists();
     }
 
     /**
@@ -35,7 +37,11 @@ class ClientPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        if ($user->is_admin) {
+            return true;
+        }
+
+        return Organization::forUser($user)->exists();
     }
 
     /**
@@ -43,7 +49,11 @@ class ClientPolicy
      */
     public function update(User $user, Client $client): bool
     {
-        return false;
+        if ($user->is_admin) {
+            return true;
+        }
+
+        return Organization::forUser($user)->clients()->where('clients.id', $client->id)->exists();
     }
 
     /**
@@ -53,5 +63,4 @@ class ClientPolicy
     {
         return $user->is_admin;
     }
-
 }
