@@ -2,9 +2,9 @@
 
 namespace App\Policies;
 
+use App\Models\Client;
 use App\Models\Connection;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 
 #[UsePolicy(ConnectionPolicy::class)]
@@ -24,7 +24,7 @@ class ConnectionPolicy
      */
     public function view(User $user, Connection $connection): bool
     {
-        return false;
+        return $user->organizations()->where('id', $connection->client->organization_id)->exists();
     }
 
     /**
@@ -43,7 +43,7 @@ class ConnectionPolicy
      */
     public function update(User $user, Connection $connection): bool
     {
-        return false;
+        return $user->organizations()->where('id', $connection->client->organization_id)->exists();
     }
 
     /**
@@ -51,7 +51,7 @@ class ConnectionPolicy
      */
     public function delete(User $user, Connection $connection): bool
     {
-        return false;
+        return $user->organizations()->where('id', $connection->client->organization_id)->exists();
     }
 
     /**

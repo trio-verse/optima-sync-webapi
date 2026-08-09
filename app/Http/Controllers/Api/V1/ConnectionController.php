@@ -24,7 +24,7 @@ class ConnectionController extends Controller
      */
     public function index(Request $request)
     {
-        Gate::authorize('viewAny', [Connection::class, $request->organization_id]);
+        Gate::authorize('viewAny', $request->input('organization_id'));
 
         $validated = $request->only([
             'per_page',
@@ -41,7 +41,7 @@ class ConnectionController extends Controller
      */
     public function store(StoreConnectionRequest $request, Client $client)
     {
-        Gate::authorize('create', [Connection::class, $client->id]);
+        Gate::authorize('create', $client->id);
         $validated = $request->validated();
         if ($this->connectionService->storeConnection($client, $validated)) {
             return ApiResponse::success([], "Connection created successfully", 201);
@@ -55,7 +55,8 @@ class ConnectionController extends Controller
      */
     public function show(Connection $connection)
     {
-        //
+        Gate::authorize('view', $connection);
+        return ApiResponse::success(new ConnectionResource($connection), "Connection retrieved successfully", 200);
     }
 
     /**
@@ -63,7 +64,14 @@ class ConnectionController extends Controller
      */
     public function update(UpdateConnectionRequest $request, Connection $connection)
     {
-        //
+        Gate::authorize('update', $connection);
+        $validated = $request->validated();
+
+        if ($this->connectionService->updateConnection($connection, $validated)) {
+            return ApiResponse::success(new ConnectionResource($connection), "Connection updated successfully", 200);
+        } else {
+            return ApiResponse::error(null, "Failed to update connection", 500);
+        }
     }
 
     /**
@@ -71,11 +79,18 @@ class ConnectionController extends Controller
      */
     public function destroy(Connection $connection)
     {
-        //
+        Gate::authorize('delete', $connection);
+
+        if ($this->connectionService->deleteConnection($connection)) {
+            return ApiResponse::success([], "Connection deleted successfully", 200);
+        } else {
+            return ApiResponse::error(null, "Failed to delete connection", 500);
+        }
     }
 
-    public function getClientConnections(Request $request , Client $client){
-        Gate::authorize('viewAny', [Connection::class, $client->id]);
+    public function getClientConnections(Request $request, Client $client)
+    {
+        Gate::authorize('viewAny', $client->organization_id);
         $validated = $request->only([
             'per_page',
             'page',
