@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\City;
+use App\Models\Organization;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class CityFactory extends Factory
@@ -14,6 +15,8 @@ class CityFactory extends Factory
         return [
             'name' => $this->faker->unique()->city(),
             'color' => $this->faker->hexColor(),
+            'organization_id' => Organization::factory(),
+
         ];
     }
 }

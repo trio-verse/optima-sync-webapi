@@ -169,7 +169,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: August 2, 2026</li>
+        <li>Last updated: August 3, 2026</li>
     </ul>
 </div>
 
@@ -1213,7 +1213,7 @@ response updated organization data</p>
     --header "Accept: application/json" \
     --data "{
     \"user_id\": \"architecto\",
-    \"role\": \"admin\"
+    \"role\": \"member\"
 }"
 </code></pre></div>
 
@@ -1231,7 +1231,7 @@ const headers = {
 
 let body = {
     "user_id": "architecto",
-    "role": "admin"
+    "role": "member"
 };
 
 fetch(url, {
@@ -1360,10 +1360,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="role"                data-endpoint="POSTapi-v1-organizations--organizationId--members"
-               value="admin"
+               value="member"
                data-component="body">
     <br>
-<p>Example: <code>admin</code></p>
+<p>Example: <code>member</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>admin</code></li> <li><code>member</code></li></ul>
         </div>
@@ -1388,7 +1388,7 @@ Must be one of:
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"role\": \"admin\"
+    \"role\": \"member\"
 }"
 </code></pre></div>
 
@@ -1405,7 +1405,7 @@ const headers = {
 };
 
 let body = {
-    "role": "admin"
+    "role": "member"
 };
 
 fetch(url, {
@@ -1534,10 +1534,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="role"                data-endpoint="PATCHapi-v1-organizations--organizationId--members--memberId-"
-               value="admin"
+               value="member"
                data-component="body">
     <br>
-<p>Example: <code>admin</code></p>
+<p>Example: <code>member</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>admin</code></li> <li><code>member</code></li></ul>
         </div>
@@ -1557,16 +1557,16 @@ Must be one of:
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://127.0.0.1:8000/api/v1/organizations/16/logo" \
+    "http://127.0.0.1:8000/api/v1/organizations/1/logo" \
     --header "Authorization: Bearer {ACCESS_TOKEN}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "logo=@C:\Users\qosuy\AppData\Local\Temp\phpCFE8.tmp" </code></pre></div>
+    --form "logo=@C:\Users\qosuy\AppData\Local\Temp\php5A3F.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://127.0.0.1:8000/api/v1/organizations/16/logo"
+    "http://127.0.0.1:8000/api/v1/organizations/1/logo"
 );
 
 const headers = {
@@ -1679,10 +1679,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="organization_id"                data-endpoint="POSTapi-v1-organizations--organization_id--logo"
-               value="16"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the organization. Example: <code>16</code></p>
+<p>The ID of the organization. Example: <code>1</code></p>
             </div>
                             <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
         <div style=" padding-left: 28px;  clear: unset;">
@@ -1695,7 +1695,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Must be a file. Must not be greater than 5120 kilobytes. Example: <code>C:\Users\qosuy\AppData\Local\Temp\phpCFE8.tmp</code></p>
+<p>Must be a file. Must not be greater than 5120 kilobytes. Example: <code>C:\Users\qosuy\AppData\Local\Temp\php5A3F.tmp</code></p>
         </div>
         </form>
 
@@ -2020,7 +2020,7 @@ response updated city data</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PATCH \
-    "http://127.0.0.1:8000/api/v1/cities/16" \
+    "http://127.0.0.1:8000/api/v1/cities/1" \
     --header "Authorization: Bearer {ACCESS_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -2033,7 +2033,7 @@ response updated city data</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://127.0.0.1:8000/api/v1/cities/16"
+    "http://127.0.0.1:8000/api/v1/cities/1"
 );
 
 const headers = {
@@ -2148,10 +2148,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="city_id"                data-endpoint="PATCHapi-v1-cities--city_id-"
-               value="16"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the city. Example: <code>16</code></p>
+<p>The ID of the city. Example: <code>1</code></p>
             </div>
                             <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
         <div style=" padding-left: 28px;  clear: unset;">
@@ -2195,7 +2195,7 @@ response remove the specified city from DB</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://127.0.0.1:8000/api/v1/cities/16" \
+    "http://127.0.0.1:8000/api/v1/cities/1" \
     --header "Authorization: Bearer {ACCESS_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -2203,7 +2203,7 @@ response remove the specified city from DB</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://127.0.0.1:8000/api/v1/cities/16"
+    "http://127.0.0.1:8000/api/v1/cities/1"
 );
 
 const headers = {
@@ -2313,10 +2313,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="city_id"                data-endpoint="DELETEapi-v1-cities--city_id-"
-               value="16"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the city. Example: <code>16</code></p>
+<p>The ID of the city. Example: <code>1</code></p>
             </div>
                     </form>
 
@@ -3259,7 +3259,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PATCH \
-    "http://127.0.0.1:8000/api/v1/industries/16" \
+    "http://127.0.0.1:8000/api/v1/industries/1" \
     --header "Authorization: Bearer {ACCESS_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -3272,7 +3272,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://127.0.0.1:8000/api/v1/industries/16"
+    "http://127.0.0.1:8000/api/v1/industries/1"
 );
 
 const headers = {
@@ -3387,10 +3387,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="industry_id"                data-endpoint="PATCHapi-v1-industries--industry_id-"
-               value="16"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the industry. Example: <code>16</code></p>
+<p>The ID of the industry. Example: <code>1</code></p>
             </div>
                             <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
         <div style=" padding-left: 28px;  clear: unset;">
@@ -3433,7 +3433,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://127.0.0.1:8000/api/v1/industries/16" \
+    "http://127.0.0.1:8000/api/v1/industries/1" \
     --header "Authorization: Bearer {ACCESS_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -3441,7 +3441,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://127.0.0.1:8000/api/v1/industries/16"
+    "http://127.0.0.1:8000/api/v1/industries/1"
 );
 
 const headers = {
@@ -3551,10 +3551,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="industry_id"                data-endpoint="DELETEapi-v1-industries--industry_id-"
-               value="16"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the industry. Example: <code>16</code></p>
+<p>The ID of the industry. Example: <code>1</code></p>
             </div>
                     </form>
 
@@ -3580,7 +3580,7 @@ response new client</p>
     --data "{
     \"organization_id\": 16,
     \"name\": \"n\",
-    \"client_type\": \"individual\",
+    \"client_type\": \"government\",
     \"industry_id\": 16,
     \"city_id\": 16,
     \"phone\": \"n\",
@@ -3609,7 +3609,7 @@ const headers = {
 let body = {
     "organization_id": 16,
     "name": "n",
-    "client_type": "individual",
+    "client_type": "government",
     "industry_id": 16,
     "city_id": 16,
     "phone": "n",
@@ -3747,10 +3747,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="client_type"                data-endpoint="POSTapi-v1-clients"
-               value="individual"
+               value="government"
                data-component="body">
     <br>
-<p>Example: <code>individual</code></p>
+<p>Example: <code>government</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>company</code></li> <li><code>individual</code></li> <li><code>government</code></li> <li><code>charity</code></li> <li><code>agency</code></li></ul>
         </div>
@@ -3891,14 +3891,14 @@ response updated client data</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PATCH \
-    "http://127.0.0.1:8000/api/v1/clients/16" \
+    "http://127.0.0.1:8000/api/v1/clients/1" \
     --header "Authorization: Bearer {ACCESS_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
     \"organization_id\": 16,
     \"name\": \"n\",
-    \"client_type\": \"agency\",
+    \"client_type\": \"individual\",
     \"industry_id\": 16,
     \"city_id\": 16,
     \"phone\": \"n\",
@@ -3915,7 +3915,7 @@ response updated client data</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://127.0.0.1:8000/api/v1/clients/16"
+    "http://127.0.0.1:8000/api/v1/clients/1"
 );
 
 const headers = {
@@ -3927,7 +3927,7 @@ const headers = {
 let body = {
     "organization_id": 16,
     "name": "n",
-    "client_type": "agency",
+    "client_type": "individual",
     "industry_id": 16,
     "city_id": 16,
     "phone": "n",
@@ -4041,10 +4041,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="client_id"                data-endpoint="PATCHapi-v1-clients--client_id-"
-               value="16"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the client. Example: <code>16</code></p>
+<p>The ID of the client. Example: <code>1</code></p>
             </div>
                             <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
         <div style=" padding-left: 28px;  clear: unset;">
@@ -4078,10 +4078,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="client_type"                data-endpoint="PATCHapi-v1-clients--client_id-"
-               value="agency"
+               value="individual"
                data-component="body">
     <br>
-<p>Example: <code>agency</code></p>
+<p>Example: <code>individual</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>company</code></li> <li><code>individual</code></li> <li><code>government</code></li> <li><code>charity</code></li> <li><code>agency</code></li></ul>
         </div>
@@ -4789,7 +4789,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://127.0.0.1:8000/api/v1/products/16" \
+    --get "http://127.0.0.1:8000/api/v1/products/1" \
     --header "Authorization: Bearer {ACCESS_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -4797,7 +4797,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://127.0.0.1:8000/api/v1/products/16"
+    "http://127.0.0.1:8000/api/v1/products/1"
 );
 
 const headers = {
@@ -4924,10 +4924,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="id"                data-endpoint="GETapi-v1-products--id-"
-               value="16"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the product. Example: <code>16</code></p>
+<p>The ID of the product. Example: <code>1</code></p>
             </div>
                     </form>
 
@@ -4945,7 +4945,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PUT \
-    "http://127.0.0.1:8000/api/v1/products/16" \
+    "http://127.0.0.1:8000/api/v1/products/1" \
     --header "Authorization: Bearer {ACCESS_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -4959,7 +4959,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://127.0.0.1:8000/api/v1/products/16"
+    "http://127.0.0.1:8000/api/v1/products/1"
 );
 
 const headers = {
@@ -5079,10 +5079,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="id"                data-endpoint="PUTapi-v1-products--id-"
-               value="16"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the product. Example: <code>16</code></p>
+<p>The ID of the product. Example: <code>1</code></p>
             </div>
                             <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
         <div style=" padding-left: 28px;  clear: unset;">
@@ -5137,7 +5137,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://127.0.0.1:8000/api/v1/products/16" \
+    "http://127.0.0.1:8000/api/v1/products/1" \
     --header "Authorization: Bearer {ACCESS_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -5145,7 +5145,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://127.0.0.1:8000/api/v1/products/16"
+    "http://127.0.0.1:8000/api/v1/products/1"
 );
 
 const headers = {
@@ -5255,10 +5255,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="id"                data-endpoint="DELETEapi-v1-products--id-"
-               value="16"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the product. Example: <code>16</code></p>
+<p>The ID of the product. Example: <code>1</code></p>
             </div>
                     </form>
 

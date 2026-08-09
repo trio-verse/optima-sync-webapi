@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Connection;
 use App\Policies\ClientPolicy;
 use App\QueriesBuilder\ClientQuery;
+use App\Trait\BelongsToOrganization;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -29,7 +30,7 @@ use Illuminate\Database\Eloquent\Model;
 #[UsePolicy(ClientPolicy::class)]
 class Client extends Model
 {
-    use HasFactory;
+    use HasFactory , BelongsToOrganization;
 
     protected $appends = [
         'full_address',

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Trait\BelongsToOrganization;
 use Dba\Connection;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -9,10 +10,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Str;
 
-#[Fillable(['name', 'slug', 'price', 'description'])]
+#[Fillable(['name', 'slug', 'price', 'description' , 'organization_id'])]
 class Product extends Model
 {
-    use HasFactory;
+    use HasFactory , BelongsToOrganization;
 
     protected function slug(): Attribute
     {
