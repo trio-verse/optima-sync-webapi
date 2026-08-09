@@ -50,7 +50,7 @@ return [
     |
     */
 
-    'expiration' => env('SANCTUM_EXPIRATION', 525600),
+    'expiration' => env('SANCTUM_EXPIRATION', 604800),
 
     /*
     |--------------------------------------------------------------------------

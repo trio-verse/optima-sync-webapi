@@ -2,16 +2,18 @@
 
 namespace App\Models;
 
+use App\Trait\BelongsToOrganization;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Industry extends Model
 {
-    use HasFactory;
+    use HasFactory , BelongsToOrganization;
 
     protected $fillable = [
         'name',
-        'color'
+        'color',
+        'organization_id'
     ];
     
     // public function Clients()

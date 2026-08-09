@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Connection;
+use App\Models\Organization;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,6 +19,7 @@ class ConnectionFactory extends Factory
     public function definition(): array
     {
         return [
+            'organization_id' => Organization::factory(),
             'client_id' => \App\Models\Client::factory(),
             'product_id' => \App\Models\Product::factory(),
             'stage' => \App\Enums\enConnectionStages::LEAD->value,

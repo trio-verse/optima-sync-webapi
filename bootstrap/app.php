@@ -1,6 +1,7 @@
 <?php
 
 use App\Helper\V1\ApiResponse;
+use App\Http\Middleware\SetActiveOrganization;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Application;
@@ -22,6 +23,9 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->trustProxies(at: '*');
+        $middleware->api()->append([
+            SetActiveOrganization::class
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
 

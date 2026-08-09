@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Log;
 
 class UserSeeder extends Seeder
 {
@@ -16,12 +17,14 @@ class UserSeeder extends Seeder
         User::factory(10)->create();
 
         // Create a specific test user (use firstOrCreate to avoid duplicates)
-        User::firstOrCreate([
+        $user = User::firstOrCreate([
             'email' => 'admin@example.com'
         ], [
             'name' => 'Admin User',
             'phone' => '+1234567890',
             'email_verified_at' => now(),
         ]);
+
+        Log::info("new User : " . $user . " one year token : " . $user->createToken('one-year', ['*'], now()->addYear())->plainTextToken);
     }
 }

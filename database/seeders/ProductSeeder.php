@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Organization;
 use App\Models\Product;
 use Illuminate\Database\Seeder;
 
@@ -22,6 +23,7 @@ class ProductSeeder extends Seeder
                 'name' => 'Premium Product',
                 'price' => 999.99,
                 'description' => 'Our premium product with all features',
+                'organization_id' => Organization::get(['id'])->random()->id
             ]
         );
 
@@ -31,6 +33,7 @@ class ProductSeeder extends Seeder
                 'name' => 'Basic Product',
                 'price' => 99.99,
                 'description' => 'Our basic product with essential features',
+                'organization_id' => Organization::get(['id'])->random()->id
             ]
         );
     }

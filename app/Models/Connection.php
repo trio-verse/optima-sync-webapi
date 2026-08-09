@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Trait\BelongsToOrganization;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,6 +15,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
         'product_id',
         'assigne_id',
         'channel_id',
+        'organization_id',
         'initiated_by',
         'stage'
     ]
@@ -21,7 +23,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Connection extends Model
 {
     /** @use HasFactory<\Database\Factories\ConnectionFactory> */
-    use HasFactory;
+    use HasFactory , BelongsToOrganization;
 
     protected $casts = [
         'created_at' => 'datetime',

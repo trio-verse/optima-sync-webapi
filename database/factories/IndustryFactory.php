@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Industry;
+use App\Models\Organization;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class IndustryFactory extends Factory
@@ -12,6 +13,7 @@ class IndustryFactory extends Factory
     public function definition(): array
     {
         return [
+            'organization_id' => Organization::factory(),
             'name' => $this->faker->unique()->word() . ' Industry',
             'color' => $this->faker->hexColor(),
         ];
