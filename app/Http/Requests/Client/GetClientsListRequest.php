@@ -24,13 +24,14 @@ class GetClientsListRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'organization_id' => ['required' , "exists:organizations,id"],
             'search' => ['nullable', 'array'],
             'search.name' => ['nullable', 'string', 'max:255'],
             'search.contact_info' => ['nullable', 'string', 'max:255'],
 
             'city_id' => ['nullable', 'integer', 'exists:cities,id'],
             'industry_id' => ['nullable', 'integer', 'exists:industries,id'],
-            'type' => ['nullable', 'string'],
+            'client_type' => ['nullable', 'string'],
             'per_page' => ['nullable', 'integer', 'min:1', 'max:100'],
         ];
     }

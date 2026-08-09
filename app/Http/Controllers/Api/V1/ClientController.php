@@ -23,9 +23,11 @@ class ClientController extends Controller
      */
     public function index(GetClientsListRequest $request)
     {
-        $clients = $this->client_service->getClientsList($request->validated());
+        
+        // dd($request->input("organization_id"));
+        $clients = $this->client_service->getClientsList($request->validated(), (int) $request->input("organization_id"));
 
-        return ApiResponse::success(
+        return ApiResponse::pagination(
             ClientResource::collection($clients),
             'Clients list fetched successfully'
         );

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Dba\Connection;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -21,5 +22,13 @@ class Product extends Model
         );
     }
 
+    /**
+     * get the client that connected to this product
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough<Client, Connection, Product>
+     */
+    public function clients()
+    {
+        return $this->hasManyThrough(Client::class, Connection::class, 'product_id', 'id', 'id', 'client_id');
+    }
 
 }

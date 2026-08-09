@@ -22,8 +22,8 @@ class OrganizationResource extends JsonResource
             'email' => $this->email,
             'address' => $this->address,
             'description' => $this->description,
-            'logo' => $this->whenLoaded('logo', function () {
-                return $this->logo ? Storage::url($this->logo->file_path) : null;
+            'logo_url' => $this->whenLoaded('logo', function () {
+                return $this->logo ? Storage::disk('public')->url($this->logo->file_path) : null;
             }),
             'owner' => $this->whenLoaded('user', function () {
                 return new UserResource($this->user);

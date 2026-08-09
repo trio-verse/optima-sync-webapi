@@ -38,7 +38,7 @@ class ClientQuery extends Builder
         return $this->when(
             filled($type),
             fn(Builder $query) =>
-            $query->where('type', "like", "%{$type}%")
+            $query->where('client_type', "like", "%{$type}%")
         );
     }
 

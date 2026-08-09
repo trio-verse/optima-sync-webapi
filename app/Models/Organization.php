@@ -24,8 +24,16 @@ class Organization extends Model
         'user_id',
 
     ];
+    protected $with = [
+        'logo'
+    ];
 
     // relations
+    public function clients()
+    {
+        return $this->hasMany(Client::class);
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -39,7 +47,7 @@ class Organization extends Model
     {
         return $this->morphMany(Media::class, 'mediable');
     }
-    public function logo() : MorphOne
+    public function logo(): MorphOne
     {
         return $this->morphOne(Media::class, 'mediable')
             ->where('file_type', 'logo');

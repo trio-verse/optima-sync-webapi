@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\V1\ChannelController;
 use App\Http\Controllers\Api\V1\CityController;
 use App\Http\Controllers\Api\V1\ClientController;
+use App\Http\Controllers\Api\V1\ConnectionController;
 use App\Http\Controllers\Api\V1\IndustryController;
 use App\Http\Controllers\Api\V1\OrganizationController;
 use App\Http\Controllers\Api\V1\OrganizationLogoController;
@@ -22,7 +23,7 @@ Route::prefix('v1')->group(function () {
     Route::middleware(['auth:sanctum'])->group(function () {
 
         Route::get('/organizations', [OrganizationController::class, 'index']);
-        Route::get('/organizations/myOrgs' , [OrganizationController::class , 'getMyOrganizations']);
+        Route::get('/organizations/myOrgs', [OrganizationController::class, 'getMyOrganizations']);
         Route::post('/organizations', [OrganizationController::class, 'store']);
         Route::patch('/organizations/{id}', [OrganizationController::class, 'update']);
         Route::get('/organizations/{id}', [OrganizationController::class, 'show']);
@@ -57,6 +58,11 @@ Route::prefix('v1')->group(function () {
         Route::post('/clients', [ClientController::class, 'store']);
         Route::patch('/clients/{client}', [ClientController::class, 'update']);
         Route::get('/clients', [ClientController::class, 'index']);
+
+        // connections
+        Route::post('/clients/{client}/connections', [ConnectionController::class, 'store']);
+        Route::get('/connections', [ConnectionController::class, 'index']);
+        Route::get('/clients/{client}/connections', [ConnectionController::class, 'getClientConnections']);
 
         // Products
         Route::apiResource('products', ProductController::class);
