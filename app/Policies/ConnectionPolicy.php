@@ -4,48 +4,86 @@ namespace App\Policies;
 
 use App\Models\Client;
 use App\Models\Connection;
-use App\Models\Organization;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 
-#[UsePolicy(ConnectionPolicy::class)]
 class ConnectionPolicy
 {
+    /**
+     * Determine if the user belongs to the connection's organization.
+     */
+    private function userBelongsToConnectionOrganization(User $user, Connection $connection): bool
+    {
+        // Load necessary relationships
+        $connection->loadMissing(['client.organization']);
+
+        $organizationId = $connection->client->organization_id;
+
+        // Check if user is the organization owner
+        if ($connection->client->organization->user_id === $user->id) {
+            return true;
+        }
+
+        // Check if user is a member of the organization
+        return $user->organizations()->where('organizations.id', $organizationId)->exists();
+    }
+
+    /**
+     * Determine if the user belongs to the client's organization.
+     */
+    private function userBelongsToClientOrganization(User $user, Client $client): bool
+    {
+        // Load the client's organization relationship
+        $client->loadMissing('organization');
+
+        // Check if user is the organization owner
+        if ($client->organization->user_id === $user->id) {
+            return true;
+        }
+
+        // Check if user is a member of the organization
+        return $user->organizations()->where('organizations.id', $client->organization_id)->exists();
+    }
+
+    /**
+     * Determine if the user has access to any organization.
+     */
+    private function userHasOrganizations(User $user): bool
+    {
+        // User owns organizations or is a member of organizations
+        return $user->createdOrganizations()->exists()
+            || $user->organizations()->exists();
+    }
+
     /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
     {
-        // $org = $user->organizations()->find($organization_id);
-        // return $org !== null;
-        return Organization::forUser($user)->exists();
+        return $this->userHasOrganizations($user);
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user): bool
+    public function view(User $user, Connection $connection): bool
     {
-        return Organization::forUser($user)->exists();
+        return $this->userBelongsToConnectionOrganization($user, $connection);
     }
 
     /**
-     * Determine whether the user can create models.
+     * Determine whether the user can create models for a specific client.
      */
-    public function create(User $user, int $client_id): bool
+    public function create(User $user, Client $client): bool
     {
-        // return Organization::forUser($user)->exists();
-        return Organization::forUser($user)->clients()->find($client_id)->exists();
-
+        return $this->userBelongsToClientOrganization($user, $client);
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user): bool
+    public function update(User $user, Connection $connection): bool
     {
-        // return $user->organizations()->where('id', $connection->client->organization_id)->exists();
-        return Organization::forUser($user)->exists();
+        return $this->userBelongsToConnectionOrganization($user, $connection);
     }
 
     /**
@@ -53,8 +91,11 @@ class ConnectionPolicy
      */
     public function delete(User $user, Connection $connection): bool
     {
-        // return $user->organizations()->where('id', $connection->client->organization_id)->exists();
-        return Organization::forUser($user)->clients()->find($connection->client_id)->exists();
+        // Load the organization relationship
+        $connection->loadMissing(['client.organization']);
+
+        // Only organization owner can delete connections
+        return $connection->client->organization->user_id === $user->id;
     }
 
     /**
@@ -62,7 +103,9 @@ class ConnectionPolicy
      */
     public function restore(User $user, Connection $connection): bool
     {
-        return false;
+        // Only organization owner can restore connections
+        $connection->loadMissing(['client.organization']);
+        return $connection->client->organization->user_id === $user->id;
     }
 
     /**
@@ -70,6 +113,8 @@ class ConnectionPolicy
      */
     public function forceDelete(User $user, Connection $connection): bool
     {
-        return false;
+        // Only organization owner can force delete connections
+        $connection->loadMissing(['client.organization']);
+        return $connection->client->organization->user_id === $user->id;
     }
 }
