@@ -24,20 +24,12 @@ class ProductService
     public function getProductsList()
     {
         return Product::query()
-            ->latest()->get(['id', 'name', 'description', 'price', 'slug']);
+            ->latest();
     }
 
-    public function getProductById(int $id): Product|Collection
+    public function getProductById(int $id): Product
     {
-        $product = Product::query()->find($id)->get([
-            'id',
-            'name',
-            'description',
-            'price',
-            'slug',
-            'created_at',
-            'updated_at'
-        ]);
+        $product = Product::query()->findOrFail($id);
         if (!$product) {
             throw new NotFoundHttpException;
         }

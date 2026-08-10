@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\product\StoreProductRequest as ProductStoreProductRequest;
 use App\Http\Requests\product\UpdateProductRequest;
 use App\Http\Requests\StoreProductRequest;
+use App\Http\Resources\V1\ProductResource;
 use App\Models\Product;
 use App\Services\ProductService;
 use Illuminate\Support\Facades\Log;
@@ -24,7 +25,7 @@ class ProductController extends Controller
     {
         $products = $this->productService->getProductsList();
 
-        return ApiResponse::success($products, 'products retrieved successfully');
+        return ApiResponse::success(ProductResource::collection($products), 'products retrieved successfully');
     }
 
     /**
@@ -35,9 +36,9 @@ class ProductController extends Controller
         try {
             // $request->merge(['slug' => $request['name']]);
             $validated = $request->validated();
-            dd($validated);
+
             $product = $this->productService->createProduct($validated);
-            return ApiResponse::success($product, "product created successfully", 201);
+            return ApiResponse::success(new ProductResource($product), "product created successfully", 201);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             return ApiResponse::error(null, "server error", 500);
@@ -51,7 +52,7 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         $product = $this->productService->getProductById($product->id);
-        return ApiResponse::success($product, "product retrieved successfully", 200);
+        return ApiResponse::success(new ProductResource($product), "product retrieved successfully", 200);
     }
 
     /**
