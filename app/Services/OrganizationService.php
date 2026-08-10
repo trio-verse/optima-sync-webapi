@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class OrganizationService
 {
@@ -20,8 +21,9 @@ class OrganizationService
 
     public function show(int $id)
     {
+        Gate::authorize('view', [Organization::class, $id]);
 
-        $org = Organization::with(['members.user'])->findOrFail($id);
+        $org = Organization::with(['members.user', 'user', 'products'])->withCount('clients', 'members')->findOrFail($id);
         return $org;
     }
 
@@ -57,7 +59,7 @@ class OrganizationService
 
     public function addMember(int $organizationId, array $data): OrganizationMember|false
     {
-        $org = Organization::find($organizationId)->firstOrFail();
+        $org = Organization::findOrFail($organizationId);
 
         Gate::authorize('addMember', $org);
 
@@ -65,18 +67,19 @@ class OrganizationService
             $user = User::whereEmail($data['email'])->first();
             if (!$user) {
                 $userService = new UserService();
-                $user = $userService->createUser($data['email']);
+                $user = $userService->createUser(['email' => $data['email']]);
             }
-            return $org->members()->create(
+            $member = $org->members()->create(
                 [
                     'user_id' => $user->id,
                     'role' => $data['role']
                 ]
             );
+            return $member->load('user');
         });
     }
 
-    public function updateMemberRole(int $organizationId, int $memberId, array $data): OrganizationMember|false
+    public function updateMemberRole(int $organizationId, int $memberId, array $data): bool
     {
         $org = Organization::findOrFail($organizationId);
 
@@ -84,14 +87,13 @@ class OrganizationService
 
         return DB::transaction(function () use ($org, $memberId, $data) {
             $member = $org->members()->findOrFail($memberId);
-            $member->update($data);
-            return $member;
+            return $member->update($data);
         });
     }
-    public function getMyOrganizations(User $user): LengthAwarePaginator
+    public function getMyOrganizations(User $user): Collection
     {
         Gate::authorize('getMyOrganizations', Organization::class);
 
-        return Organization::forUser($user)->withCount('members')->paginate(15);
+        return Organization::forUser($user)->withCount('members')->get();
     }
 }

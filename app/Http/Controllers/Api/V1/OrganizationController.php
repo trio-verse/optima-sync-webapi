@@ -16,6 +16,8 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\RecordNotFoundException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 
 class OrganizationController extends Controller
@@ -28,11 +30,13 @@ class OrganizationController extends Controller
      * get all Organizations
      * @return JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $orgs = Organization::withCount('members')->simplePaginate(15);
-            return ApiResponse::success(OrganizationResource::collection($orgs));
+            $orgs = Organization::withCount('members')->paginate((int) 
+                (request()->has('per_page') ? $request->input('per_page') : 15));
+
+            return ApiResponse::pagination(OrganizationResource::collection($orgs));
         } catch (\Exception $e) {
             Log::error($e->getMessage() . 'code : ' . $e->getCode());
             return ApiResponse::serverError();
@@ -142,21 +146,20 @@ class OrganizationController extends Controller
             // Validate the request data
             $validatedData = $request->validated();
 
-            $member = $this->organizationservice->updateMemberRole(
+            $isUpdated = $this->organizationservice->updateMemberRole(
                 $organizationId,
                 $memberId,
                 $validatedData
             );
 
-            return ApiResponse::response(new OrganizationMemberResource($member), 'The member role was updated successfully', 200);
-        } catch (RecordNotFoundException $e) {
+            if ($isUpdated)
+                return ApiResponse::success([], 'The member role was updated successfully', 200);
+            return ApiResponse::error([], 'Failed to update member role', 500);
+
+        } catch (RecordNotFoundException | ModelNotFoundException $e) {
             return ApiResponse::error(null, "Organization or member not found", 404);
-        } catch (AuthorizationException $e) {
-            return ApiResponse::error(null, "Not allowed", 403);
-        } catch (\Exception $e) {
-            Log::error($e->getMessage());
-            return ApiResponse::error(null, "Server error", 500);
         }
+
     }
 
     /**
@@ -164,11 +167,13 @@ class OrganizationController extends Controller
      * show a list of orginaztions that the user is a member of
      */
 
-    public function getMyOrganizations(): JsonResponse
+    public function getMyOrganizations(Request $request): JsonResponse
     {
         $user = request()->user();
-        $organizations = $this->organizationservice->getMyOrganizations($user);
+        Gate::authorize('getMyOrganizations', Organization::class);
 
-        return ApiResponse::pagination(OrganizationResource::collection($organizations), 'The organizations were retrieved successfully', 200);
+        $organizations = $this->organizationservice->getMyOrganizations($user, $request->input('per_page', 15));
+
+        return ApiResponse::success(OrganizationResource::collection($organizations), 'The organizations were retrieved successfully', 200);
     }
 }

@@ -25,7 +25,7 @@ class StoreOrganizationMemberRequest extends FormRequest
         return [
             // 'organization_id' => ['required', 'exists:organizations,id'],
             // 'user_id' => ['required', 'exists:users,id'],
-            'email' => ['required', 'email', 'exists:users,email'],
+            'email' => ['required', 'email', 'unique:users,email'],
             'role' => ['required', 'in:admin,member'],
         ];
     }

@@ -41,7 +41,11 @@ class Organization extends Model
     }
     public function members()
     {
-        return $this->hasMany(OrganizationMember::class);
+        return $this->hasManyThrough(User::class , OrganizationMember::class , 'organization_id' , 'id' , 'id' , 'user_id');
+    }
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'organization_id');
     }
 
     /**
