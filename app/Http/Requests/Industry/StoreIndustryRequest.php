@@ -2,18 +2,19 @@
 
 namespace App\Http\Requests\Industry;
 
+use App\Http\Requests\BaseTagsRequest;
+use App\Singleton\TenantManager;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StoreIndustryRequest extends FormRequest
+class StoreIndustryRequest extends BaseTagsRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
+
+    public function __construct()
     {
-        return true;
+        $this->table_name = 'industries';
+        $this->model_name = 'industry';
     }
 
     /**
@@ -23,9 +24,6 @@ class StoreIndustryRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'name' => ['required', 'string', 'max:255', Rule::unique('industries', 'name')],
-            'color' => "required|string"
-        ];
+        return $this->storeRequest();
     }
 }

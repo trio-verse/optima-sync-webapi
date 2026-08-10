@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Channel;
+use App\Singleton\TenantManager;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\DB;
 
@@ -30,8 +31,10 @@ class ChannelService
 
     public function deleteChannel(Channel $channel): bool
     {
-        return DB::transaction(function () use ($channel) {
+        $manager = app(TenantManager::class);
+        if ($manager->getOrganizationId() === $channel->organization_id) {
             return $channel->delete();
-        });
+        }
+        return false;
     }
 }

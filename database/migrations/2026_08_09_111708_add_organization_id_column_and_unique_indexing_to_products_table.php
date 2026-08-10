@@ -12,6 +12,9 @@ return new class extends Migration {
     {
         Schema::table('products', function (Blueprint $table) {
             $table->foreignId('organization_id')->after('id')->constrained('organizations')->restrictOnDelete();
+            $table->string('slug')->unique(false)->change();
+            // indexes
+            $table->unique(['organization_id', 'slug']);
         });
     }
 

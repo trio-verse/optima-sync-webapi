@@ -2,17 +2,17 @@
 
 namespace App\Http\Requests\Channel;
 
+use App\Http\Requests\BaseTagsRequest;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreChannelRequest extends FormRequest
+class StoreChannelRequest extends BaseTagsRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
+
+    public function __construct()
     {
-        return true;
+        $this->table_name = 'channels';
+        $this->model_name = 'channel';
     }
 
     /**
@@ -22,9 +22,6 @@ class StoreChannelRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'name' => ['required', 'string', 'max:255', 'unique:channels,name'],
-            'color' => ['required', 'string'],
-        ];
+        return $this->storeRequest();
     }
 }

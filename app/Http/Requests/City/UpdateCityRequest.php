@@ -2,18 +2,20 @@
 
 namespace App\Http\Requests\City;
 
+use App\Http\Requests\BaseTagsRequest;
+use App\Singleton\TenantManager;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Override;
 
-class UpdateCityRequest extends FormRequest
+class UpdateCityRequest extends BaseTagsRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
+
+    public function __construct()
     {
-        return true;
+        $this->table_name = 'cities';
+        $this->model_name = 'city';
     }
 
     /**
@@ -23,9 +25,6 @@ class UpdateCityRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'name' => ['required', 'string', 'max:255', Rule::unique('cities', 'name')->ignore($this->city)],
-            'color' => ['sometimes', 'string'],
-        ];
+        return $this->updateRequest();
     }
 }

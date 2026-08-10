@@ -3,9 +3,10 @@
 namespace App\Services;
 
 use App\Models\Industry;
-use Exception;
+use App\Singleton\TenantManager; 
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Pagination\Paginator;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\DB; 
 
 class IndustryService
 {
@@ -31,11 +32,12 @@ class IndustryService
         return $industry->refresh();
     }
 
-    public function delete(Industry $industry): bool
+    public function delete(Industry $industry)
     {
-        return DB::transaction(function () use ($industry) {
-            $industry->deleteOrFail();
-            return true;
-        });
+        $manager = app(TenantManager::class);
+        if ($manager->getOrganizationId() === $industry->organization_id) {
+            return $industry->deleteOrFail();
+        }
+        throw new AuthorizationException();
     }
 }

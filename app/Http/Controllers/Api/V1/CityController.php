@@ -15,7 +15,9 @@ use Illuminate\Http\Request;
 class CityController extends Controller
 {
 
-    public function __construct(protected CityService $city_service) {}
+    public function __construct(protected CityService $city_service)
+    {
+    }
     /**
      * Display a listing of the cities.
      * 
@@ -54,8 +56,9 @@ class CityController extends Controller
     {
         $is_updated = $this->city_service->updatecity($request->validated(), $city);
         if ($is_updated) {
-            return ApiResponse::response(new CityResource($city), 'The city was updated succsesfully', 200);;
-        } else   return ApiResponse::error(null, "bad request", 400);
+            return ApiResponse::response(new CityResource($city), 'The city was updated succsesfully', 200);
+        } else
+            return ApiResponse::error(null, "bad request", 400);
     }
 
     /**
@@ -66,10 +69,13 @@ class CityController extends Controller
      */
     public function destroy(City $city)
     {
-        $this->city_service->deleteCity($city);
-
+        $isDeleted = $this->city_service->deleteCity($city);
+        if (!$isDeleted) {
+            return ApiResponse::error([], 'deleting fail', 500);
+        }
+        
         return ApiResponse::success(
-            null,
+            [],
             'City deleted successfully',
             200
         );
