@@ -13,6 +13,9 @@ use App\Services\ClientService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
+/**
+ * @group Clients
+ */
 class ClientController extends Controller
 {
     public function __construct(protected ClientService $client_service)
@@ -65,7 +68,7 @@ class ClientController extends Controller
             return ApiResponse::error(null, "bad request", 400);
     }
     /**
-     * Display the specified resource.
+     * Display Client.
      */
     public function show(Client $client)
     {
@@ -74,7 +77,7 @@ class ClientController extends Controller
         return ApiResponse::success(new ClientResource($client), 'Client fetched successfully');
     }
     /**
-     * Remove the specified resource from storage.
+     * Remove Client .
      */
     public function destroy(Client $client)
     {

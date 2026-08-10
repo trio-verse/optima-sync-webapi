@@ -11,12 +11,16 @@ use App\Models\Channel;
 use App\Services\ChannelService;
 use Illuminate\Http\Request;
 
+/**
+ * @group Channels
+ */
 class ChannelController extends Controller
 {
 
     public function __construct(
         protected ChannelService $channel_service
     ) {}
+   
      /**
      * Display a listing of the channels.
      * 

@@ -10,12 +10,8 @@ use Illuminate\Validation\Rule;
 
 class UpdateIndustryRequest extends BaseTagsRequest
 {
-
-    public function __construct()
-    {
-        $this->table_name = 'industries';
-        $this->model_name = 'industry';
-    }
+    protected $table_name = 'industries';
+    protected $model_name = 'industry';
 
     /**
      * Get the validation rules that apply to the request.
@@ -25,5 +21,26 @@ class UpdateIndustryRequest extends BaseTagsRequest
     public function rules(): array
     {
         return $this->updateRequest();
+    }
+
+    /**
+     * Get body parameters for Scribe documentation.
+     *
+     * @return array
+     */
+    public function bodyParameters(): array
+    {
+        return [
+            'name' => [
+                'description' => 'The name of the industry',
+                'required' => false,
+                'example' => 'Technology'
+            ],
+            'color' => [
+                'description' => 'The color associated with the industry',
+                'required' => false,
+                'example' => '#33FF57'
+            ]
+        ];
     }
 }

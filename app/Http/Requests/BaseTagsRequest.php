@@ -11,13 +11,14 @@ class BaseTagsRequest extends FormRequest
 
     private null|int $org_id = null;
     protected $table_name = '';
-
     protected $model_name = '';
 
     public function prepareForValidation()
     {
-        $tenant = app(TenantManager::class);
-        $this->org_id = $tenant->getOrganizationId();
+        if (app()->bound(TenantManager::class)) {
+            $tenant = app(TenantManager::class);
+            $this->org_id = $tenant->getOrganizationId();
+        }
     }
 
     /**
@@ -28,6 +29,37 @@ class BaseTagsRequest extends FormRequest
         return true;
     }
 
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
+    {
+        return $this->storeRequest();
+    }
+
+    /**
+     * Get body parameters for Scribe documentation.
+     *
+     * @return array
+     */
+    public function bodyParameters(): array
+    {
+        return [
+            'name' => [
+                'description' => 'The name of the item',
+                'required' => true,
+                'example' => 'Sample Name'
+            ],
+            'color' => [
+                'description' => 'The color associated with the item',
+                'required' => true,
+                'example' => '#FF0000'
+            ]
+        ];
+    }
 
     /**
      *  Get the validation rules that apply to the Store (city , industry , channel).
@@ -47,8 +79,14 @@ class BaseTagsRequest extends FormRequest
      */
     public function updateRequest(): array
     {
+        // Safely retrieve the model or ID from the route parameter
+        $model = $this->route($this->model_name);
+
+        // If route parameter is a Model instance, get ->id. If it's already an ID/string, use it directly.
+        $modelId = is_object($model) ? $model->id : $model;
+
         return [
-            'name' => ['sometimes', 'string', 'max:255', Rule::unique($this->table_name, 'name')->ignore($this->route($this->model_name)->id)->where('organization_id', $this->org_id)],
+            'name' => ['sometimes', 'string', 'max:255', Rule::unique($this->table_name, 'name')->ignore($modelId)->where('organization_id', $this->org_id)],
             'color' => ['sometimes', 'string']
         ];
     }

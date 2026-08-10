@@ -26,4 +26,20 @@ class SendOtpRequest extends FormRequest
             'email' => 'required|email',
         ];
     }
+
+    /**
+     * Get body parameters for Scribe documentation.
+     *
+     * @return array
+     */
+    public function bodyParameters(): array
+    {
+        return [
+            'email' => [
+                'description' => 'The email address to send OTP to',
+                'required' => true,
+                'example' => 'user@example.com'
+            ]
+        ];
+    }
 }

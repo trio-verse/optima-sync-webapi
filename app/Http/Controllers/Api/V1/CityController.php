@@ -12,6 +12,9 @@ use App\Models\City;
 use App\Services\CityService;
 use Illuminate\Http\Request;
 
+/**
+ * @group Cities
+ */
 class CityController extends Controller
 {
 

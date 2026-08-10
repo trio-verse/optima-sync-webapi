@@ -11,12 +11,8 @@ use Override;
 
 class StoreCityRequest extends BaseTagsRequest
 {
-
-    public function __construct()
-    {
-        $this->table_name = 'cities';
-        $this->model_name = 'city';
-    }
+    protected $table_name = 'cities';
+    protected $model_name = 'city';
 
     /**
      * Get the validation rules that apply to the request.
@@ -26,5 +22,26 @@ class StoreCityRequest extends BaseTagsRequest
     public function rules(): array
     {
         return $this->storeRequest();
+    }
+
+    /**
+     * Get body parameters for Scribe documentation.
+     *
+     * @return array
+     */
+    public function bodyParameters(): array
+    {
+        return [
+            'name' => [
+                'description' => 'The name of the city',
+                'required' => true,
+                'example' => 'New York'
+            ],
+            'color' => [
+                'description' => 'The color associated with the city',
+                'required' => true,
+                'example' => '#FF5733'
+            ]
+        ];
     }
 }

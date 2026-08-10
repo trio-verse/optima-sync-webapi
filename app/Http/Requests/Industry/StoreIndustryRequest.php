@@ -10,12 +10,10 @@ use Illuminate\Validation\Rule;
 
 class StoreIndustryRequest extends BaseTagsRequest
 {
-
-    public function __construct()
-    {
-        $this->table_name = 'industries';
-        $this->model_name = 'industry';
-    }
+ 
+        protected $table_name = 'industries';
+        protected $model_name = 'industry';
+    
 
     /**
      * Get the validation rules that apply to the request.
@@ -25,5 +23,26 @@ class StoreIndustryRequest extends BaseTagsRequest
     public function rules(): array
     {
         return $this->storeRequest();
+    }
+
+    /**
+     * Get body parameters for Scribe documentation.
+     *
+     * @return array
+     */
+    public function bodyParameters(): array
+    {
+        return [
+            'name' => [
+                'description' => 'The name of the industry',
+                'required' => true,
+                'example' => 'Technology'
+            ],
+            'color' => [
+                'description' => 'The color associated with the industry',
+                'required' => true,
+                'example' => '#33FF57'
+            ]
+        ];
     }
 }

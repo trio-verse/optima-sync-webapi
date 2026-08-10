@@ -11,6 +11,9 @@ use App\Models\Industry;
 use App\Services\IndustryService;
 use Illuminate\Http\JsonResponse;
 
+/**
+ * @group Industries
+ */
 class IndustryController extends Controller
 {
 

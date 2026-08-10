@@ -12,6 +12,9 @@ use App\Models\Product;
 use App\Services\ProductService;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * @group Products
+ */
 class ProductController extends Controller
 {
     public function __construct(private ProductService $productService)

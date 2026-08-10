@@ -13,6 +13,9 @@ use App\Services\ConnectionService;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
+/**
+ * @group Connections
+ */
 class ConnectionController extends Controller
 {
     use AuthorizesRequests;

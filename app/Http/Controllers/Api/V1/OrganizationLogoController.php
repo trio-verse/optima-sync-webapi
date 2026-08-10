@@ -8,6 +8,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Media\UploadOrganizationLogoRequest;
 use App\Models\Organization;
 
+/**
+ * @group Organizations
+ */
 class OrganizationLogoController extends Controller
 {
 

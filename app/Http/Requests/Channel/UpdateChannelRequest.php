@@ -10,12 +10,9 @@ use Illuminate\Validation\Rule;
 class UpdateChannelRequest extends BaseTagsRequest
 {
 
-    public function __construct()
-    {
-        $this->table_name = 'channels';
-        $this->model_name = 'channel';
+    protected $table_name = 'channels';
+    protected $model_name = 'channel';
 
-    }
 
     /**
      * Get the validation rules that apply to the request.
@@ -25,5 +22,26 @@ class UpdateChannelRequest extends BaseTagsRequest
     public function rules(): array
     {
         return $this->updateRequest();
+    }
+
+    /**
+     * Get body parameters for Scribe documentation.
+     *
+     * @return array
+     */
+    public function bodyParameters(): array
+    {
+        return [
+            'name' => [
+                'description' => 'The name of the channel',
+                'required' => false,
+                'example' => 'Social Media'
+            ],
+            'color' => [
+                'description' => 'The color associated with the channel',
+                'required' => false,
+                'example' => '#3357FF'
+            ]
+        ];
     }
 }

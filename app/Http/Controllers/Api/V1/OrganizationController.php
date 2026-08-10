@@ -20,6 +20,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * @group Organizations
+ */
 class OrganizationController extends Controller
 {
     public function __construct(private OrganizationService $organizationservice)
