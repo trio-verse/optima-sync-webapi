@@ -30,7 +30,7 @@ class SetActiveOrganization
             return response()->json(['message' => 'Organization context required (X-Organization-Id header missing).'], 400);
         }
         $user = $request->user();
-        $isAdmin = Organization::where('user_id', $user->id)->exists();
+        $isAdmin = Organization::where('id',$orgId)->where('user_id', $user->id)->exists();
         $isMember = DB::table("organization_members")->where("organization_id", $orgId)->where("user_id", $user->id)->exists();
 
         if (!$isMember && !$isAdmin) {

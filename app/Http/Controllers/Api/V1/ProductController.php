@@ -33,7 +33,9 @@ class ProductController extends Controller
     public function store(ProductStoreProductRequest $request)
     {
         try {
+            // $request->merge(['slug' => $request['name']]);
             $validated = $request->validated();
+            dd($validated);
             $product = $this->productService->createProduct($validated);
             return ApiResponse::success($product, "product created successfully", 201);
         } catch (\Exception $e) {
@@ -58,7 +60,9 @@ class ProductController extends Controller
     public function update(UpdateProductRequest $request, Product $product)
     {
         try {
+            
             $validated = $request->validated();
+            
             $product = $this->productService->updateProduct(
                 $validated,
                 $product
