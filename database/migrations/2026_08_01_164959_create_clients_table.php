@@ -34,6 +34,10 @@ return new class extends Migration
 
             $table->text('notes')->nullable();
             $table->timestamps();
+
+            // Composite indexes for fast tenant-level filtering
+            $table->index(['organization_id', 'city_id']);
+            $table->index(['organization_id', 'industry_id']);
         });
     }
 

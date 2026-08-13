@@ -19,55 +19,59 @@ Route::prefix('v1')->group(function () {
     Route::post('/register-email', [OtpAuthenticationController::class, 'store']);
     Route::post('verify-otp', [OtpAuthenticationController::class, 'verify']);
 
-    // Organization
     Route::middleware(['auth:sanctum'])->group(function () {
 
+        // organizations get
         Route::get('/organizations', [OrganizationController::class, 'index']);
-        Route::get('/organizations/myOrgs', [OrganizationController::class, 'getMyOrganizations']);
+        Route::get('/organizations/myOrgs', [OrganizationController::class, 'getMyOrganizations'])->name('myOrgs');
         Route::post('/organizations', [OrganizationController::class, 'store']);
-        Route::patch('/organizations/{id}', [OrganizationController::class, 'update']);
-        Route::get('/organizations/{id}', [OrganizationController::class, 'show']);
 
-        // Org members
-        Route::post('/organizations/{organizationId}/members', [OrganizationController::class, 'addMember']);
-        Route::patch('/organizations/{organizationId}/members/{memberId}', [OrganizationController::class, 'updateMemberRole']);
+        Route::middleware(['active_org'])->group(function () {
+            // Organizations
+            Route::patch('/organizations/{id}', [OrganizationController::class, 'update']);
+            Route::get('/organizations/{id}', [OrganizationController::class, 'show']);
 
-        // Organization Logo
-        Route::post('/organizations/{organization}/logo', [OrganizationLogoController::class, 'store'])
-            ->name('organizations.logo.store');
+            // Org members
+            Route::post('/organizations/{organizationId}/members', [OrganizationController::class, 'addMember']);
+            Route::patch('/organizations/{organizationId}/members/{memberId}', [OrganizationController::class, 'updateMemberRole']);
 
-        //City
-        Route::get('cities', [CityController::class, 'index']);
-        Route::post('cities', [CityController::class, 'store']);
-        Route::patch('cities/{city}', [CityController::class, 'update']);
-        Route::delete('cities/{city}', [CityController::class, 'destroy']);
+            // Organization Logo
+            Route::post('/organizations/{organization}/logo', [OrganizationLogoController::class, 'store'])
+                ->name('organizations.logo.store');
 
-        //Channel
-        Route::get('channels', [ChannelController::class, 'index']);
-        Route::post('channels', [ChannelController::class, 'store']);
-        Route::patch('channels/{channel}', [ChannelController::class, 'update']);
-        Route::delete('channels/{channel}', [ChannelController::class, 'destroy']);
+            //City
+            Route::get('cities', [CityController::class, 'index']);
+            Route::post('cities', [CityController::class, 'store']);
+            Route::patch('cities/{city}', [CityController::class, 'update']);
+            Route::delete('cities/{city}', [CityController::class, 'destroy']);
 
-        // Industry
-        Route::get('/industries', [IndustryController::class, 'index']);
-        Route::post('/industries', [IndustryController::class, 'store']);
-        Route::patch('/industries/{industry}', [IndustryController::class, 'update']);
-        Route::delete('/industries/{industry}', [IndustryController::class, 'delete']);
+            //Channel
+            Route::get('channels', [ChannelController::class, 'index']);
+            Route::post('channels', [ChannelController::class, 'store']);
+            Route::patch('channels/{channel}', [ChannelController::class, 'update']);
+            Route::delete('channels/{channel}', [ChannelController::class, 'destroy']);
 
-        //Client
-        Route::post('/clients', [ClientController::class, 'store']);
-        Route::patch('/clients/{client}', [ClientController::class, 'update']);
-        Route::get('/clients', [ClientController::class, 'index']);
+            // Industry
+            Route::get('/industries', [IndustryController::class, 'index']);
+            Route::post('/industries', [IndustryController::class, 'store']);
+            Route::patch('/industries/{industry}', [IndustryController::class, 'update']);
+            Route::delete('/industries/{industry}', [IndustryController::class, 'delete']);
 
-        // connections
-        Route::post('/clients/{client}/connections', [ConnectionController::class, 'store']);
-        Route::get('/connections', [ConnectionController::class, 'index']);
-        Route::get('/clients/{client}/connections', [ConnectionController::class, 'getClientConnections']);
-        Route::get('connections/{connection}', [ConnectionController::class, 'show']);
-        Route::patch('connections/{connection}', [ConnectionController::class, 'update']);
-        Route::delete('connections/{connection}', [ConnectionController::class, 'destroy']);
+            //Client
+            Route::post('/clients', [ClientController::class, 'store']);
+            Route::patch('/clients/{client}', [ClientController::class, 'update']);
+            Route::get('/clients', [ClientController::class, 'index']);
 
-        // Products
-        Route::apiResource('products', ProductController::class);
+            // connections
+            Route::post('/clients/{client}/connections', [ConnectionController::class, 'store']);
+            Route::get('/connections', [ConnectionController::class, 'index']);
+            Route::get('/clients/{client}/connections', [ConnectionController::class, 'getClientConnections']);
+            Route::get('connections/{connection}', [ConnectionController::class, 'show']);
+            Route::patch('connections/{connection}', [ConnectionController::class, 'update']);
+            Route::delete('connections/{connection}', [ConnectionController::class, 'destroy']);
+
+            // Products
+            Route::apiResource('products', ProductController::class);
+        });
     });
 });

@@ -4,30 +4,50 @@ namespace App\Policies;
 
 use App\Models\Client;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class ClientPolicy
 {
     /**
-     * Determine whether the user can view any models.
+     * Determine if the user belongs to the client's organization.
      */
-    public function viewAny(User $user, int $organizationId): bool
+    private function userBelongsToClientOrganization(User $user, Client $client): bool
     {
-        if ($user->is_admin) {
+        // Load the client's organization relationship
+        $client->loadMissing('organization');
+        
+        // Check if user is the organization owner
+        if ($client->organization->user_id === $user->id) {
             return true;
         }
-        return $user->organizations()->find($organizationId) !== null;
+
+        // Check if user is a member of the organization
+        return $user->organizations()->where('organizations.id', $client->organization_id)->exists();
+    }
+
+    /**
+     * Determine if the user has access to any organization.
+     */
+    private function userHasOrganizations(User $user): bool
+    {
+        // User owns organizations or is a member of organizations
+        return $user->createdOrganizations()->exists() 
+            || $user->organizations()->exists();
+    }
+
+    /**
+     * Determine whether the user can view any models.
+     */
+    public function viewAny(User $user): bool
+    {
+        return $this->userHasOrganizations($user);
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user , int $organizationId): bool
+    public function view(User $user, Client $client): bool
     {
-        if ($user->is_admin) {
-            return true;
-        }
-        return $user->organizations()->find($organizationId) !== null;
+        return $this->userBelongsToClientOrganization($user, $client);
     }
 
     /**
@@ -35,7 +55,7 @@ class ClientPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $this->userHasOrganizations($user);
     }
 
     /**
@@ -43,7 +63,7 @@ class ClientPolicy
      */
     public function update(User $user, Client $client): bool
     {
-        return false;
+        return $this->userBelongsToClientOrganization($user, $client);
     }
 
     /**
@@ -51,7 +71,30 @@ class ClientPolicy
      */
     public function delete(User $user, Client $client): bool
     {
-        return $user->is_admin;
+        // Load the organization relationship
+        $client->loadMissing('organization');
+        
+        // Only organization owner can delete clients
+        return $client->organization->user_id === $user->id;
     }
 
+    /**
+     * Determine whether the user can restore the model.
+     */
+    // public function restore(User $user, Client $client): bool
+    // {
+    //     // Only organization owner can restore clients
+    //     $client->loadMissing('organization');
+    //     return $client->organization->user_id === $user->id;
+    // }
+
+    // /**
+    //  * Determine whether the user can permanently delete the model.
+    //  */
+    // public function forceDelete(User $user, Client $client): bool
+    // {
+    //     // Only organization owner can force delete clients
+    //     $client->loadMissing('organization');
+    //     return $client->organization->user_id === $user->id;
+    // }
 }

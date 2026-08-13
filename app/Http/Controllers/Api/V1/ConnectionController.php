@@ -11,10 +11,14 @@ use App\Models\Client;
 use App\Models\Connection;
 use App\Services\ConnectionService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
+/**
+ * @group Connections
+ */
 class ConnectionController extends Controller
 {
+    use AuthorizesRequests;
 
     public function __construct(private ConnectionService $connectionService)
     {
@@ -24,7 +28,7 @@ class ConnectionController extends Controller
      */
     public function index(Request $request)
     {
-        Gate::authorize('viewAny', $request->input('organization_id'));
+        $this->authorize('viewAny', Connection::class);
 
         $validated = $request->only([
             'per_page',
@@ -41,7 +45,8 @@ class ConnectionController extends Controller
      */
     public function store(StoreConnectionRequest $request, Client $client)
     {
-        Gate::authorize('create', $client->id);
+        $this->authorize('create', [Connection::class, $client]);
+
         $validated = $request->validated();
         if ($this->connectionService->storeConnection($client, $validated)) {
             return ApiResponse::success([], "Connection created successfully", 201);
@@ -55,7 +60,8 @@ class ConnectionController extends Controller
      */
     public function show(Connection $connection)
     {
-        Gate::authorize('view', $connection);
+        $this->authorize('view', [Connection::class, $connection]);
+
         return ApiResponse::success(new ConnectionResource($connection), "Connection retrieved successfully", 200);
     }
 
@@ -64,11 +70,12 @@ class ConnectionController extends Controller
      */
     public function update(UpdateConnectionRequest $request, Connection $connection)
     {
-        Gate::authorize('update', $connection);
+        $this->authorize('update', $connection);
+
         $validated = $request->validated();
 
         if ($this->connectionService->updateConnection($connection, $validated)) {
-            return ApiResponse::success(new ConnectionResource($connection), "Connection updated successfully", 200);
+            return ApiResponse::success(new ConnectionResource($connection->fresh()), "Connection updated successfully", 200);
         } else {
             return ApiResponse::error(null, "Failed to update connection", 500);
         }
@@ -79,7 +86,7 @@ class ConnectionController extends Controller
      */
     public function destroy(Connection $connection)
     {
-        Gate::authorize('delete', $connection);
+        $this->authorize('delete', $connection);
 
         if ($this->connectionService->deleteConnection($connection)) {
             return ApiResponse::success([], "Connection deleted successfully", 200);
@@ -90,7 +97,9 @@ class ConnectionController extends Controller
 
     public function getClientConnections(Request $request, Client $client)
     {
-        Gate::authorize('viewAny', $client->organization_id);
+        // Verify user has access to this client's organization
+        $this->authorize('view', [Client::class , $client]);
+
         $validated = $request->only([
             'per_page',
             'page',

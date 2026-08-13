@@ -24,7 +24,7 @@ class GetClientsListRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'organization_id' => ['required' , "exists:organizations,id"],
+            // 'organization_id' => ['required' , "exists:organizations,id"],
             'search' => ['nullable', 'array'],
             'search.name' => ['nullable', 'string', 'max:255'],
             'search.contact_info' => ['nullable', 'string', 'max:255'],

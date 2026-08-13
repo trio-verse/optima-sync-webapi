@@ -2,19 +2,17 @@
 
 namespace App\Http\Requests\Channel;
 
+use App\Http\Requests\BaseTagsRequest;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UpdateChannelRequest extends FormRequest
+class UpdateChannelRequest extends BaseTagsRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return true;
-    }
+
+    protected $table_name = 'channels';
+    protected $model_name = 'channel';
+
 
     /**
      * Get the validation rules that apply to the request.
@@ -23,9 +21,27 @@ class UpdateChannelRequest extends FormRequest
      */
     public function rules(): array
     {
+        return $this->updateRequest();
+    }
+
+    /**
+     * Get body parameters for Scribe documentation.
+     *
+     * @return array
+     */
+    public function bodyParameters(): array
+    {
         return [
-            'name' => ['required', 'string', 'max:255', Rule::unique('channels', 'name')->ignore($this->channel)],
-            'color' => ['sometimes', 'string'],
+            'name' => [
+                'description' => 'The name of the channel',
+                'required' => false,
+                'example' => 'Social Media'
+            ],
+            'color' => [
+                'description' => 'The color associated with the channel',
+                'required' => false,
+                'example' => '#3357FF'
+            ]
         ];
     }
 }

@@ -25,10 +25,11 @@ class StoreConnectionRequest extends FormRequest
      */
     public function rules(): array
     {
+        // dd($this->client->id, $this->product_id);
         return [
-            'organization_id' => ['required', 'exists:organizations,id'],
+            // 'organization_id' => ['required', 'exists:organizations,id'],
             // "client_id" => ['required', 'exists:clients,id'],
-            "product_id" => ['required', 'exists:products,id' , new CheckConnectionStatusRule( $this->client->id , $this->product_id)],
+            "product_id" => ['required', 'exists:products,id' , new CheckConnectionStatusRule( $this->client_id , $this->product_id)],
             'stage' => ['required', Rule::in(enConnectionStages::all())],
             'channel_id' => ['nullable', 'exists:channels,id'],
             'assignee_id' => ['nullable', 'exists:users,id'],

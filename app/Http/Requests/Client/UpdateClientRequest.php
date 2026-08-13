@@ -24,7 +24,7 @@ class UpdateClientRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'organization_id' => ['sometimes', 'integer', 'exists:organizations,id'],
+            // 'organization_id' => ['sometimes', 'integer', 'exists:organizations,id'],
             'name' => ['sometimes', 'string', 'max:255'],
             'client_type' => [
                 'sometimes',

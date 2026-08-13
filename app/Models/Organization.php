@@ -5,6 +5,7 @@ use App\Policies\OrganizationPolicy;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
@@ -40,7 +41,24 @@ class Organization extends Model
     }
     public function members()
     {
-        return $this->hasMany(OrganizationMember::class);
+        return $this->hasManyThrough(User::class , OrganizationMember::class , 'organization_id' , 'id' , 'id' , 'user_id');
+    }
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'organization_id');
+    }
+
+    /**
+     * Scope: orgs where the given user is an owner or member/admin.
+     */
+    public function scopeForUser(Builder $query, User $user): Builder
+    {
+        return $query->where(function ($q) use ($user) {
+            $q->where('user_id', $user->id)
+                ->orWhereHas('members', function ($q2) use ($user) {
+                    $q2->where('user_id', $user->id);
+                });
+        });
     }
 
     public function medias(): MorphMany

@@ -2,19 +2,19 @@
 
 namespace App\Http\Requests\City;
 
+use App\Http\Requests\BaseTagsRequest;
+use App\Singleton\TenantManager;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Override;
 
-class UpdateCityRequest extends FormRequest
+class UpdateCityRequest extends BaseTagsRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return true;
-    }
+ 
+        protected $table_name = 'cities';
+        protected $model_name = 'city';
+  
 
     /**
      * Get the validation rules that apply to the request.
@@ -23,9 +23,27 @@ class UpdateCityRequest extends FormRequest
      */
     public function rules(): array
     {
+        return $this->updateRequest();
+    }
+
+    /**
+     * Get body parameters for Scribe documentation.
+     *
+     * @return array
+     */
+    public function bodyParameters(): array
+    {
         return [
-            'name' => ['required', 'string', 'max:255', Rule::unique('cities', 'name')->ignore($this->city)],
-            'color' => ['sometimes', 'string'],
+            'name' => [
+                'description' => 'The name of the city',
+                'required' => false,
+                'example' => 'New York'
+            ],
+            'color' => [
+                'description' => 'The color associated with the city',
+                'required' => false,
+                'example' => '#FF5733'
+            ]
         ];
     }
 }

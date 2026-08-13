@@ -52,6 +52,12 @@ class User extends Authenticatable
             ->withPivot('role');
     }
 
+    public function createdOrganizations()
+    {
+        return $this->hasMany(Organization::class, 'user_id');
+    }
+
+
     /**
      * get all clients that assigned to this user
      * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough<Client, Connection, User>

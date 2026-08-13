@@ -2,19 +2,18 @@
 
 namespace App\Http\Requests\Industry;
 
+use App\Http\Requests\BaseTagsRequest;
+use App\Singleton\TenantManager;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StoreIndustryRequest extends FormRequest
+class StoreIndustryRequest extends BaseTagsRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return true;
-    }
+ 
+        protected $table_name = 'industries';
+        protected $model_name = 'industry';
+    
 
     /**
      * Get the validation rules that apply to the request.
@@ -23,9 +22,27 @@ class StoreIndustryRequest extends FormRequest
      */
     public function rules(): array
     {
+        return $this->storeRequest();
+    }
+
+    /**
+     * Get body parameters for Scribe documentation.
+     *
+     * @return array
+     */
+    public function bodyParameters(): array
+    {
         return [
-            'name' => ['required', 'string', 'max:255', Rule::unique('industries', 'name')],
-            'color' => "required|string"
+            'name' => [
+                'description' => 'The name of the industry',
+                'required' => true,
+                'example' => 'Technology'
+            ],
+            'color' => [
+                'description' => 'The color associated with the industry',
+                'required' => true,
+                'example' => '#33FF57'
+            ]
         ];
     }
 }

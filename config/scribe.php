@@ -29,7 +29,7 @@ return [
     'base_url' => config('app.url'),
 
     // Routes to include in the docs
-    'routes' => [
+     'routes' => [
         [
             'match' => [
                 // Match only routes whose paths match this pattern (use * as a wildcard to match any characters). Example: 'users/*'.
@@ -53,6 +53,7 @@ return [
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
                 'Authorization' => 'Bearer {ACCESS_TOKEN}',
+                'X-Organization-Id' => '{ORGANIZATION_ID}',
             ],
              ],
         ],
@@ -110,7 +111,7 @@ return [
         'csrf_url' => '/sanctum/csrf-cookie',
     ],
 
-    // How is your API authenticated? This information will be used in the displayed docs, generated examples and response calls.
+     // How is your API authenticated? This information will be used in the displayed docs, generated examples and response calls.
     'auth' => [
         'enabled' => true,
         'default' => true,
@@ -163,7 +164,7 @@ return [
         'generators' => [],
     ],
 
-    'groups' => [
+     'groups' => [
         // Endpoints which don't have a @group will be placed in this default group.
         'default' => 'Endpoints',
 
@@ -171,7 +172,17 @@ return [
         // You can override this by listing the groups, subgroups and endpoints here in the order you want them.
         // See https://scribe.knuckles.wtf/blog/laravel-v4#easier-sorting and https://scribe.knuckles.wtf/laravel/reference/config#order for details
         // Note: does not work for `external` docs types
-        'order' => [],
+        'order' => [
+            'Authentication',
+            'Organizations',
+            'Products',
+            'Connections',
+            'Clients',
+            'Media',
+            'Industries',
+            'Cities',
+            'Channels',
+        ],
     ],
 
     // Custom logo path. This will be used as the value of the src attribute for the <img> tag,
@@ -213,7 +224,7 @@ return [
             Strategies\StaticData::withSettings(data: [
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
-
+                'X-Organization-Id' => '{ORGANIZATION_ID}',
             ]),
         ],
         'urlParameters' => [

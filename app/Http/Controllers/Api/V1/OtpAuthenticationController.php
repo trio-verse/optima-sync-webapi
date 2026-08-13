@@ -12,6 +12,9 @@ use App\Models\OtpAuthentication;
 use App\Services\AuthService;
 use Illuminate\Http\JsonResponse;
 
+/**
+ * @group Authentication
+ */
 class OtpAuthenticationController extends Controller
 {
 

@@ -25,7 +25,7 @@ class ConnectionService
         try {
             return $client->connections()->paginate($data['per_page'] ?? null);
         } catch (Throwable $th) {
-            Log::error('Error getting client connections: ' . $exception->getMessage());
+            Log::error('Error getting client connections: ' . $th->getMessage());
             throw $th;
         }
     }

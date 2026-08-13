@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\City;
+use App\Singleton\TenantManager;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\DB;
 
@@ -30,8 +31,10 @@ class CityService
 
     public function deleteCity(City $city): bool
     {
-        return DB::transaction(function () use ($city) {
+        $manager = app(TenantManager::class);
+        if ($manager->getOrganizationId() === $city->organization_id) {
             return $city->delete();
-        });
+        }
+        return false ;
     }
 }

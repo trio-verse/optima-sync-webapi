@@ -54,6 +54,18 @@ class Client extends Model
         return $this->belongsTo(Industry::class);
     }
 
+    // Direct relationship to Channels via Connections
+    public function channels()
+    {
+        return $this->hasManyThrough(
+            Channel::class,
+            Connection::class,
+            'client_id',  // FK on connections table
+            'id',         // FK on channels table
+            'id',         // Local key on clients table
+            'channel_id'  // Local key on connections table
+        );
+    }
 
     public function products()
     {

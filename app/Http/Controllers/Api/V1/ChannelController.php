@@ -11,12 +11,16 @@ use App\Models\Channel;
 use App\Services\ChannelService;
 use Illuminate\Http\Request;
 
+/**
+ * @group Channels
+ */
 class ChannelController extends Controller
 {
 
     public function __construct(
         protected ChannelService $channel_service
     ) {}
+   
      /**
      * Display a listing of the channels.
      * 
@@ -66,10 +70,14 @@ class ChannelController extends Controller
      */
     public function destroy(Channel $channel)
     {
-        $this->channel_service->deleteChannel($channel);
-
+        
+        $isDeleted = $this->channel_service->deleteChannel($channel);
+        if (!$isDeleted) {
+            return ApiResponse::error([], 'deleting fail', 500);
+        }
+        
         return ApiResponse::success(
-            null,
+            [],
             'Channel deleted successfully',
             200
         );

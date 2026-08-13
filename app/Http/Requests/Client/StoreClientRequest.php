@@ -24,7 +24,7 @@ class StoreClientRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'organization_id' => ['required', 'integer', 'exists:organizations,id'],
+            // 'organization_id' => ['required', 'integer', 'exists:organizations,id'],
             'name' => ['required', 'string', 'max:255'],
             'client_type' => [
                 'required',

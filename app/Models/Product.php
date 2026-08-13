@@ -10,16 +10,35 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Str;
 
-#[Fillable(['name', 'slug', 'price', 'description' , 'organization_id'])]
+#[Fillable(['name', 'slug', 'price', 'description', 'organization_id'])]
 class Product extends Model
 {
-    use HasFactory , BelongsToOrganization;
+    use HasFactory, BelongsToOrganization;
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        // Automatically generate slug from name when creating
+        static::creating(function ($product) {
+            if (empty($product->slug) && !empty($product->name)) {
+                $product->slug = Str::slug($product->name);
+            }
+        });
+
+        // Automatically update slug when name is updated
+        static::updating(function ($product) {
+            if ($product->isDirty('name')) {
+                $product->slug = Str::slug($product->name);
+            }
+        });
+    }
 
     protected function slug(): Attribute
     {
         return Attribute::make(
             get: fn($value) => $value,
-            set: fn($value) => Str::slug($value),
+            set: fn($value, $attributes) => Str::slug($attributes['name'] ?? $value),
         );
     }
 

@@ -11,7 +11,11 @@ use App\Http\Resources\V1\ClientResource;
 use App\Models\Client;
 use App\Services\ClientService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
+/**
+ * @group Clients
+ */
 class ClientController extends Controller
 {
     public function __construct(protected ClientService $client_service)
@@ -23,9 +27,9 @@ class ClientController extends Controller
      */
     public function index(GetClientsListRequest $request)
     {
-        
-        // dd($request->input("organization_id"));
-        $clients = $this->client_service->getClientsList($request->validated(), (int) $request->input("organization_id"));
+        Gate::authorize('viewAny', Client::class);
+
+        $clients = $this->client_service->getClientsList($request->validated());
 
         return ApiResponse::pagination(
             ClientResource::collection($clients),
@@ -40,6 +44,8 @@ class ClientController extends Controller
      */
     public function store(StoreClientRequest $request)
     {
+        Gate::authorize('create', Client::class);
+
         $client = $this->client_service->createClient($request->validated());
 
         return ApiResponse::success(new ClientResource($client), 'The client was created successfully', 201);
@@ -53,6 +59,8 @@ class ClientController extends Controller
      */
     public function update(UpdateClientRequest $request, Client $client)
     {
+        Gate::authorize('update', $client);
+
         $is_updated = $this->client_service->updateClient($request->validated(), $client);
         if ($is_updated) {
             return ApiResponse::success(new ClientResource($client), 'The client was updated successfully', 200);
@@ -60,17 +68,23 @@ class ClientController extends Controller
             return ApiResponse::error(null, "bad request", 400);
     }
     /**
-     * Display the specified resource.
+     * Display Client.
      */
     public function show(Client $client)
     {
-        //
+        Gate::authorize('view', $client);
+
+        return ApiResponse::success(new ClientResource($client), 'Client fetched successfully');
     }
     /**
-     * Remove the specified resource from storage.
+     * Remove Client .
      */
     public function destroy(Client $client)
     {
-        //
+        Gate::authorize('delete', $client);
+
+        $client->delete();
+
+        return ApiResponse::success(null, 'Client deleted successfully');
     }
 }
