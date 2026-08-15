@@ -25,7 +25,7 @@ class ConnectionController extends Controller
     {
     }
     /**
-     * Display a listing of the resource.
+     * Get all Connections.
      */
     public function index(Request $request)
     {
@@ -42,7 +42,7 @@ class ConnectionController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store new Connection.
      */
     public function store(StoreConnectionRequest $request, Client $client)
     {
@@ -57,7 +57,7 @@ class ConnectionController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * show Connection.
      */
     public function show(Connection $connection)
     {
@@ -67,7 +67,7 @@ class ConnectionController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update Connection.
      */
     public function update(UpdateConnectionRequest $request, Connection $connection)
     {
@@ -83,7 +83,7 @@ class ConnectionController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove Connection.
      */
     public function destroy(Connection $connection)
     {
@@ -96,6 +96,12 @@ class ConnectionController extends Controller
         }
     }
 
+    /**
+     * get client connections
+     * @param Request $request
+     * @param Client $client
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getClientConnections(Request $request, Client $client)
     {
         // Verify user has access to this client's organization
