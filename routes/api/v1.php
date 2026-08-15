@@ -70,6 +70,10 @@ Route::prefix('v1')->group(function () {
             Route::patch('connections/{connection}', [ConnectionController::class, 'update']);
             Route::delete('connections/{connection}', [ConnectionController::class, 'destroy']);
 
+            // connection activities
+            Route::get('connections/{connection}/activities', [ConnectionController::class, 'getActivities']);
+            Route::post('connections/{connection}/activities', [ConnectionController::class, 'storeActivity']);
+
             // Products
             Route::apiResource('products', ProductController::class);
         });

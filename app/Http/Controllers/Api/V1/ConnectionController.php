@@ -4,14 +4,15 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Helper\V1\ApiResponse;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Activity\StoreActivityRequest;
 use App\Http\Requests\connections\StoreConnectionRequest;
 use App\Http\Requests\connections\UpdateConnectionRequest;
 use App\Http\Resources\V1\ConnectionResource;
 use App\Models\Client;
 use App\Models\Connection;
 use App\Services\ConnectionService;
-use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\Request;
 
 /**
  * @group Connections
@@ -98,7 +99,7 @@ class ConnectionController extends Controller
     public function getClientConnections(Request $request, Client $client)
     {
         // Verify user has access to this client's organization
-        $this->authorize('view', [Client::class , $client]);
+        $this->authorize('view', [Client::class, $client]);
 
         $validated = $request->only([
             'per_page',
@@ -108,5 +109,41 @@ class ConnectionController extends Controller
         ]);
         $connections = $this->connectionService->getClientConnections($client, $validated);
         return ApiResponse::pagination(ConnectionResource::collection($connections), "Client Connections retrieved successfully", 200);
+    }
+
+    /**
+     * Get activities for a connection
+     * 
+     * Retrieve all activities/updates for a specific connection
+     */
+    public function getActivities(Request $request, Connection $connection)
+    {
+        $this->authorize('view', $connection);
+
+        $validated = $request->only([
+            'per_page',
+            'page',
+        ]);
+        $activities = $this->connectionService->getConnectionActivities($connection, $validated);
+        return ApiResponse::pagination(\App\Http\Resources\V1\ActivityResource::collection($activities), "Connection activities retrieved successfully", 200);
+    }
+
+    /**
+     * Add activity to a connection
+     * 
+     * Create a new activity/update for a connection
+     */
+    public function storeActivity(StoreActivityRequest $request, Connection $connection)
+    {
+        $this->authorize('update', $connection);
+
+        $data = $request->validated();
+        $data['user_id'] = auth()->id();
+
+        if ($this->connectionService->storeActivity($connection, $data)) {
+            return ApiResponse::success([], "Activity added successfully", 201);
+        } else {
+            return ApiResponse::error(null, "Failed to add activity", 500);
+        }
     }
 }
