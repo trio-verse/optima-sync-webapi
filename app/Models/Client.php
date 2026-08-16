@@ -72,9 +72,10 @@ class Client extends Model
         return $this->hasMany(Product::class);
     }
 
-    //    public funcrtion stackholders(){
-    //       return $this->hasMany(Stackholder::class);
-    //    }
+    public function stakeholders()
+    {
+        return $this->hasMany(Stakeholder::class);
+    }
 
 
     /**
@@ -123,5 +124,4 @@ class Client extends Model
             set: fn(?string $value) => $value ? preg_replace('/\s+/', '', $value) : null,
         );
     }
-
 }

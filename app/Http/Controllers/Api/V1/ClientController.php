@@ -18,9 +18,7 @@ use Illuminate\Support\Facades\Gate;
  */
 class ClientController extends Controller
 {
-    public function __construct(protected ClientService $client_service)
-    {
-    }
+    public function __construct(protected ClientService $client_service) {}
 
     /**
      * Display a listing of the resource.
@@ -47,7 +45,7 @@ class ClientController extends Controller
         Gate::authorize('create', Client::class);
 
         $client = $this->client_service->createClient($request->validated());
-
+        $client->load(['city', 'industry', 'stakeholders']);
         return ApiResponse::success(new ClientResource($client), 'The client was created successfully', 201);
     }
 
@@ -63,6 +61,7 @@ class ClientController extends Controller
 
         $is_updated = $this->client_service->updateClient($request->validated(), $client);
         if ($is_updated) {
+            $client->load(['city', 'industry', 'stakeholders']);
             return ApiResponse::success(new ClientResource($client), 'The client was updated successfully', 200);
         } else
             return ApiResponse::error(null, "bad request", 400);

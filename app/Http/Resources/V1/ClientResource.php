@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\V1;
 
+
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -30,10 +31,10 @@ class ClientResource extends JsonResource
                 'city' => new CityResource($this->whenLoaded('city')),
             ],
 
-            'industry' => new IndustryResource($this->industry),
+            'industry' => new IndustryResource($this->whenLoaded('industry')),
 
             'notes' => $this->notes,
-            'stakeholders' => [],
+            'stakeholders' => StakeholderResource::collection($this->whenLoaded('stakeholders')),
             'createdAt' => $this->created_at?->format('Y-m-d\TH:i:s\Z'),
             'updatedAt' => $this->updated_at?->format('Y-m-d\TH:i:s\Z'),
         ];

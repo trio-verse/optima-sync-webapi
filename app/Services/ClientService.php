@@ -20,7 +20,9 @@ class ClientService
     public function getClientsList(array $filters)
     {
           
-        return Client::nameFilter($filters['search']['name'] ?? null)
+        return Client::with(['stakeholders' , 'city' , 'industry'])
+        
+            ->nameFilter($filters['search']['name'] ?? null)
             ->contactInfoFilter($filters['search']['contact_info'] ?? null)
             ->cityFilter($filters['city_id'] ?? null)
             ->industryFilter($filters['industry_id'] ?? null)
