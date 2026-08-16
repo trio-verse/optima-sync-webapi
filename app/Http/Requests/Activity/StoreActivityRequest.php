@@ -24,7 +24,7 @@ class StoreActivityRequest extends FormRequest
     {
         return [
             'content' => ['required', 'string', 'min:1', 'max:2000'],
-            'metadata' => ['nullable', 'array'],
+            // 'metadata' => ['nullable', 'array'],
         ];
     }
 }

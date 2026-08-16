@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\StoreActivityRequest;
 use App\Http\Requests\connections\StoreConnectionRequest;
 use App\Http\Requests\connections\UpdateConnectionRequest;
+use App\Http\Resources\V1\ActivityResource;
 use App\Http\Resources\V1\ConnectionResource;
 use App\Models\Client;
 use App\Models\Connection;
@@ -119,7 +120,7 @@ class ConnectionController extends Controller
 
     /**
      * Get activities for a connection
-     * 
+     *
      * Retrieve all activities/updates for a specific connection
      */
     public function getActivities(Request $request, Connection $connection)
@@ -131,12 +132,12 @@ class ConnectionController extends Controller
             'page',
         ]);
         $activities = $this->connectionService->getConnectionActivities($connection, $validated);
-        return ApiResponse::pagination(\App\Http\Resources\V1\ActivityResource::collection($activities), "Connection activities retrieved successfully", 200);
+        return ApiResponse::pagination(ActivityResource::collection($activities), "Connection activities retrieved successfully", 200);
     }
 
     /**
      * Add activity to a connection
-     * 
+     *
      * Create a new activity/update for a connection
      */
     public function storeActivity(StoreActivityRequest $request, Connection $connection)

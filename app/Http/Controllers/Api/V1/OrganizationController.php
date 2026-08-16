@@ -36,7 +36,7 @@ class OrganizationController extends Controller
     public function index(Request $request)
     {
         try {
-            $orgs = Organization::withCount('members')->paginate((int) 
+            $orgs = Organization::withCount('members')->paginate((int)
                 (request()->has('per_page') ? $request->input('per_page') : 15));
 
             return ApiResponse::pagination(OrganizationResource::collection($orgs));
@@ -62,7 +62,7 @@ class OrganizationController extends Controller
             return ApiResponse::notFound("organization not found");
         } catch (\Exception $e) {
             Log::error($e->getMessage() . 'code : ' . $e->getCode());
-            return ApiResponse::serverError();
+            return ApiResponse::serverError($e->getMessage());
         }
     }
     /**

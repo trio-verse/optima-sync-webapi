@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
             IndustrySeeder::class,
             ClientSeeder::class,
             ConnectionSeeder::class,
-            ActivitySeeder::class
+            // ActivitySeeder::class
         ]);
     }
 }

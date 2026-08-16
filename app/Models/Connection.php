@@ -39,7 +39,8 @@ class Connection extends Model
     protected $with = [
         'product',
         'client',
-        'assignee'
+        'assignee',
+        'channel',
     ];
 
     public function IsClosed(): Attribute
