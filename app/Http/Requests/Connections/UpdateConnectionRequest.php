@@ -28,7 +28,8 @@ class UpdateConnectionRequest extends FormRequest
             'stage' => ['sometimes', Rule::in(enConnectionStages::all())],
             'channel_id' => ['string', 'sometimes', 'exists:channels,id'],
             'assignee_id' => ['string', 'sometimes', 'exists:users,id'],
-            'initiated_by' => ['string', 'nullable']
+            'initiated_by' => ['string', 'nullable'],
+            'campaign_id' => ['nullable', 'exists:campaigns,id'],
         ];
     }
 }

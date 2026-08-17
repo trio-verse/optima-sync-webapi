@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\enConnectionStages;
 use App\Models\Activity;
 use App\Models\Client;
 use App\Models\Connection;
@@ -73,6 +74,11 @@ class ConnectionService
     {
         try {
             $connection->update($data);
+            if (isset($data['stage']) && $data['stage'] == enConnectionStages::WIN->value) {
+                $connection->load('product');
+                $connection->deal_value = $connection->product->price;
+                $connection->save();
+            }
             return true;
         } catch (\Exception $exception) {
             Log::error('Error updating connection: ' . $exception->getMessage());

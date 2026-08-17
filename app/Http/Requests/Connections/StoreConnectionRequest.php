@@ -33,7 +33,9 @@ class StoreConnectionRequest extends FormRequest
             'stage' => ['required', Rule::in(enConnectionStages::all())],
             'channel_id' => ['nullable', 'exists:channels,id'],
             'assignee_id' => ['nullable', 'exists:users,id'],
-            'initiated_by' => ['string', 'nullable']
+            'initiated_by' => ['string', 'nullable'],
+            'campaign_id' => ['nullable', 'exists:campaigns,id'],
+
         ];
     }
 }
