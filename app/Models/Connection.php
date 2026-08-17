@@ -23,7 +23,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Connection extends Model
 {
     /** @use HasFactory<\Database\Factories\ConnectionFactory> */
-    use HasFactory , BelongsToOrganization;
+    use HasFactory, BelongsToOrganization;
 
     protected $casts = [
         'created_at' => 'datetime',
@@ -39,7 +39,8 @@ class Connection extends Model
     protected $with = [
         'product',
         'client',
-        'assignee'
+        'assignee',
+        'channel',
     ];
 
     public function IsClosed(): Attribute
@@ -68,5 +69,10 @@ class Connection extends Model
     public function assignee()
     {
         return $this->belongsTo(User::class, 'assignee_id');
+    }
+
+    public function activities()
+    {
+        return $this->hasMany(Activity::class);
     }
 }

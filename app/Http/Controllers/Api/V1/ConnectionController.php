@@ -4,14 +4,16 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Helper\V1\ApiResponse;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Activity\StoreActivityRequest;
 use App\Http\Requests\connections\StoreConnectionRequest;
 use App\Http\Requests\connections\UpdateConnectionRequest;
+use App\Http\Resources\V1\ActivityResource;
 use App\Http\Resources\V1\ConnectionResource;
 use App\Models\Client;
 use App\Models\Connection;
 use App\Services\ConnectionService;
-use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\Request;
 
 /**
  * @group Connections
@@ -24,7 +26,7 @@ class ConnectionController extends Controller
     {
     }
     /**
-     * Display a listing of the resource.
+     * Get all Connections.
      */
     public function index(Request $request)
     {
@@ -41,7 +43,7 @@ class ConnectionController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store new Connection.
      */
     public function store(StoreConnectionRequest $request, Client $client)
     {
@@ -56,7 +58,7 @@ class ConnectionController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * show Connection.
      */
     public function show(Connection $connection)
     {
@@ -66,7 +68,7 @@ class ConnectionController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update Connection.
      */
     public function update(UpdateConnectionRequest $request, Connection $connection)
     {
@@ -82,7 +84,7 @@ class ConnectionController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove Connection.
      */
     public function destroy(Connection $connection)
     {
@@ -95,10 +97,16 @@ class ConnectionController extends Controller
         }
     }
 
+    /**
+     * get client connections
+     * @param Request $request
+     * @param Client $client
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getClientConnections(Request $request, Client $client)
     {
         // Verify user has access to this client's organization
-        $this->authorize('view', [Client::class , $client]);
+        $this->authorize('view', [Client::class, $client]);
 
         $validated = $request->only([
             'per_page',
@@ -108,5 +116,41 @@ class ConnectionController extends Controller
         ]);
         $connections = $this->connectionService->getClientConnections($client, $validated);
         return ApiResponse::pagination(ConnectionResource::collection($connections), "Client Connections retrieved successfully", 200);
+    }
+
+    /**
+     * Get activities for a connection
+     *
+     * Retrieve all activities/updates for a specific connection
+     */
+    public function getActivities(Request $request, Connection $connection)
+    {
+        $this->authorize('view', $connection);
+
+        $validated = $request->only([
+            'per_page',
+            'page',
+        ]);
+        $activities = $this->connectionService->getConnectionActivities($connection, $validated);
+        return ApiResponse::pagination(ActivityResource::collection($activities), "Connection activities retrieved successfully", 200);
+    }
+
+    /**
+     * Add activity to a connection
+     *
+     * Create a new activity/update for a connection
+     */
+    public function storeActivity(StoreActivityRequest $request, Connection $connection)
+    {
+        $this->authorize('update', $connection);
+
+        $data = $request->validated();
+        $data['user_id'] = auth()->id();
+
+        if ($this->connectionService->storeActivity($connection, $data)) {
+            return ApiResponse::success([], "Activity added successfully", 201);
+        } else {
+            return ApiResponse::error(null, "Failed to add activity", 500);
+        }
     }
 }

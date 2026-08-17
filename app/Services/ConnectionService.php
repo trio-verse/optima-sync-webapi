@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Activity;
 use App\Models\Client;
 use App\Models\Connection;
 use Illuminate\Support\Facades\Log;
@@ -30,6 +31,18 @@ class ConnectionService
         }
     }
 
+    public function getConnectionActivities(Connection $connection, array $data): LengthAwarePaginator
+    {
+        try {
+            return $connection->activities()
+                ->with(['user'])
+                ->latest()
+                ->paginate($data['per_page'] ?? 20);
+        } catch (Throwable $th) {
+            Log::error('Error getting connection activities: ' . $th->getMessage());
+            throw $th;
+        }
+    }
 
     public function storeConnection(Client $client, array $data): bool
     {
@@ -39,6 +52,19 @@ class ConnectionService
             return true;
         } catch (\Exception $exception) {
             Log::error('Error storing connection: ' . $exception->getMessage());
+            return false;
+        }
+    }
+
+    public function storeActivity(Connection $connection, array $data): bool
+    {
+        try {
+            // Set organization_id from the connection
+            $data['organization_id'] = $connection->client->organization_id;
+            $connection->activities()->create($data);
+            return true;
+        } catch (\Exception $exception) {
+            Log::error('Error storing activity: ' . $exception->getMessage());
             return false;
         }
     }

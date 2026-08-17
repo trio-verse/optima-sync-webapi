@@ -23,8 +23,7 @@ class ProductService
 
     public function getProductsList()
     {
-        return Product::query()
-            ->latest();
+        return Product::orderByDesc('created_at')->get();
     }
 
     public function getProductById(int $id): Product

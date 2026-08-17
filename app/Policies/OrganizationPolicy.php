@@ -13,7 +13,7 @@ class OrganizationPolicy
     {
         $organization = Organization::find($orgId);
         return $user->id === $organization->user_id ? Response::allow()
-            : Response::deny('You do not own this Organization.');
+            : Response::denyAsNotFound('You do not own this Organization.');
 
     }
     /**

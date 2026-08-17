@@ -7,7 +7,7 @@ use App\Models\User;
 
 class UserService
 {
-   
+
     public function findOrFail(string $email): User|bool
     {
         $user = User::where('email', $email)->first();
@@ -18,9 +18,10 @@ class UserService
     {
         if (!isset($data['name']) || $data['name'] == null || $data['name'] == '') {
             $data['name'] = explode('@', $data['email'])[0];
-        }
-        $data['email_verified_at'] = now();
+            }
+            $data['email_verified_at'] = now();
 
+            // dd($data);
         return User::create($data);
     }
 }
