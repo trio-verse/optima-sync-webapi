@@ -27,7 +27,6 @@ class ClientService
             ->cityFilter($filters['city_id'] ?? null)
             ->industryFilter($filters['industry_id'] ?? null)
             ->typeFilter($filters['client_type'] ?? null)
-            ->latest()->paginate($filters['per_page'] ?? 15)
-        ;
+            ->latest()->paginate($filters['per_page'] ?? 50);
     }
 }

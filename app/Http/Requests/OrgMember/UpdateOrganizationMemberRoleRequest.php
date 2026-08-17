@@ -17,6 +17,16 @@ class UpdateOrganizationMemberRoleRequest extends FormRequest
     }
 
     /**
+     * Prepare the data for validation.
+     */
+    protected function prepareForValidation()
+    {
+        // Merge the 'id' route parameter into the validation data
+        $this->merge(['memberId' => $this->route('memberId')]);
+        $this->merge(['organizationId' => $this->route('organizationId')]);
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, ValidationRule|array<mixed>|string>
@@ -25,6 +35,8 @@ class UpdateOrganizationMemberRoleRequest extends FormRequest
     {
         return [
             'role' => ['required', 'in:admin,member'],
+            'memberId' => 'required|integer|exists:organization_members,id',
+            'organizationId' => 'required|integer|equals',
         ];
     }
 }

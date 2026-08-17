@@ -80,5 +80,11 @@ Route::prefix('v1')->group(function () {
                         Route::patch('clients/{client}/stakeholders/{stakeholder}', [StakeholderController::class, 'update']);
                         Route::delete('clients/{client}/stakeholders/{stakeholder}', [StakeholderController::class, 'destroy']);
                 });
+            // connection activities
+            Route::get('connections/{connection}/activities', [ConnectionController::class, 'getActivities']);
+            Route::post('connections/{connection}/activities', [ConnectionController::class, 'storeActivity']);
+
+            // Products
+            Route::apiResource('products', ProductController::class);
         });
 });

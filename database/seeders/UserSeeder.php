@@ -25,6 +25,6 @@ class UserSeeder extends Seeder
             'email_verified_at' => now(),
         ]);
 
-        Log::info("new User : " . $user . " one year token : " . $user->createToken('one-year', ['*'], now()->addYear())->plainTextToken);
+        Log::info("new User : " . $user . "\n one year token : " . $user->createToken('one-year', ['*'], now()->addYear())->plainTextToken);
     }
 }

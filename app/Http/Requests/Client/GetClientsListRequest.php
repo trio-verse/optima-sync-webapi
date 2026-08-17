@@ -33,6 +33,7 @@ class GetClientsListRequest extends FormRequest
             'industry_id' => ['nullable', 'integer', 'exists:industries,id'],
             'client_type' => ['nullable', 'string'],
             'per_page' => ['nullable', 'integer', 'min:1', 'max:100'],
+            'page' => ['nullable', 'integer', 'min:1'],
         ];
     }
 }
