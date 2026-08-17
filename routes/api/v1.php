@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\CampaignController;
 use App\Http\Controllers\Api\V1\ChannelController;
 use App\Http\Controllers\Api\V1\CityController;
 use App\Http\Controllers\Api\V1\ClientController;
@@ -82,6 +83,13 @@ Route::prefix('v1')->group(function () {
                         // connection activities
                         Route::get('connections/{connection}/activities', [ConnectionController::class, 'getActivities']);
                         Route::post('connections/{connection}/activities', [ConnectionController::class, 'storeActivity']);
+
+                        // Campaigns
+                        Route::get('campaigns' , [CampaignController::class , 'index'])->name('campaigns.index');
+                        Route::post('campaigns' , [CampaignController::class , 'store'])->name('campaigns.store');
+                        Route::patch('campaigns/{campaign}' , [CampaignController::class , 'update'])->name('campaigns.update');
+                        Route::get('campaigns/{campaign}' , [CampaignController::class , 'show'])->name('campaigns.show');
+                        Route::delete('campaigns/{campaign}' , [CampaignController::class , 'destroy'])->name('campaigns.destroy');
                 });
 
         });
