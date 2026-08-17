@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\connections;
+namespace App\Http\Requests\Connections;
 
 use App\Enums\enConnectionStages;
 use App\Rules\CheckConnectionStatusRule;
