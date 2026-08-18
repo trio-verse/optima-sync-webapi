@@ -21,12 +21,14 @@ class ConnectionResource extends JsonResource
             'stage' => $this->stage,
             'channel_id' => $this->channel_id,
             'assignee_id' => $this->assignee_id,
+            'campaign_id' => $this->campaign_id,
+            'deal_value' => $this->deal_value ?? null,
             'initiated_by' => $this->initiated_by,
             'created_at' => $this->created_at->format('Y-m-d\TH:i:s\Z'),
             'updated_at' => $this->updated_at->format('Y-m-d\TH:i:s\Z'),
             // 'client' => $this->whenLoaded('client' , fn() => new ClientResource($this->client)),
-            'client' => $this->whenLoaded('client' , function(){
-                return[
+            'client' => $this->whenLoaded('client', function () {
+                return [
                     'id' => $this->client->id,
                     'name' => $this->client->name,
                     'email' => $this->client->email,
@@ -38,19 +40,18 @@ class ConnectionResource extends JsonResource
                     'notes' => $this->client->notes,
                 ];
             }),
-            'product' => $this->whenLoaded('product' , fn() => [
+            'product' => $this->whenLoaded('product', fn() => [
                 'id' => $this->product->id,
                 'name' => $this->product->name,
                 'price' => $this->product->price,
                 'description' => $this->product->description,
-                
             ]),
-            'channel' => $this->whenLoaded('channel' , fn() => [
+            'channel' => $this->whenLoaded('channel', fn() => [
                 'id' => $this->channel->id,
                 'name' => $this->channel->name,
             ]),
-            'assignee' => $this->whenLoaded('assignee' , fn() => [
-                'id' => $this->assignee->id,    
+            'assignee' => $this->whenLoaded('assignee', fn() => [
+                'id' => $this->assignee->id,
                 'name' => $this->assignee->name,
                 'email' => $this->assignee->email,
             ]),

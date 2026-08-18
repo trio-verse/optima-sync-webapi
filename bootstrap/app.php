@@ -26,7 +26,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'active_org' => SetActiveOrganization::class
         ]);
-        
+
     })
     ->withExceptions(function (Exceptions $exceptions): void {
 

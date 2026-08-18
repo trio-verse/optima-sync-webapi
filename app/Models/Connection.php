@@ -17,7 +17,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
         'channel_id',
         'organization_id',
         'initiated_by',
-        'stage'
+        'stage',
+        'campaign_id',
+        'deal_value',
     ]
 )]
 class Connection extends Model
