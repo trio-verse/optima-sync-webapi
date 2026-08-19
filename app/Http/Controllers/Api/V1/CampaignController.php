@@ -40,7 +40,7 @@ class CampaignController extends Controller
         $this->authorize('create', Campaign::class);
         $validated = $request->validated();
         $campaign = $this->service->save($validated);
-        return ApiResponse::success([], "Campaign created successfully", 201);
+        return ApiResponse::success(new CampaignResource($campaign), "Campaign created successfully", 201);
     }
 
     /**
