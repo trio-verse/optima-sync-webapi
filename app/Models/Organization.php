@@ -48,6 +48,21 @@ class Organization extends Model
         return $this->hasMany(Product::class, 'organization_id');
     }
 
+
+    public function connections()
+    {
+        return $this->hasMany(Connection::class, 'organization_id');
+    }
+
+    public function campaigns()
+    {
+        return $this->hasMany(Campaign::class, 'organization_id');
+    }
+
+    public function contents()
+    {
+        return $this->hasMany(Content::class, 'organization_id');
+    }
     /**
      * Scope: orgs where the given user is an owner or member/admin.
      */

@@ -15,6 +15,11 @@ use App\Services\Marketing\ContentService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 
+
+/**
+ * group Content
+ */
+
 class ContentController extends Controller
 {
     use AuthorizesRequests;
@@ -25,7 +30,7 @@ class ContentController extends Controller
     ) {
     }
     /**
-     * Display a listing of the resource.
+     * Display a listing of campaign content.
      */
     public function index(Campaign $campaign)
     {
@@ -35,7 +40,7 @@ class ContentController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store content.
      */
     public function store(StoreContentRequest $request)
     {
@@ -49,7 +54,7 @@ class ContentController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display content.
      */
     public function show(Campaign $campaign, Content $content)
     {
@@ -60,11 +65,11 @@ class ContentController extends Controller
 
 
     /**
-     * Update the specified resource in storage.
+     * Update content.
      */
     public function update(UpdateContentRequest $request, Campaign $campaign, Content $content)
     {
-        
+
         try {
             $isUpdated = $this->update_content_service->update($request->user(), $campaign, $content, $request->validated());
 
@@ -78,7 +83,7 @@ class ContentController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove content.
      */
     public function destroy(Campaign $campaign, Content $content)
     {
