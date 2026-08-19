@@ -21,6 +21,13 @@ class User extends Authenticatable
     use HasFactory, Notifiable, HasApiTokens;
 
     /**
+     * The attributes that should be appended to arrays.
+     *
+     * @var array
+     */
+    protected $appends = ['is_admin', 'is_member'];
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
@@ -36,13 +43,13 @@ class User extends Authenticatable
     public function isAdmin(): Attribute
     {
         return new Attribute(
-            get: fn() => $this->pivot->role === 'admin'
+            get: fn() => $this->pivot?->role === 'admin' || false
         );
     }
     public function isMember(): Attribute
     {
         return new Attribute(
-            get: fn() => $this->pivot->role === "member"
+            get: fn() => $this->pivot?->role === "member" || false
         );
     }
     // Relations

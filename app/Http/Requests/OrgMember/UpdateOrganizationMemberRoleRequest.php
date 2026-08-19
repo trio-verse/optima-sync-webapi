@@ -36,7 +36,7 @@ class UpdateOrganizationMemberRoleRequest extends FormRequest
         return [
             'role' => ['required', 'in:admin,member'],
             'memberId' => 'required|integer|exists:organization_members,id',
-            'organizationId' => 'required|integer|equals',
+            'organizationId' => 'required|integer',
         ];
     }
 }

@@ -41,6 +41,10 @@ class OrganizationService
                 'address' => $data['address'],
                 'user_id' => $data['user_id'],
             ]);
+            $organization->members()->create([
+                'user_id' => $data['user_id'],
+                'role' => 'admin'
+            ]);
             // dd($data);
             return $organization;
         });
