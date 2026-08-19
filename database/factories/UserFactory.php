@@ -41,4 +41,30 @@ class UserFactory extends Factory
             'email_verified_at' => null,
         ]);
     }
+
+    /**
+     * Indicate that the user is an admin.
+     */
+    public function admin(): static
+    {
+        return $this->afterCreating(function (User $user) {
+            // Create an organization for this admin
+            $organization = \App\Models\Organization::factory()->create(['user_id' => $user->id]);
+            
+            // Attach user to organization as admin
+            $user->organizations()->attach($organization->id, ['role' => 'admin']);
+        });
+    }
+
+    /**
+     * Indicate that the user is a member.
+     */
+    public function member(): static
+    {
+        return $this->afterCreating(function (User $user) {
+            // Attach user to an existing organization as member
+            $organization = \App\Models\Organization::factory()->create();
+            $user->organizations()->attach($organization->id, ['role' => 'member']);
+        });
+    }
 }

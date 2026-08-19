@@ -65,7 +65,7 @@ return Application::configure(basePath: dirname(__DIR__))
             report($e);
 
             return ApiResponse::serverError(
-                app()->isProduction() ? 'Internal server error' : $e->getMessage()
+                app()->isProduction() ? 'Internal server error' : $e->getMessage() . " \n in " . $e->getFile() . "\n on line " . $e->getLine()
             );
         });
     })->create();

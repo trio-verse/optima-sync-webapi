@@ -57,10 +57,10 @@ class Campaign extends Model
      * [[[[[[[[[[[[[[[[[[[[[  Relations  ]]]]]]]]]]]]]]]]]]]]]]
      */
 
-    // public function contents()
-    // {
-    //     return $this->hasMany(Content::class);
-    // }
+    public function contents()
+    {
+        return $this->hasMany(Content::class);
+    }
 
     public function connections()
     {
