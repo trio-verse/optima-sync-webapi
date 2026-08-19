@@ -9,6 +9,7 @@ use App\Http\Requests\Campaign\UpdateCampaignRequest;
 use App\Http\Resources\V1\CampaignResource;
 use App\Models\Campaign;
 use App\Services\CampaignService;
+use App\Services\Marketing\CampaignAnalyticsService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 
@@ -18,12 +19,14 @@ use Illuminate\Http\Request;
 class CampaignController extends Controller
 {
     use AuthorizesRequests;
-    public function __construct(private CampaignService $service)
-    {
+    public function __construct(
+        private CampaignService $service,
+        private CampaignAnalyticsService $campaignAnalytics
+    ) {
     }
 
     /**
-     * Display a listing of the resource.
+     * Display a listing of campaigns.
      */
     public function index()
     {
@@ -33,7 +36,7 @@ class CampaignController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store campaign.
      */
     public function store(StoreCampaignRequest $request)
     {
@@ -44,7 +47,7 @@ class CampaignController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display campaign.
      */
     public function show(Campaign $campaign)
     {
@@ -54,7 +57,7 @@ class CampaignController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update campaign.
      */
     public function update(UpdateCampaignRequest $request, Campaign $campaign)
     {
@@ -65,12 +68,29 @@ class CampaignController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove campaign.
      */
     public function destroy(Campaign $campaign)
     {
         $this->authorize('delete', $campaign);
         $this->service->delete($campaign);
         return ApiResponse::success(null, "Campaign deleted successfully");
+    }
+
+
+    /**
+     * analytics.
+     *  some KPI for the campaign
+     */
+    public function analytics(Campaign $campaign)
+    {
+        $this->authorize('view', $campaign);
+
+        $stats = $this->campaignAnalytics->getStats($campaign);
+
+        return ApiResponse::success([
+            'campaign' => new CampaignResource($campaign),
+            'analytics' => $stats,
+        ]);
     }
 }

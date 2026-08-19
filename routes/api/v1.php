@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\V1\ClientController;
 use App\Http\Controllers\Api\V1\ConnectionController;
 use App\Http\Controllers\Api\V1\ContentController;
 use App\Http\Controllers\Api\V1\IndustryController;
+use App\Http\Controllers\Api\V1\MarketingAnalyticsController;
 use App\Http\Controllers\Api\V1\OrganizationController;
 use App\Http\Controllers\Api\V1\OrganizationLogoController;
 use App\Http\Controllers\Api\V1\OtpAuthenticationController;
@@ -85,6 +86,12 @@ Route::prefix('v1')->group(function () {
             Route::get('connections/{connection}/activities', [ConnectionController::class, 'getActivities']);
             Route::post('connections/{connection}/activities', [ConnectionController::class, 'storeActivity']);
 
+            /**
+             * =====================================
+             *      Marketing Module
+             * =====================================
+             */
+
             // Campaigns
             Route::get('campaigns', [CampaignController::class, 'index'])->name('campaigns.index');
             Route::post('campaigns', [CampaignController::class, 'store'])->name('campaigns.store');
@@ -98,6 +105,13 @@ Route::prefix('v1')->group(function () {
             Route::get('campaigns/{campaign}/contents/{content}', [ContentController::class, 'show'])->name('campaign.contents.show');
             Route::patch('campaigns/{campaign}/contents/{content}', [ContentController::class, 'update'])->name('campaign.contents.update');
             Route::delete('campaigns/{campaign}/contents/{content}', [ContentController::class, 'destroy'])->name('campaign.contents.destroy');
+
+            // Analytics
+            Route::get('campaigns/{campaign}/analytics', [CampaignController::class, 'analytics'])->name('campaign.analytics');
+
+            Route::get('marketing/analytics', [MarketingAnalyticsController::class, 'dashboard'])->name('analytics');
+
+
         });
 
     });
