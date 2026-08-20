@@ -13,7 +13,7 @@ use App\Models\Campaign;
 use App\Models\Content;
 use App\Models\User;
 use App\Singleton\TenantManager;
-use Illuminate\Auth\AuthenticationException;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Gate;
 
 /**
@@ -61,11 +61,14 @@ final class UpdateContentService
         return $content->refresh();
     }
 
+    /**
+     * @throws AuthorizationException
+     */
     private function assertBelongsToCampaign(Campaign $campaign, Content $content): void
     {
         if (!$campaign->contents()->whereKey($content->id)->exists()) {
             // throw new ContentNotInCampaignException($content, $campaign);
-            throw new AuthenticationException("Content #{$content->id} does not belong to campaign #{$campaign->id}.");
+            throw new AuthorizationException("Content #{$content->id} does not belong to campaign #{$campaign->id}.");
         }
     }
 
@@ -80,14 +83,14 @@ final class UpdateContentService
 
     private function assertValidTransition(enContentStatus $current, enContentStatus $target, bool $isAdmin): void
     {
-        if ($current === $target) {
-            throw new AuthenticationException("Content is already in the status: {$current->value}");
-        }
+//        if ($current === $target) {
+//            throw new ("Content is already in the status: {$current->value}");
+//        }
 
         if (!$this->transitions->isAllowed($current, $target, $isAdmin)) {
             $role = $isAdmin ? 'an admin' : 'a member';
 
-            throw new AuthenticationException("As {$role}, you cannot move content from {$current->value} to {$target->value}.");
+            throw new AuthorizationException("As {$role}, you cannot move content from {$current->value} to {$target->value}.");
         }
     }
 
