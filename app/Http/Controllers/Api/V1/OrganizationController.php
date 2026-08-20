@@ -104,9 +104,7 @@ class OrganizationController extends Controller
 
             $organization = $this->organizationservice->updateOrg($id, $validatedData);
             return ApiResponse::response(new OrganizationResource($organization), 'The organization was updated succsesfully', 200);
-        } catch (ModelNotFoundException $e) {
-            return ApiResponse::error(null, "organization not found", 404);
-        } catch (RecordNotFoundException $e) {
+        } catch (ModelNotFoundException|RecordNotFoundException $e) {
             return ApiResponse::error(null, "organization not found", 404);
         } catch (AuthorizationException $e) {
             return ApiResponse::error(null, "Not allowed", 403);
