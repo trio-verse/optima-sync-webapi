@@ -45,7 +45,8 @@ final class UpdateContentService
         $newStatus = $this->extractRequestedStatus($data);
 
         if ($newStatus !== null) {
-            $this->assertValidTransition($content->status, $newStatus, $isAdmin);
+            $currentStatus = enContentStatus::from($content->status);
+            $this->assertValidTransition($currentStatus, $newStatus, $isAdmin);
         }
 
         $data = array_merge($data, $this->metadata->resolve(
