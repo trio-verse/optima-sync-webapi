@@ -35,5 +35,16 @@ class MarketingAnalyticsController extends Controller
     }
 
 
+    public function effectiveCampaigns(Request $request): JsonResponse
+    {
+        $sortBy = $request->enum('sort', ['cpl', 'roi']) ?? 'cpl';
+
+        $campaigns = $this->dashboardService->getEffectiveCampaigns(
+            $this->organization,
+            $sortBy
+        );
+
+        return response()->json($campaigns);
+    }
 
 }

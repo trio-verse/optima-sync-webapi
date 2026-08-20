@@ -55,12 +55,73 @@ class MarketingDashboardService
             'overall_CPL' => $leads > 0 && $spent > 0 ? round($spent / $leads, 2) : null,
             'overall_percentage_ROI' => $this->calculateOverallROI($spent, $revenue),
 
+
+            "per_campaign" => $this->perCampaign($org)
+
         ];
     }
 
+    public function getEffectiveCampaigns(Organization $org, string $sortBy = 'cpl')
+    {
+        $campaigns = $org->campaigns()->withCount('connections')
+            ->withSum(
+                ['connections as total_revenue' => fn($query) => $query->where('stage', 'win')],
+                'deal_Value'
+            )->withSum(
+                ['contents as current_spent' => fn($q) => $q->whereNotNull('cost_confirmed_by')],
+                'cost'
+            )->get()
+            ->map(function ($campaign) {
+                $spent = (float) $campaign->current_spent;
+                $leads = (int) $campaign->connections_count;
+                $revenue = (float) $campaign->total_revenue;
+                $campaign->cpl = $leads > 0 && $spent > 0
+                    ? round($spent / $leads, 2)
+                    : null;
 
-    
+                // dd($spent , $revenue);
+                $campaign->roi = $this->calculateOverallROI($spent, $revenue);
 
+                return $campaign;
+            });
+
+        return match ($sortBy) {
+            'roi' => $campaigns
+                ->whereNotNull('roi')
+                ->sortByDesc('roi')
+                ->values(),
+            default => $campaigns
+                ->sortBy('cpl')
+                ->values(),
+        };
+    }
+
+
+    private function perCampaign(Organization $org)
+    {
+        $campaigns = $org->campaigns()
+            ->latest()
+            ->limit(5)
+            ->get(['id', 'name'])
+            ->map(function ($campaign) {
+                $id = $campaign->id;
+                $name = $campaign->name;
+                $win_rate = $this->campaignAnalytics->getStats($campaign)['win_rate'];
+                $roi = $this->campaignAnalytics->getStats($campaign)['roi'];
+                $cpl = $this->campaignAnalytics->getStats($campaign)['cpl'];
+
+                return [
+                    'id' => $id,
+                    'name' => $name,
+                    'win_rate' => $win_rate,
+                    'roi' => $roi,
+                    'cpl' => $cpl
+                ];
+            })
+            ->toArray();
+        return $campaigns;
+
+    }
 
     private function calculateOverallROI(float $spent, float $revenue): null|float
     {

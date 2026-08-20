@@ -110,6 +110,7 @@ Route::prefix('v1')->group(function () {
             Route::get('campaigns/{campaign}/analytics', [CampaignController::class, 'analytics'])->name('campaign.analytics');
 
             Route::get('marketing/analytics', [MarketingAnalyticsController::class, 'dashboard'])->name('analytics');
+            Route::get('marketing/analytics/effective-campaigns', [MarketingAnalyticsController::class, 'effectiveCampaigns'])->name('analytics.effectiveCampaigns');
 
 
         });
