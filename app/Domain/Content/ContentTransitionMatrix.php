@@ -54,12 +54,9 @@ final class ContentTransitionMatrix
 
     public function isAllowed(enContentStatus $from, enContentStatus $to, bool $isAdmin): bool
     {
-        if ($from === $to) {
-            return false;
-        }
 
         $allowedTargets = self::TRANSITIONS[$from->value][$isAdmin ? 'admin' : 'member'] ?? [];
 
-        return in_array($to->value, $allowedTargets, true);
+        return in_array($to->value, $allowedTargets, true) || $from->value === $to->value;
     }
 }
