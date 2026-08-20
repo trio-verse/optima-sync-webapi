@@ -10,14 +10,13 @@ use App\Http\Resources\V1\ContentResource;
 use App\Models\Campaign;
 use App\Models\Content;
 use App\Services\Marketing\Content\CreateContentService;
-use App\Services\Marketing\Content\updateContentService;
-use App\Services\Marketing\ContentService;
+use App\Services\Marketing\Content\UpdateContentService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 
 
 /**
- * group Content
+ * @group Content
  */
 
 class ContentController extends Controller
@@ -26,10 +25,11 @@ class ContentController extends Controller
 
     public function __construct(
         private CreateContentService $create_content_service,
-        private updateContentService $update_content_service
+        private UpdateContentService $update_content_service
     ) {
     }
     /**
+     * Content list.
      * Display a listing of campaign content.
      */
     public function index(Campaign $campaign)

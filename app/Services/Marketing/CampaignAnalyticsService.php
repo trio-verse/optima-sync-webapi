@@ -64,7 +64,7 @@ class CampaignAnalyticsService
      */
     private function ROIcalculate(float $spent, float $revenue, int $wins_count)
     {
-        if ($spent === 0 || $wins_count === 0)
+        if ($spent == 0 || $wins_count == 0)
             return null;
 
         return round(($revenue - $spent) / $spent * 100, 2);
