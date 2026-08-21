@@ -27,8 +27,8 @@ class       UpdateCampaignRequest extends FormRequest
         return [
             'name' => ['string', 'nullable', 'max:255'],
             'description' => ['string', 'nullable', 'max:255'],
-            'start_date' => ['date', 'nullable'],
-            'end_date' => ['date', 'nullable', 'after:start_date'],
+            'start_date' => ['date_format:Y-m-d', 'nullable'],
+            'end_date' => ['date_format:Y-m-d', 'nullable', 'after:start_date'],
             'expected_budget' => ['numeric', 'nullable', 'min:0'],
             'estimated_content_count' => ['integer', 'nullable', 'min:0'],
             'status' => ['string', 'nullable', Rule::in(enCampaignStatus::all())],

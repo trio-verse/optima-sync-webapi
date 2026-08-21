@@ -33,8 +33,8 @@ class Campaign extends Model
     protected function casts(): array
     {
         return [
-            'start_date' => 'date',
-            'end_date' => 'date',
+            'start_date' => 'datetime',
+            'end_date' => 'datetime',
             'expected_budget' => 'decimal:2',
             'estimated_content_count' => 'integer',
         ];
@@ -109,18 +109,18 @@ class Campaign extends Model
     public function getIsOverdueAttribute()
     {
         if ($this->end_date && $this->status !== 'completed') {
-            return now()->date > $this->end_date->date;
+            return now()->startOfDay()->greaterThan($this->end_date->startOfDay());
         }
         return false;
     }
-    public function getDaysRemainingAttribute()
+    public function getDaysRemainingAttribute(): int
     {
         if (!$this->end_date || $this->status === 'completed') {
             return 0;
         }
 
-        $remaining = now()->diffInDays($this->end_date, false);
-        return $remaining < 0 ? 0 : $remaining;
+        $remaining = now()->startOfDay()->diffInDays($this->end_date->startOfDay(), false);
+        return $remaining < 0 ? 0 : (int) $remaining;
     }
     public function getFormattedBudgetAttribute()
     {
