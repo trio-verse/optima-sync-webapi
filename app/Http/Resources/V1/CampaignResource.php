@@ -18,8 +18,8 @@ class CampaignResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
-            'start_date' => $this->start_date?->format('Y-m-d\TH:i:s\Z'),
-            'end_date' => $this->end_date?->format('Y-m-d\TH:i:s\Z'),
+            'start_date' => $this->start_date?->format('Y-m-d'),
+            'end_date' => $this->end_date?->format('Y-m-d'),
             'expected_budget' => $this->expected_budget,
             'estimated_content_count' => $this->estimated_content_count,
             'status' => $this->status,
@@ -27,10 +27,10 @@ class CampaignResource extends JsonResource
 
             $this->mergeWhen($request->routeIs('campaigns.show'), [
                 'duration' => $this->duration,
+                'days_remaining' => $this->days_remaining,
                 'content_progress' => $this->content_progress,
                 'content_performance' => $this->content_performance,
                 'is_overdue' => $this->is_overdue,
-                'days_remaining' => $this->days_remaining,
                 'formatted_budget' => $this->formatted_budget,
 
                 'connections' => ConnectionResource::collection($this->whenLoaded('connections')),
