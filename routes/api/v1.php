@@ -38,7 +38,8 @@ Route::prefix('v1')->group(function () {
             // Org members
             Route::post('/organizations/{organizationId}/members', [OrganizationController::class, 'addMember']);
             Route::patch('/organizations/{organizationId}/members/{memberId}', [OrganizationController::class, 'updateMemberRole']);
-
+            Route::get('/organizations/{organizationId}/members', [OrganizationController::class, 'getOrganizationMembers']);
+            
             // Organization Logo
             Route::post('/organizations/{organization}/logo', [OrganizationLogoController::class, 'store'])
                 ->name('organizations.logo.store');

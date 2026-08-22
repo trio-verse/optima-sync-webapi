@@ -100,4 +100,11 @@ class OrganizationService
 
         return Organization::forUser($user)->withCount('members')->get();
     }
+
+    public function getOrganizationMembers(int $organizationId, int $perPage = 15): Collection
+    {
+        $org = Organization::findOrFail($organizationId);
+        Gate::authorize('view', $org);
+        return $org->members()->with('user')->paginate($perPage);
+    }
 }
