@@ -81,7 +81,9 @@ class ConnectionService
             // cannot corrupt the financial record of an already-closed deal.
             if (!$wasWon && isset($data['stage']) && $data['stage'] == enConnectionStages::WIN->value) {
                 $connection->load('product');
-                $connection->deal_value = $connection->product->price;
+                $connection->update([
+                    'deal_value' => $connection->product->price
+                ]);
                 $connection->save();
             }
             return true;
