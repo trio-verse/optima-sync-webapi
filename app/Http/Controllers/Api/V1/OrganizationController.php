@@ -104,7 +104,7 @@ class OrganizationController extends Controller
 
             $organization = $this->organizationservice->updateOrg($id, $validatedData);
             return ApiResponse::response(new OrganizationResource($organization), 'The organization was updated succsesfully', 200);
-        } catch (ModelNotFoundException|RecordNotFoundException $e) {
+        } catch (ModelNotFoundException | RecordNotFoundException $e) {
             return ApiResponse::error(null, "organization not found", 404);
         } catch (AuthorizationException $e) {
             return ApiResponse::error(null, "Not allowed", 403);
@@ -176,5 +176,11 @@ class OrganizationController extends Controller
         $organizations = $this->organizationservice->getMyOrganizations($user, $request->input('per_page', 15));
 
         return ApiResponse::success(OrganizationResource::collection($organizations), 'The organizations were retrieved successfully', 200);
+    }
+
+    public function getOrganizationMembers(Request $request, string|int $organizationId): JsonResponse
+    {
+        $members = $this->organizationservice->getOrganizationMembers($organizationId, $request->input('per_page', 15));
+        return ApiResponse::success(OrganizationMemberResource::collection($members), 'The members were retrieved successfully', 200);
     }
 }
