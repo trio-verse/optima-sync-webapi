@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\CampaignCaptureController;
 use App\Http\Controllers\Api\V1\CampaignController;
 use App\Http\Controllers\Api\V1\ChannelController;
 use App\Http\Controllers\Api\V1\CityController;
@@ -39,7 +40,7 @@ Route::prefix('v1')->group(function () {
             Route::post('/organizations/{organizationId}/members', [OrganizationController::class, 'addMember']);
             Route::patch('/organizations/{organizationId}/members/{memberId}', [OrganizationController::class, 'updateMemberRole']);
             Route::get('/organizations/{organizationId}/members', [OrganizationController::class, 'getOrganizationMembers']);
-            
+
             // Organization Logo
             Route::post('/organizations/{organization}/logo', [OrganizationLogoController::class, 'store'])
                 ->name('organizations.logo.store');
@@ -114,6 +115,10 @@ Route::prefix('v1')->group(function () {
             Route::get('marketing/analytics/effective-campaigns', [MarketingAnalyticsController::class, 'effectiveCampaigns'])->name('analytics.effectiveCampaigns');
 
 
+            // Lead capture
+            Route::get('campaigns/{campaign}/capture', [CampaignCaptureController::class, 'show']);
+            Route::patch('campaigns/{campaign}/capture', [CampaignCaptureController::class, 'update']);
+            Route::post('campaigns/{campaign}/capture/regenerate', [CampaignCaptureController::class, 'regenerateToken']);
         });
 
     });
