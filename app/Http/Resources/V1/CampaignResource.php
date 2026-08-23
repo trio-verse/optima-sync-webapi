@@ -25,6 +25,11 @@ class CampaignResource extends JsonResource
             'status' => $this->status,
             'target' => $this->target,
 
+            'capture' => [
+                'enabled' => $this->capture_form_enabled,
+                'capture_url' => $this->capture_url,  // null if disabled
+            ],
+            
             $this->mergeWhen($request->routeIs('campaigns.show'), [
                 'duration' => $this->duration,
                 'days_remaining' => $this->days_remaining,

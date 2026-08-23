@@ -178,9 +178,15 @@ class OrganizationController extends Controller
         return ApiResponse::success(OrganizationResource::collection($organizations), 'The organizations were retrieved successfully', 200);
     }
 
+    /**
+     * get Members list
+     * @param Request $request
+     * @param string|int $organizationId
+     * @return JsonResponse
+     */
     public function getOrganizationMembers(Request $request, string|int $organizationId): JsonResponse
     {
         $members = $this->organizationservice->getOrganizationMembers($organizationId, $request->input('per_page', 15));
-        return ApiResponse::success(OrganizationMemberResource::collection($members), 'The members were retrieved successfully', 200);
+        return ApiResponse::pagination(OrganizationMemberResource::collection($members), 'The members were retrieved successfully', 200);
     }
 }

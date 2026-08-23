@@ -73,8 +73,13 @@ class ConnectionService
     public function updateConnection(Connection $connection, array $data): bool
     {
         try {
+            $wasWon = $connection->stage == enConnectionStages::WIN->value;
             $connection->update($data);
-            if (isset($data['stage']) && $data['stage'] == enConnectionStages::WIN->value) {
+
+            // Freeze a snapshot of the deal value only when transitioning into WIN.
+            // Never overwrite it afterward, so later product price changes
+            // cannot corrupt the financial record of an already-closed deal.
+            if (!$wasWon && isset($data['stage']) && $data['stage'] == enConnectionStages::WIN->value) {
                 $connection->load('product');
                 $connection->deal_value = $connection->product->price;
                 $connection->save();

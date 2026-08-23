@@ -7,6 +7,8 @@ use App\Trait\BelongsToOrganization;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
+use Override;
 
 class Campaign extends Model
 {
@@ -26,7 +28,9 @@ class Campaign extends Model
         'estimated_content_count',
         'status',
         'organization_id',
-        'target'
+        'target',
+        'capture_token',
+        'capture_form_enabled',
     ];
 
 
@@ -47,10 +51,25 @@ class Campaign extends Model
         'is_overdue',
         'days_remaining',
         'formatted_budget',
+        'capture_url'
     ];
     protected $hidden = [
         'organization_id',
     ];
+
+    #[Override]
+    protected static function booted()
+    {
+        static::updating(function (Campaign $campaign) {
+            if (
+                $campaign->isDirty('capture_form_enabled')
+                && $campaign->capture_form_enabled === true
+                && $campaign->capture_token === null
+            ) {
+                $campaign->capture_token = Str::random(48);
+            }
+        });
+    }
 
 
     /**
@@ -71,8 +90,17 @@ class Campaign extends Model
 
     /**
      * Helpers / Attributes
-     * @return int|null
      */
+
+    public function getCaptureUrlAttribute(): ?string
+    {
+        if (!$this->capture_form_enabled || !$this->capture_token) {
+            return null;
+        }
+
+        return url("/capture/{$this->capture_token}");
+    }
+
     public function getDurationAttribute()
     {
         if (!$this->start_date || !$this->end_date) {
