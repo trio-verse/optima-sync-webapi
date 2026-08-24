@@ -87,7 +87,6 @@ class MarketingDashboardService
 
         return match ($sortBy) {
             'roi' => $campaigns
-                ->whereNotNull('roi')
                 ->sortByDesc('roi')
                 ->values(),
             default => $campaigns

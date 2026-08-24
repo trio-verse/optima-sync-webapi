@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Api\V1;
 use App\Helper\V1\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\StoreActivityRequest;
+use App\Http\Requests\Activity\UpdateActivityRequest;
 use App\Http\Requests\Connections\StoreConnectionRequest;
 use App\Http\Requests\Connections\UpdateConnectionRequest;
 use App\Http\Resources\V1\ActivityResource;
 use App\Http\Resources\V1\ConnectionResource;
+use App\Models\Activity;
 use App\Models\Client;
 use App\Models\Connection;
 use App\Services\ConnectionService;
@@ -151,6 +153,48 @@ class ConnectionController extends Controller
             return ApiResponse::success([], "Activity added successfully", 201);
         } else {
             return ApiResponse::error(null, "Failed to add activity", 500);
+        }
+    }
+
+    /**
+     * Update activity of a connection
+     *
+     * Update an existing activity/update for a connection
+     */
+    public function updateActivity(UpdateActivityRequest $request, Connection $connection, Activity $activity)
+    {
+        $this->authorize('update', $connection);
+
+        if ($activity->connection_id !== $connection->id) {
+            return ApiResponse::error(null, "Activity not found for this connection", 404);
+        }
+
+        $data = $request->validated();
+
+        if ($this->connectionService->updateActivity($activity, $data)) {
+            return ApiResponse::success(new ActivityResource($activity->fresh()), "Activity updated successfully", 200);
+        } else {
+            return ApiResponse::error(null, "Failed to update activity", 500);
+        }
+    }
+
+    /**
+     * Delete activity of a connection
+     *
+     * Remove an existing activity/update for a connection
+     */
+    public function deleteActivity(Connection $connection, Activity $activity)
+    {
+        $this->authorize('update', $connection);
+
+        if ($activity->connection_id !== $connection->id) {
+            return ApiResponse::error(null, "Activity not found for this connection", 404);
+        }
+
+        if ($this->connectionService->deleteActivity($activity)) {
+            return ApiResponse::success([], "Activity deleted successfully", 200);
+        } else {
+            return ApiResponse::error(null, "Failed to delete activity", 500);
         }
     }
 }

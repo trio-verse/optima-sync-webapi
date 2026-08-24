@@ -87,6 +87,8 @@ Route::prefix('v1')->group(function () {
             // connection activities
             Route::get('connections/{connection}/activities', [ConnectionController::class, 'getActivities']);
             Route::post('connections/{connection}/activities', [ConnectionController::class, 'storeActivity']);
+            Route::patch('connections/{connection}/activities/{activity}', [ConnectionController::class, 'updateActivity']);
+            Route::delete('connections/{connection}/activities/{activity}', [ConnectionController::class, 'deleteActivity']);
 
             /**
              * =====================================

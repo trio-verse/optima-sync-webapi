@@ -45,9 +45,7 @@ class AppServiceProvider extends ServiceProvider
 
 
         // for all apis
-        RateLimiter::for('api', function (Request $request) {
-            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
-        });
+        $this->applyRateLimiting();
 
         // Rate limiter for Lead Capture
         RateLimiter::for('lead-capture', function (Request $request) {
@@ -55,6 +53,47 @@ class AppServiceProvider extends ServiceProvider
                 Limit::perHour(10)->by('ip:' . $request->ip()),
                 Limit::perHour(100)->by('token:' . $request->route('token')),
             ];
+        });
+    }
+
+    public function applyRateLimiting(): void
+    {
+        //  Dynamic limits based on user tier
+        RateLimiter::for('tiered-api', function (Request $request) {
+            $user = $request->user();
+
+            if (!$user) {
+                // Anonymous users get strict limits
+                return Limit::perMinute(10)->by($request->ip());
+            }
+
+            // Map subscription tiers to request limits  (feaute update)
+            $limits = [
+                'free' => 60,
+                'starter' => 500,
+                'professional' => 2000,
+                'enterprise' => 10000,
+            ];
+
+            // $maxRequests = $limits[$user->subscription_tier] ?? 100;
+            $maxRequests = 60 ;
+
+            return Limit::perMinute($maxRequests)->by($user->id);
+        });
+
+        // Different limits per endpoint type
+        RateLimiter::for('resource-based', function (Request $request) {
+            // Heavy operations get stricter limits
+            $expensiveEndpoints = ['/api/reports', '/api/exports', '/api/bulk'];
+
+            $isExpensive = collect($expensiveEndpoints)
+                ->contains(fn($path) => str_starts_with($request->path(), ltrim($path, '/')));
+
+            if ($isExpensive) {
+                return Limit::perHour(10)->by($request->user()?->id ?: $request->ip());
+            }
+
+            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
     }
 }

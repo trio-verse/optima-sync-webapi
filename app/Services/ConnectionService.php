@@ -70,6 +70,28 @@ class ConnectionService
         }
     }
 
+    public function updateActivity(Activity $activity, array $data): bool
+    {
+        try {
+            $activity->update($data);
+            return true;
+        } catch (\Exception $exception) {
+            Log::error('Error updating activity: ' . $exception->getMessage());
+            return false;
+        }
+    }
+
+    public function deleteActivity(Activity $activity): bool
+    {
+        try {
+            $activity->delete();
+            return true;
+        } catch (\Exception $exception) {
+            Log::error('Error deleting activity: ' . $exception->getMessage());
+            return false;
+        }
+    }
+
     public function updateConnection(Connection $connection, array $data): bool
     {
         try {
@@ -93,8 +115,12 @@ class ConnectionService
 
     public function deleteConnection(Connection $connection): bool
     {
+        $connection->loadCount('activities');
         try {
             $connection->delete();
+
+            if ($connection->activities_count > 0)
+                $connection->activities()->delete();
             return true;
         } catch (\Exception $exception) {
             Log::error('Error deleting connection: ' . $exception->getMessage());
