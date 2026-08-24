@@ -76,7 +76,7 @@ class OrganizationService
             $member = $org->members()->create(
                 [
                     'user_id' => $user->id,
-                    'role' => $data['role']
+                    'role' => $data['role'] ?? 'member'
                 ]
             );
             return $member->load('user');

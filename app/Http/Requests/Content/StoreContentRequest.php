@@ -7,6 +7,7 @@ use App\Models\Campaign;
 use App\Models\Content;
 use App\Singleton\TenantManager;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Override;
@@ -43,8 +44,9 @@ class StoreContentRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('contents')->where(function ($query) {
-                    return $query->where('organization_id', app(TenantManager::class)->getOrganizationId());
+                Rule::unique('contents')->where(function (Builder $query) {
+                    return $query->where('organization_id', app(TenantManager::class)->getOrganizationId())
+                        ->where('campaign_id', (int) $this->route('campaign'));
                 })
             ],
             'type' => ['required', 'string', 'max:255'],
