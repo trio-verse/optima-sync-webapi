@@ -53,8 +53,8 @@ class ConnectionController extends Controller
         $this->authorize('create', [Connection::class, $client]);
 
         $validated = $request->validated();
-        if ($this->connectionService->storeConnection($client, $validated)) {
-            return ApiResponse::success([], "Connection created successfully", 201);
+        if ($connection = $this->connectionService->storeConnection($client, $validated)) {
+            return ApiResponse::success(new ConnectionResource($connection), "Connection created successfully", 201);
         } else {
             return ApiResponse::error(null, "Failed to create connection", 500);
         }

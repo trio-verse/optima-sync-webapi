@@ -6,6 +6,7 @@ use App\Enums\enConnectionStages;
 use App\Models\Activity;
 use App\Models\Client;
 use App\Models\Connection;
+use App\Models\Product;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Throwable;
@@ -28,7 +29,7 @@ class ConnectionService
             return $client->connections()
                 ->when(isset($data['stage']), fn($query) => $query->byStage($data['stage']))
                 ->paginate($data['per_page'] ?? null);
-                
+
         } catch (Throwable $th) {
             Log::error('Error getting client connections: ' . $th->getMessage());
             throw $th;
@@ -48,12 +49,14 @@ class ConnectionService
         }
     }
 
-    public function storeConnection(Client $client, array $data): bool
+    public function storeConnection(Client $client, array $data): false|Connection
     {
         try {
+            if (isset($data['stage']) && $data['stage'] == enConnectionStages::WIN->value)
+                $data['deal_value'] = Product::find((int) $data['product_id'])->price;
 
-            $client->connections()->create($data)->save();
-            return true;
+            $connection = $client->connections()->create($data);
+            return $connection;
         } catch (\Exception $exception) {
             Log::error('Error storing connection: ' . $exception->getMessage());
             return false;
