@@ -74,6 +74,7 @@ Route::prefix('v1')->group(function () {
             Route::get('/clients/{client}/connections', [ConnectionController::class, 'getClientConnections']);
             Route::get('connections/{connection}', [ConnectionController::class, 'show']);
             Route::patch('connections/{connection}', [ConnectionController::class, 'update']);
+            Route::patch('connections/{connection}/stage', [ConnectionController::class, 'changeStage'])->name('connections.stage');
             Route::delete('connections/{connection}', [ConnectionController::class, 'destroy']);
 
             // Products
@@ -100,6 +101,7 @@ Route::prefix('v1')->group(function () {
             Route::get('campaigns', [CampaignController::class, 'index'])->name('campaigns.index');
             Route::post('campaigns', [CampaignController::class, 'store'])->name('campaigns.store');
             Route::patch('campaigns/{campaign}', [CampaignController::class, 'update'])->name('campaigns.update');
+            Route::patch('campaigns/{campaign}/status', [CampaignController::class, 'changeStatus'])->name('campaigns.status');
             Route::get('campaigns/{campaign}', [CampaignController::class, 'show'])->name('campaigns.show');
             Route::delete('campaigns/{campaign}', [CampaignController::class, 'destroy'])->name('campaigns.destroy');
 
@@ -108,6 +110,8 @@ Route::prefix('v1')->group(function () {
             Route::post('campaigns/{campaign}/contents', [ContentController::class, 'store'])->name('campaign.contents.store');
             Route::get('campaigns/{campaign}/contents/{content}', [ContentController::class, 'show'])->name('campaign.contents.show');
             Route::patch('campaigns/{campaign}/contents/{content}', [ContentController::class, 'update'])->name('campaign.contents.update');
+            Route::patch('campaigns/{campaign}/contents/{content}/status', [ContentController::class, 'changeStatus'])->name('campaign.contents.status');
+            Route::post('campaigns/{campaign}/contents/{content}/cost/confirm', [ContentController::class, 'confirmCost'])->name('campaign.contents.cost.confirm');
             Route::delete('campaigns/{campaign}/contents/{content}', [ContentController::class, 'destroy'])->name('campaign.contents.destroy');
 
             // Analytics

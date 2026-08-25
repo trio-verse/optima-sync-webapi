@@ -56,6 +56,7 @@ class ContentResource extends JsonResource
             'type' => $this->type,
             'script' => $this->script,
             'cost' => $this->cost,
+            'cost_confirmed_at' => $this->cost_confirmed_at,
             'status' => $this->status,
             'published_at' => $this->published_at,
         ];

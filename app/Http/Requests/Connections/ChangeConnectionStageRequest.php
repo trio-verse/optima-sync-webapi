@@ -2,10 +2,12 @@
 
 namespace App\Http\Requests\Connections;
 
+use App\Enums\enConnectionStages;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class UpdateConnectionRequest extends FormRequest
+class ChangeConnectionStageRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,10 +25,20 @@ class UpdateConnectionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'channel_id' => ['string', 'sometimes', 'exists:channels,id'],
-            'assignee_id' => ['string', 'sometimes', 'exists:users,id'],
-            'initiated_by' => ['string', 'nullable'],
-            'campaign_id' => ['nullable', 'exists:campaigns,id'],
+            'stage' => ['required', Rule::in(enConnectionStages::all())],
+        ];
+    }
+
+    /**
+     * Get custom validation messages.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'stage.required' => 'The stage field is required.',
+            'stage.in' => 'The selected stage is invalid.',
         ];
     }
 }

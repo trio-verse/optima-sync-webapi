@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use App\Enums\enConnectionStages;
 use App\Trait\BelongsToOrganization;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 #[Fillable(
     [
@@ -76,5 +79,14 @@ class Connection extends Model
     public function activities()
     {
         return $this->hasMany(Activity::class);
+    }
+
+
+    // scopes
+    public function scopeByStage(Builder $query, string $stage)
+    {
+        if (!in_array($stage, enConnectionStages::all()) || strtolower($stage) == 'all')
+            return $query;
+        return $query->where('stage', $stage);
     }
 }

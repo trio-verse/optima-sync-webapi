@@ -6,6 +6,7 @@ use App\Helper\V1\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\StoreActivityRequest;
 use App\Http\Requests\Activity\UpdateActivityRequest;
+use App\Http\Requests\Connections\ChangeConnectionStageRequest;
 use App\Http\Requests\Connections\StoreConnectionRequest;
 use App\Http\Requests\Connections\UpdateConnectionRequest;
 use App\Http\Resources\V1\ActivityResource;
@@ -86,6 +87,20 @@ class ConnectionController extends Controller
     }
 
     /**
+     * Change Connection stage.
+     */
+    public function changeStage(ChangeConnectionStageRequest $request, Connection $connection)
+    {
+        $this->authorize('update', $connection);
+
+        if ($this->connectionService->changeStage($connection, $request->validated('stage'))) {
+            return ApiResponse::success(new ConnectionResource($connection->fresh()), "Connection stage changed successfully", 200);
+        } else {
+            return ApiResponse::error(null, "Failed to change connection stage", 500);
+        }
+    }
+
+    /**
      * Remove Connection.
      */
     public function destroy(Connection $connection)
@@ -114,7 +129,7 @@ class ConnectionController extends Controller
             'per_page',
             'page',
             'sort',
-            'order',
+            'stage',
         ]);
         $connections = $this->connectionService->getClientConnections($client, $validated);
         return ApiResponse::pagination(ConnectionResource::collection($connections), "Client Connections retrieved successfully", 200);

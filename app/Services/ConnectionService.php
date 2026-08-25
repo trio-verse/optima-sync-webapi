@@ -25,7 +25,10 @@ class ConnectionService
     public function getClientConnections(Client $client, array $data): LengthAwarePaginator
     {
         try {
-            return $client->connections()->paginate($data['per_page'] ?? null);
+            return $client->connections()
+                ->when(isset($data['stage']), fn($query) => $query->byStage($data['stage']))
+                ->paginate($data['per_page'] ?? null);
+                
         } catch (Throwable $th) {
             Log::error('Error getting client connections: ' . $th->getMessage());
             throw $th;
@@ -95,20 +98,31 @@ class ConnectionService
     public function updateConnection(Connection $connection, array $data): bool
     {
         try {
-            $wasWon = $connection->stage == enConnectionStages::WIN->value;
             $connection->update($data);
+            return true;
+        } catch (\Exception $exception) {
+            Log::error('Error updating connection: ' . $exception->getMessage());
+            return false;
+        }
+    }
+
+    public function changeStage(Connection $connection, string $stage): bool
+    {
+        try {
+            $wasWon = $connection->stage == enConnectionStages::WIN->value;
+            $connection->update(['stage' => $stage]);
 
             // Freeze a snapshot of the deal value only when transitioning into WIN.
             // Never overwrite it afterward, so later product price changes
             // cannot corrupt the financial record of an already-closed deal.
-            if (!$wasWon && isset($data['stage']) && $data['stage'] == enConnectionStages::WIN->value) {
+            if (!$wasWon && $stage === enConnectionStages::WIN->value) {
                 $connection->load('product');
-                $connection->deal_value = $connection->product->price;
+                $connection->deal_value = $connection->product?->price;
                 $connection->save();
             }
             return true;
         } catch (\Exception $exception) {
-            Log::error('Error updating connection: ' . $exception->getMessage());
+            Log::error('Error changing connection stage: ' . $exception->getMessage());
             return false;
         }
     }

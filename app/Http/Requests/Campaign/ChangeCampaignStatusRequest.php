@@ -2,10 +2,12 @@
 
 namespace App\Http\Requests\Campaign;
 
+use App\Enums\enCampaignStatus;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class       UpdateCampaignRequest extends FormRequest
+class ChangeCampaignStatusRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,13 +25,20 @@ class       UpdateCampaignRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['string', 'nullable', 'max:255'],
-            'description' => ['string', 'nullable', 'max:255'],
-            'start_date' => ['date_format:Y-m-d', 'nullable'],
-            'end_date' => ['date_format:Y-m-d', 'nullable', 'after:start_date'],
-            'expected_budget' => ['numeric', 'nullable', 'min:0'],
-            'estimated_content_count' => ['integer', 'nullable', 'min:0'],
-            'target' => ['string', 'nullable'],
+            'status' => ['required', Rule::in(enCampaignStatus::all())],
+        ];
+    }
+
+    /**
+     * Get custom validation messages.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'status.required' => 'The status field is required.',
+            'status.in' => 'The selected status is invalid.',
         ];
     }
 }
