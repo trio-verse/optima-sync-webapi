@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Helper\V1\ApiResponse;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Campaign\ChangeCampaignStatusRequest;
 use App\Http\Requests\Campaign\StoreCampaignRequest;
 use App\Http\Requests\Campaign\UpdateCampaignRequest;
 use App\Http\Resources\V1\CampaignResource;
@@ -65,6 +66,16 @@ class CampaignController extends Controller
         $validated = $request->validated();
         $campaign = $this->service->update($campaign, $validated);
         return ApiResponse::success([], "Campaign updated successfully");
+    }
+
+    /**
+     * Change campaign status.
+     */
+    public function changeStatus(ChangeCampaignStatusRequest $request, Campaign $campaign)
+    {
+        $this->authorize('update', $campaign);
+        $campaign = $this->service->changeStatus($campaign, $request->validated('status'));
+        return ApiResponse::success(new CampaignResource($campaign), "Campaign status changed successfully");
     }
 
     /**

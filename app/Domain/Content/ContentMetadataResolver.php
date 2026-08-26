@@ -10,9 +10,10 @@ use Illuminate\Support\Carbon;
 
 /**
  * Decides which metadata fields get stamped onto a Content update, based on
- * who is acting, whether a status change is happening, and whether the
- * payload touches `cost`.
+ * who is acting and whether a status change is happening.
  *
+ * Cost confirmation is intentionally not handled here — it is an explicit
+ * admin action performed through ContentCostConfirmer.
  */
 final class ContentMetadataResolver
 {
@@ -23,16 +24,10 @@ final class ContentMetadataResolver
         User $user,
         bool $isAdmin,
         ?enContentStatus $newStatus,
-        bool $payloadHasCost,
     ): array {
         $metadata = $newStatus !== null
             ? $this->metadataForStatus($newStatus, $user)
             : [];
-
-        if ($payloadHasCost && $isAdmin) {
-            $metadata['cost_confirmed_by'] = $user->id;
-            $metadata['cost_confirmed_at'] = Carbon::now();
-        }
 
         if (!$isAdmin && $this->isAuthoringStatus($newStatus)) {
             // Re-stamp ownership whenever a non-admin author drafts or

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\product;
 
+use App\Models\Product;
 use App\Rules\UniqueProductSlug;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -23,7 +24,8 @@ class UpdateProductRequest extends FormRequest
     public function rules(): array
     {
         // Get the product ID from the route parameter
-        $productId = $this->route('product');
+        $product = $this->route('product');
+        $productId = $product instanceof Product ? $product->id : $product ;
 
         return [
             'name' => ['sometimes', 'string', 'max:255', new UniqueProductSlug($productId)],

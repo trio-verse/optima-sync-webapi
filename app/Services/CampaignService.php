@@ -24,6 +24,13 @@ class CampaignService
         return $campaign;
     }
 
+    public function changeStatus(Campaign $campaign, string $status): Campaign
+    {
+        $campaign->status = $status;
+        $campaign->saveOrFail();
+        return $campaign;
+    }
+
     public function show(Campaign $campaign): Campaign
     {
         return $campaign->load(['connections']);

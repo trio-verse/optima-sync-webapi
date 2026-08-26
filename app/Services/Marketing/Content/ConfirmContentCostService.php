@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\Marketing\Content;
 
+use App\Domain\Content\ContentCostConfirmer;
 use App\Models\Campaign;
 use App\Models\Content;
 use App\Models\User;
@@ -11,28 +12,30 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Gate;
 
 /**
- * Updates the editable fields of a Content row that belongs to a Campaign.
- *
- * Status transitions and cost confirmation are intentionally not handled
- * here — they are explicit actions performed through their own endpoints
- * (ChangeContentStatusService / ConfirmContentCostService).
+ * Confirms the cost of a Content row that belongs to a Campaign.
+ * Admin-only action: accepts the current cost or replaces it before
+ * stamping the confirmation metadata.
  */
-final class UpdateContentService
+final class ConfirmContentCostService
 {
+    public function __construct(
+        private readonly ContentCostConfirmer $costConfirmer,
+    ) {
+    }
+
     /**
      * @param array<string, mixed> $data
      *
      * @throws AuthorizationException
+     * @throws \Illuminate\Validation\ValidationException
      */
-    public function update(User $user, Campaign $campaign, Content $content, array $data): Content
+    public function confirm(User $user, Campaign $campaign, Content $content, array $data): Content
     {
         $this->assertBelongsToCampaign($campaign, $content);
 
-        Gate::authorize('update', $content);
+        Gate::authorize('set_cost', $content);
 
-        $content->update($data);
-
-        return $content->refresh();
+        return $this->costConfirmer->confirm($content, $user, $data['cost'] ?? null);
     }
 
     /**

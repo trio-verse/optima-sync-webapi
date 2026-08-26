@@ -5,7 +5,7 @@ namespace App\Http\Requests\Content;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateContentRequest extends FormRequest
+class ConfirmContentCostRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -18,7 +18,7 @@ class UpdateContentRequest extends FormRequest
             return false;
         }
 
-        return $this->user()->can('update', $content);
+        return $this->user()->can('set_cost', $content);
     }
 
     /**
@@ -29,13 +29,7 @@ class UpdateContentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'channel_id' => ['sometimes', 'exists:channels,id'],
-            'title' => ['sometimes', 'string', 'max:255'],
-            'type' => ['sometimes', 'string', 'max:255'],
-            'script' => ['nullable', 'string'],
-            'cost' => ['nullable', 'numeric', 'min:0'],
-            'published_at' => ['nullable', 'date'],
-            'description' => ['nullable', 'string'],
+            'cost' => ['sometimes', 'nullable', 'numeric', 'min:0'],
         ];
     }
 
@@ -47,12 +41,8 @@ class UpdateContentRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'channel_id.exists' => 'The selected channel does not exist.',
-            'title.max' => 'The title must not exceed 255 characters.',
-            'type.max' => 'The type must not exceed 255 characters.',
             'cost.numeric' => 'The cost must be a valid number.',
             'cost.min' => 'The cost must be at least 0.',
-            'published_at.date' => 'The published date must be a valid date.',
         ];
     }
 
@@ -61,7 +51,6 @@ class UpdateContentRequest extends FormRequest
      */
     protected function prepareForValidation(): void
     {
-        // Convert cost to numeric if provided
         if ($this->has('cost') && is_string($this->cost)) {
             $this->merge([
                 'cost' => (float) $this->cost,

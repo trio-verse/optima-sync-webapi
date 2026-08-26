@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\OrgMember;
+namespace App\Http\Requests\Activity;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreOrganizationMemberRequest extends FormRequest
+class UpdateActivityRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,10 +23,8 @@ class StoreOrganizationMemberRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // 'organization_id' => ['required', 'exists:organizations,id'],
-            // 'user_id' => ['required', 'exists:users,id'],
-            'email' => ['required', 'email'],
-            'role' => ['nullable', 'in:admin,member'],
+            'content' => ['required', 'string', 'min:1', 'max:2000'],
+            // 'metadata' => ['nullable', 'array'],
         ];
     }
 }

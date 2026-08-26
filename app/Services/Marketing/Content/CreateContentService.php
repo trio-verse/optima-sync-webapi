@@ -88,11 +88,6 @@ class CreateContentService
         $data['published_by'] = $user->id;
         $data['approved_at'] = now();
         $data['assigned_by'] = $user->id;
-
-        if ($this->hasCost($data)) {
-            $data['cost_confirmed_by'] = $user->id;
-            $data['cost_confirmed_at'] = now();
-        }
     }
 
     /**
@@ -131,13 +126,5 @@ class CreateContentService
         return $user->createdOrganizations->contains(
             app(TenantManager::class)->getOrganizationId()
         );
-    }
-
-    /**
-     * Check if content has an associated cost
-     */
-    private function hasCost(array $data): bool
-    {
-        return isset($data['cost']) && $data['cost'] > 0;
     }
 }
