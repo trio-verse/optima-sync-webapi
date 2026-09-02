@@ -14,7 +14,7 @@ use App\Models\Content;
 use App\Services\Marketing\Content\ChangeContentStatusService;
 use App\Services\Marketing\Content\ConfirmContentCostService;
 use App\Services\Marketing\Content\CreateContentService;
-use App\Services\Marketing\Content\GetCampaignContentServiceP;
+use App\Services\Marketing\Content\GetCampaignContentService;
 use App\Services\Marketing\Content\UpdateContentService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -31,7 +31,7 @@ class ContentController extends Controller
     use AuthorizesRequests;
 
     public function __construct(
-        private GetCampaignContentServiceP $get_campaign_content_service,
+        private GetCampaignContentService $get_campaign_content_service,
         private CreateContentService $create_content_service,
         private UpdateContentService $update_content_service,
         private ConfirmContentCostService $confirm_content_cost_service,

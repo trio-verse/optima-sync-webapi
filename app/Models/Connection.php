@@ -93,4 +93,10 @@ class Connection extends Model
             return $query;
         return $query->where('stage', $stage);
     }
+
+    public function scopeSearchByClientName(Builder $query , string $name)
+    {
+        return $query->whereHas('client', fn($query) => $query->where('name', 'like', "%{$name}%"));
+    }    
+    
 }

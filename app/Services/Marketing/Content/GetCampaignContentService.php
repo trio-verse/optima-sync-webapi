@@ -5,7 +5,7 @@ namespace App\Services\Marketing\Content;
 use App\Models\Campaign;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-class GetCampaignContentServiceP
+class GetCampaignContentService
 {
 
     public function getContent(Campaign $campaign, array $data): LengthAwarePaginator

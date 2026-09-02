@@ -1,6 +1,7 @@
 <?php
 namespace App\Services\Marketing;
 
+use App\Enums\enCampaignStatus;
 use App\Models\Campaign;
 use App\Models\Organization;
 
@@ -61,7 +62,7 @@ class MarketingDashboardService
         ];
     }
 
-    public function getEffectiveCampaigns(Organization $org, string $sortBy = 'cpl' , int $per_page = 15)
+    public function getEffectiveCampaigns(Organization $org, string $sortBy = 'cpl', $status = null, int $per_page = 15)
     {
         $campaigns = $org->campaigns()->withCount('connections')
             ->withSum(
@@ -70,7 +71,9 @@ class MarketingDashboardService
             )->withSum(
                 ['contents as current_spent' => fn($q) => $q->whereNotNull('cost_confirmed_by')],
                 'cost'
-            )->paginate($per_page)
+            )->when(in_array($status, enCampaignStatus::all()), function ($query) use ($status) {
+                $query->where('status' , $status);
+            })->paginate($per_page)
             ->map(function ($campaign) {
                 $spent = (float) $campaign->current_spent;
                 $leads = (int) $campaign->connections_count;

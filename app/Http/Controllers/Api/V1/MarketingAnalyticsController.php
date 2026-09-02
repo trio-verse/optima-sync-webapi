@@ -39,13 +39,17 @@ class MarketingAnalyticsController extends Controller
     {
         $sortBy = $request->input('sort');
         $sortBy = in_array($sortBy ,['cpl', 'roi']) ? $sortBy : 'cpl';
+        $status = $request->input('status');
+        $per_page = $request->input('per_page' , 15) ;
 
         $campaigns = $this->dashboardService->getEffectiveCampaigns(
             $this->organization,
-            $sortBy
+            $sortBy,
+            $status,
+            $per_page
         );
 
-        return ApiResponse::success($campaigns , 'effictave campaigns fetched successfully');
+        return ApiResponse::pagination($campaigns , 'effictave campaigns fetched successfully');
     }
 
 }

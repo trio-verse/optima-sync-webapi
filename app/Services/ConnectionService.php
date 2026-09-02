@@ -19,7 +19,10 @@ class ConnectionService
         try {
             return Connection::with(['client', 'channel', 'assignee', 'product', 'campaign'])
                 ->orderBy($data['order'] ?? 'created_at', $data['sort'] ?? 'desc')
+                ->when(isset($data['stage']), fn($query) => $query->byStage($data['stage']))
+                ->when(isset($data['clientName']), fn($query) => $query->searchByClientName($data['clientName']))
                 ->paginate($data['per_page'] ?? null);
+                
         } catch (Throwable $th) {
             throw $th;
         }
