@@ -12,7 +12,7 @@ class CityService
 
     public function getAllCities(int $perPage = 15): Paginator
     {
-        return City::latest()->simplePaginate($perPage);
+        return City::latest()->paginate($perPage);
     }
 
     public function createcity(array $data): City

@@ -12,7 +12,7 @@ class ChannelService
 
     public function getAllChannels(int $perPage = 15): Paginator
     {
-        return Channel::latest()->simplePaginate($perPage);
+        return Channel::latest()->paginate($perPage);
     }
 
     public function createChannel(array $data): Channel

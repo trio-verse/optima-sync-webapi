@@ -4,14 +4,15 @@ namespace App\Services;
 
 use App\Models\Client;
 use App\Models\Stakeholder;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class StakeholderService
 {
 
-    public function getClientStakeholders(Client $client, int $perPage = 15)
+    public function getClientStakeholders(Client $client, int $perPage = 15) :LengthAwarePaginator
     {
 
-        return $client->stakeholders()->latest()->simplePaginate($perPage);
+        return $client->stakeholders()->latest()->paginate($perPage);
     }
 
     public function createStakeholder(Client $client, array $data): Stakeholder

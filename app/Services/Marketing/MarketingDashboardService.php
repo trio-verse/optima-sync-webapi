@@ -61,7 +61,7 @@ class MarketingDashboardService
         ];
     }
 
-    public function getEffectiveCampaigns(Organization $org, string $sortBy = 'cpl')
+    public function getEffectiveCampaigns(Organization $org, string $sortBy = 'cpl' , int $per_page = 15)
     {
         $campaigns = $org->campaigns()->withCount('connections')
             ->withSum(
@@ -70,7 +70,7 @@ class MarketingDashboardService
             )->withSum(
                 ['contents as current_spent' => fn($q) => $q->whereNotNull('cost_confirmed_by')],
                 'cost'
-            )->get()
+            )->paginate($per_page)
             ->map(function ($campaign) {
                 $spent = (float) $campaign->current_spent;
                 $leads = (int) $campaign->connections_count;

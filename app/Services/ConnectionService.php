@@ -17,7 +17,9 @@ class ConnectionService
     public function getAllConnections(array $data): LengthAwarePaginator
     {
         try {
-            return Connection::with(['client', 'channel', 'assignee', 'product' , 'campaign'])->latest()->paginate($data['per_page'] ?? null);
+            return Connection::with(['client', 'channel', 'assignee', 'product', 'campaign'])
+                ->orderBy($data['order'] ?? 'created_at', $data['sort'] ?? 'desc')
+                ->paginate($data['per_page'] ?? null);
         } catch (Throwable $th) {
             throw $th;
         }
@@ -42,7 +44,7 @@ class ConnectionService
             return $connection->activities()
                 ->with(['user'])
                 ->latest()
-                ->paginate($data['per_page'] ?? 20);
+                ->paginate($data['per_page'] ?? null);
         } catch (Throwable $th) {
             Log::error('Error getting connection activities: ' . $th->getMessage());
             throw $th;
