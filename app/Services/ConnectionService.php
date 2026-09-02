@@ -17,7 +17,7 @@ class ConnectionService
     public function getAllConnections(array $data): LengthAwarePaginator
     {
         try {
-            return Connection::with(['client', 'channel', 'assignee', 'product'])->latest()->paginate($data['per_page'] ?? null);
+            return Connection::with(['client', 'channel', 'assignee', 'product' , 'campaign'])->latest()->paginate($data['per_page'] ?? null);
         } catch (Throwable $th) {
             throw $th;
         }

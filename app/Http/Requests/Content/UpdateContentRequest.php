@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Content;
 
+use App\Rules\AcceptedOrganizationMember;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -36,6 +37,7 @@ class UpdateContentRequest extends FormRequest
             'cost' => ['nullable', 'numeric', 'min:0'],
             'published_at' => ['nullable', 'date'],
             'description' => ['nullable', 'string'],
+            'assigned_by' => ['nullable', 'integer', 'exists:users,id', new AcceptedOrganizationMember],
         ];
     }
 

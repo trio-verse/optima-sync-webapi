@@ -80,6 +80,10 @@ class Connection extends Model
     {
         return $this->hasMany(Activity::class);
     }
+    public function campaign()
+    {
+        return $this->belongsTo(campaign::class, 'campaign_id');
+    }
 
 
     // scopes
