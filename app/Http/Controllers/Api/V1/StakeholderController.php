@@ -26,10 +26,11 @@ class StakeholderController extends Controller
      * this endpoint display all Stakeholder from DB
      * response get all Stakeholder
      */
-    public function index(Client $client)
+    public function index(Request $request, Client $client)
     {
-        $stakeholder = $this->stakeholder_service->getClientStakeholders($client);
-        return ApiResponse::success(StakeholderResource::collection($stakeholder), 'Stakeholders fetched successfully');
+        $per_page = $request->query('per_page', 15);
+        $stakeholders = $this->stakeholder_service->getClientStakeholders($client,  $per_page);
+        return ApiResponse::pagination(StakeholderResource::collection($stakeholders), 'Stakeholders fetched successfully');
     }
 
 
@@ -62,12 +63,13 @@ class StakeholderController extends Controller
      * this endpoint update Stakeholder data
      * response updated Stakeholder data
      */
-    public function update(UpdateStakeholderRequest $request, Client $client,  Stakeholder $stakeholder)
+    public function update(UpdateStakeholderRequest $request, Client $client, Stakeholder $stakeholder)
     {
         $is_updated = $this->stakeholder_service->updateStakeholder($client, $stakeholder, $request->validated());
         if ($is_updated) {
             return ApiResponse::response(new StakeholderResource($stakeholder), 'The Stakeholder was updated successfully', 200);
-        } else   return ApiResponse::error(null, "bad request", 400);
+        } else
+            return ApiResponse::error(null, "bad request", 400);
     }
 
     /**

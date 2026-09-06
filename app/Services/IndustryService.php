@@ -5,15 +5,15 @@ namespace App\Services;
 use App\Models\Industry;
 use App\Singleton\TenantManager; 
 use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Pagination\Paginator;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB; 
 
 class IndustryService
 {
 
-    public function getAllIndustries(int $perPage = 15): Paginator
+    public function getAllIndustries(int $perPage = 15): LengthAwarePaginator
     {
-        return Industry::latest()->simplePaginate($perPage);
+        return Industry::latest()->paginate($perPage);
     }
 
     public function create(array $data): Industry

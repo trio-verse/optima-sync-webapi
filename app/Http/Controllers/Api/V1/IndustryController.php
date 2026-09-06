@@ -10,6 +10,7 @@ use App\Http\Resources\V1\IndustryResource;
 use App\Models\Industry;
 use App\Services\IndustryService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 /**
  * @group Industries
@@ -25,11 +26,12 @@ class IndustryController extends Controller
      * 
      * @return JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
-        $industries = $this->industryService->getAllIndustries();
+        $per_page = $request->query('per_page' , 15) ;
+        $industries = $this->industryService->getAllIndustries($per_page);
 
-        return ApiResponse::response(IndustryResource::collection($industries), 'Data fetched successfully', 200);
+        return ApiResponse::pagination(IndustryResource::collection($industries), 'Data fetched successfully', 200);
     }
 
 

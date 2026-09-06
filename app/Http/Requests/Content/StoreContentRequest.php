@@ -5,6 +5,7 @@ namespace App\Http\Requests\Content;
 use App\Enums\enContentStatus;
 use App\Models\Campaign;
 use App\Models\Content;
+use App\Rules\AcceptedOrganizationMember;
 use App\Singleton\TenantManager;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Database\Query\Builder;
@@ -55,6 +56,7 @@ class StoreContentRequest extends FormRequest
             'status' => ['nullable', 'string', Rule::in(enContentStatus::all())],
             'published_at' => ['nullable', 'date'],
             'description' => ['nullable', 'string'],
+            'assigned_by' => ['nullable', 'integer', 'exists:users,id', new AcceptedOrganizationMember],
         ];
     }
 

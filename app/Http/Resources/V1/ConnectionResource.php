@@ -22,6 +22,7 @@ class ConnectionResource extends JsonResource
             'channel_id' => $this->channel_id,
             'assignee_id' => $this->assignee_id,
             'campaign_id' => $this->campaign_id,
+            'campaign_name' => $this->campaign->name ?? null,
             'deal_value' => $this->deal_value ?? null,
             'initiated_by' => $this->initiated_by,
             'created_at' => $this->created_at->format('Y-m-d\TH:i:s\Z'),

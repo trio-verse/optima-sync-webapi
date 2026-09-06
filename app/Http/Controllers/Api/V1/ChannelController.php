@@ -27,10 +27,11 @@ class ChannelController extends Controller
      * this endpoint display all channels from DB
      * response get all channels
      */
-    public function index()
+    public function index(Request $request)
     {
-        $channels = $this->channel_service->getAllChannels();
-        return ApiResponse::success(ChannelResource::collection($channels), 'Channels fetched succsesfully');
+        $per_page = $request->query('per_page') ?? null;
+        $channels = $this->channel_service->getAllChannels($per_page);
+        return ApiResponse::pagination(ChannelResource::collection($channels), 'Channels fetched succsesfully');
     }
 
 

@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\StoreActivityRequest;
 use App\Http\Requests\Activity\UpdateActivityRequest;
 use App\Http\Requests\Connections\ChangeConnectionStageRequest;
+use App\Http\Requests\Connections\GetConnectionsRequest;
 use App\Http\Requests\Connections\StoreConnectionRequest;
 use App\Http\Requests\Connections\UpdateConnectionRequest;
 use App\Http\Resources\V1\ActivityResource;
@@ -31,16 +32,11 @@ class ConnectionController extends Controller
     /**
      * Get all Connections.
      */
-    public function index(Request $request)
+    public function index(GetConnectionsRequest $request)
     {
         $this->authorize('viewAny', Connection::class);
 
-        $validated = $request->only([
-            'per_page',
-            'page',
-            'sort',
-            'order',
-        ]);
+        $validated = $request->validated();
         $connections = $this->connectionService->getAllConnections($validated);
         return ApiResponse::pagination(ConnectionResource::collection($connections), "Connections retrieved successfully", 200);
     }

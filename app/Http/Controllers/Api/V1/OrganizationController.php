@@ -173,7 +173,7 @@ class OrganizationController extends Controller
         $user = request()->user();
         Gate::authorize('getMyOrganizations', Organization::class);
 
-        $organizations = $this->organizationservice->getMyOrganizations($user, $request->input('per_page', 15));
+        $organizations = $this->organizationservice->getMyOrganizations($user);
 
         return ApiResponse::success(OrganizationResource::collection($organizations), 'The organizations were retrieved successfully', 200);
     }

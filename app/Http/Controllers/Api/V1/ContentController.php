@@ -14,6 +14,7 @@ use App\Models\Content;
 use App\Services\Marketing\Content\ChangeContentStatusService;
 use App\Services\Marketing\Content\ConfirmContentCostService;
 use App\Services\Marketing\Content\CreateContentService;
+use App\Services\Marketing\Content\GetCampaignContentService;
 use App\Services\Marketing\Content\UpdateContentService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -30,6 +31,7 @@ class ContentController extends Controller
     use AuthorizesRequests;
 
     public function __construct(
+        private GetCampaignContentService $get_campaign_content_service,
         private CreateContentService $create_content_service,
         private UpdateContentService $update_content_service,
         private ConfirmContentCostService $confirm_content_cost_service,
@@ -40,11 +42,17 @@ class ContentController extends Controller
      * Content list.
      * Display a listing of campaign content.
      */
-    public function index(Campaign $campaign)
+    public function index(Request $request, Campaign $campaign)
     {
         $this->authorize('viewAny', [Content::class, $campaign]);
-        $campaign->load('contents');
-        return ApiResponse::success(ContentResource::collection($campaign->contents()->latest()->get()), 'contents retrieved successfully');
+        $validated = $request->only([
+            'per_page',
+            'page',
+            'sort',
+            'order',
+        ]);
+        $contents  = $this->get_campaign_content_service->getContent($campaign , $validated);
+        return ApiResponse::pagination(ContentResource::collection($contents), 'contents retrieved successfully');
     }
 
     /**

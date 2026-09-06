@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Connections;
 
 use App\Enums\enConnectionStages;
+use App\Models\Client;
 use App\Rules\CheckConnectionStatusRule;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -25,11 +26,12 @@ class StoreConnectionRequest extends FormRequest
      */
     public function rules(): array
     {
-        // dd($this->client->id, $this->product_id);
+        $client = $this->route('client');
+        $client_id = $client instanceof Client ? $client->id : $client;
         return [
             // 'organization_id' => ['required', 'exists:organizations,id'],
             // "client_id" => ['required', 'exists:clients,id'],
-            "product_id" => ['required', 'exists:products,id' , new CheckConnectionStatusRule( $this->client_id , $this->product_id)],
+            "product_id" => ['required', 'exists:products,id', new CheckConnectionStatusRule($client_id, $this->product_id)],
             'stage' => ['required', Rule::in(enConnectionStages::all())],
             'channel_id' => ['nullable', 'exists:channels,id'],
             'assignee_id' => ['nullable', 'exists:users,id'],

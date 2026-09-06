@@ -27,10 +27,11 @@ class CityController extends Controller
      * this endpoint display all cities from DB
      * response get all cities
      */
-    public function index()
+    public function index(Request $request)
     {
-        $cities = $this->city_service->getAllCities();
-        return ApiResponse::success(CityResource::collection($cities), 'Cities fetched successfully');
+        $per_page = $request->query('per_page') ?? null;
+        $cities = $this->city_service->getAllCities($per_page);
+        return ApiResponse::pagination(CityResource::collection($cities), 'Cities fetched successfully');
     }
 
 
@@ -76,7 +77,7 @@ class CityController extends Controller
         if (!$isDeleted) {
             return ApiResponse::error([], 'deleting fail', 500);
         }
-        
+
         return ApiResponse::success(
             [],
             'City deleted successfully',
