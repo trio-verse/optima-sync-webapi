@@ -12,6 +12,8 @@ use App\Http\Resources\V1\OrganizationMemberResource;
 use App\Http\Resources\V1\OrganizationResource;
 use App\Models\Organization;
 use App\Services\OrganizationService;
+use App\Services\OrgSecureCryptService;
+use App\Singleton\TenantManager;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\RecordNotFoundException;
@@ -56,7 +58,7 @@ class OrganizationController extends Controller
     public function show(string|int $id)
     {
         try {
-            $org = $this->organizationservice->show($id);
+            $org = $this->organizationservice->show((int)$id);
             return ApiResponse::success(new OrganizationResource($org));
         } catch (ModelNotFoundException $e) {
             return ApiResponse::notFound("organization not found");
@@ -188,5 +190,18 @@ class OrganizationController extends Controller
     {
         $members = $this->organizationservice->getOrganizationMembers($organizationId, $request->input('per_page', 15));
         return ApiResponse::pagination(OrganizationMemberResource::collection($members), 'The members were retrieved successfully', 200);
+    }
+
+
+    /**
+     * get encypted code from Org_ID.
+     * to use in url in public url
+     * [Get]
+     */
+    public function getHashId(Request $request){
+        $org_id = app(TenantManager::class)->getOrganizationId();
+
+        $token =  OrgSecureCryptService::encrypt($org_id);
+        return ApiResponse::success($token);
     }
 }

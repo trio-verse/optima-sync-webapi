@@ -2,10 +2,12 @@
 
 namespace App\Models;
 use App\Policies\OrganizationPolicy;
+use App\Services\OrgHashidService;
+use App\Services\OrgSecureCryptService;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
@@ -84,5 +86,17 @@ class Organization extends Model
     {
         return $this->morphOne(Media::class, 'mediable')
             ->where('file_type', 'logo');
+    }
+
+
+    /**
+     * ***********************
+     *          Accessor
+     * ***********************
+     */
+
+    public function getPublicCodeAttribute(): string
+    {
+        return OrgSecureCryptService::encrypt($this->id);
     }
 }
