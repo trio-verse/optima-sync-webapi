@@ -51,4 +51,5 @@ Route::get('projects/{project}/versions/{version}/quotations', [QuotationControl
 Route::post('projects/{project}/versions/{version}/quotations', [QuotationController::class, 'store'])->name('project.quotations.store');
 Route::get('projects/{project}/versions/{version}/quotations/{quotation}', [QuotationController::class, 'show'])->name('project.quotations.show');
 Route::patch('projects/{project}/versions/{version}/quotations/{quotation}', [QuotationController::class, 'update'])->name('project.quotations.update');
+Route::delete('projects/{project}/versions/{version}/quotations/{quotation}', [QuotationController::class, 'destroy'])->name('project.quotations.destroy');
 Route::post('projects/{project}/versions/{version}/quotations/{quotation}/generate-pdf', [QuotationController::class, 'generatePdf'])->name('project.quotations.generate-pdf');

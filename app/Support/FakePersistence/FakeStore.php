@@ -27,9 +27,9 @@ class FakeStore
         return $this->all()->firstWhere('id', $id);
     }
 
-    public function where(string $key, mixed $value): Collection
+    public function where(callable $callback): Collection
     {
-        return $this->all()->filter(fn(array $item) => $item[$key] === $value)->values();
+        return $this->all()->filter($callback)->values();
     }
 
     public function create(array $data): array

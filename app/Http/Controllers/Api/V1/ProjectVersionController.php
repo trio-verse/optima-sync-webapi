@@ -10,7 +10,11 @@ use App\Http\Resources\V1\ProjectVersionResource;
 use App\Support\FakePersistence\ProjectModuleFakeStore;
 use Database\Factories\ProjectVersionFactory;
 use Illuminate\Http\JsonResponse;
-
+/**
+ * @group Project Versions
+ *
+ * APIs for managing project versions (fake persistence — no DB yet)
+ */
 class ProjectVersionController extends Controller
 {
     public function __construct(
@@ -18,6 +22,11 @@ class ProjectVersionController extends Controller
     ) {
     }
 
+    /**
+     * index project versions
+     * @param string $project
+     * @return JsonResponse
+     */
     public function index(string $project): JsonResponse
     {
         $versions = $this->store->versions()->where(
@@ -29,7 +38,11 @@ class ProjectVersionController extends Controller
             'Project versions retrieved successfully'
         );
     }
-
+    /**
+     * store a new project version
+     * @param string $project
+     * @return JsonResponse
+     */
     public function store(StoreProjectVersionRequest $request, string $project): JsonResponse
     {
         $validated = $request->validated();
@@ -53,7 +66,9 @@ class ProjectVersionController extends Controller
 
         return ApiResponse::success(new ProjectVersionResource($version), 'Project version created successfully', 201);
     }
-
+    /**
+     * show project version
+     */
     public function show(string $project, string $version): JsonResponse
     {
         $item = $this->findForProject((int) $project, (int) $version);
@@ -64,7 +79,9 @@ class ProjectVersionController extends Controller
 
         return ApiResponse::success(new ProjectVersionResource($item), 'Project version retrieved successfully');
     }
-
+    /**
+     * update project version
+     */
     public function update(UpdateProjectVersionRequest $request, string $project, string $version): JsonResponse
     {
         $existing = $this->findForProject((int) $project, (int) $version);
@@ -82,6 +99,9 @@ class ProjectVersionController extends Controller
         return ApiResponse::success(new ProjectVersionResource($item), 'Project version updated successfully');
     }
 
+    /**
+     * delete project version
+     */
     public function destroy(string $project, string $version): JsonResponse
     {
         $existing = $this->findForProject((int) $project, (int) $version);
@@ -98,7 +118,9 @@ class ProjectVersionController extends Controller
             'deleted' => true,
         ], 'Project version deleted successfully');
     }
-
+    /**
+     * freeze project version
+     */
     public function freeze(string $project, string $version): JsonResponse
     {
         $existing = $this->findForProject((int) $project, (int) $version);
@@ -124,6 +146,9 @@ class ProjectVersionController extends Controller
         return ApiResponse::success(new ProjectVersionResource($item), 'Project version frozen successfully');
     }
 
+    /**
+     * clone project version
+     */
     public function clone(string $project, string $version): JsonResponse
     {
         $existing = $this->findForProject((int) $project, (int) $version);

@@ -11,13 +11,21 @@ use App\Support\FakePersistence\ProjectModuleFakeStore;
 use Database\Factories\ProjectCostFactory;
 use Illuminate\Http\JsonResponse;
 
+/**
+ * @group Project Costs
+ *
+ * APIs for managing project costs (fake persistence — no DB yet)
+ */
 class ProjectCostController extends Controller
 {
     public function __construct(
         protected ProjectModuleFakeStore $store
     ) {
     }
-
+    /**
+     * index project costs
+     * @return JsonResponse
+     */
     public function index(string $project, string $version): JsonResponse
     {
         $costs = $this->store->costs()->where(
@@ -31,6 +39,10 @@ class ProjectCostController extends Controller
         );
     }
 
+    /**
+     * store
+     * @return JsonResponse
+     */
     public function store(StoreProjectCostRequest $request, string $project, string $version): JsonResponse
     {
         if ($this->versionIsFrozen((int) $version)) {
@@ -47,6 +59,10 @@ class ProjectCostController extends Controller
         return ApiResponse::success(new ProjectCostResource($cost), 'Project cost created successfully', 201);
     }
 
+    /**
+     * show
+     * @return JsonResponse
+     */
     public function show(string $project, string $version, string $cost): JsonResponse
     {
         $item = $this->findForVersion((int) $project, (int) $version, (int) $cost);
@@ -58,6 +74,10 @@ class ProjectCostController extends Controller
         return ApiResponse::success(new ProjectCostResource($item), 'Project cost retrieved successfully');
     }
 
+    /**
+     * update
+     * @return JsonResponse
+     */
     public function update(UpdateProjectCostRequest $request, string $project, string $version, string $cost): JsonResponse
     {
         if (!$this->findForVersion((int) $project, (int) $version, (int) $cost)) {
@@ -79,6 +99,10 @@ class ProjectCostController extends Controller
         return ApiResponse::success(new ProjectCostResource($item), 'Project cost updated successfully');
     }
 
+    /**
+     * delete
+     * @return JsonResponse
+     */
     public function destroy(string $project, string $version, string $cost): JsonResponse
     {
         if (!$this->findForVersion((int) $project, (int) $version, (int) $cost)) {

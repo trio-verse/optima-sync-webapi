@@ -11,7 +11,11 @@ use App\Http\Resources\V1\ProjectFeatureResource;
 use App\Support\FakePersistence\ProjectModuleFakeStore;
 use Database\Factories\ProjectFeatureFactory;
 use Illuminate\Http\JsonResponse;
-
+/**
+ * @group Project Features
+ *
+ * APIs for managing project Features (fake persistence — no DB yet)
+ */
 class ProjectFeatureController extends Controller
 {
     public function __construct(
@@ -19,6 +23,10 @@ class ProjectFeatureController extends Controller
     ) {
     }
 
+    /**
+     * index project costs
+     * @return JsonResponse
+     */
     public function index(string $project, string $version): JsonResponse
     {
         $features = $this->store->features()->where(
@@ -32,6 +40,10 @@ class ProjectFeatureController extends Controller
         );
     }
 
+    /**
+     * store
+     * @return JsonResponse
+     */
     public function store(StoreProjectFeatureRequest $request, string $project, string $version): JsonResponse
     {
         if ($this->versionIsFrozen((int) $version)) {
@@ -46,6 +58,10 @@ class ProjectFeatureController extends Controller
         return ApiResponse::success(new ProjectFeatureResource($feature), 'Project feature created successfully', 201);
     }
 
+    /**
+     * show
+     * @return JsonResponse
+     */
     public function show(string $project, string $version, string $feature): JsonResponse
     {
         $item = $this->findForVersion((int) $project, (int) $version, (int) $feature);
@@ -56,7 +72,11 @@ class ProjectFeatureController extends Controller
 
         return ApiResponse::success(new ProjectFeatureResource($item), 'Project feature retrieved successfully');
     }
-
+    
+    /**
+     * update
+     * @return JsonResponse
+     */
     public function update(UpdateProjectFeatureRequest $request, string $project, string $version, string $feature): JsonResponse
     {
         if (!$this->findForVersion((int) $project, (int) $version, (int) $feature)) {
@@ -71,7 +91,10 @@ class ProjectFeatureController extends Controller
 
         return ApiResponse::success(new ProjectFeatureResource($item), 'Project feature updated successfully');
     }
-
+    /**
+     * delete
+     * @return JsonResponse
+     */
     public function destroy(string $project, string $version, string $feature): JsonResponse
     {
         if (!$this->findForVersion((int) $project, (int) $version, (int) $feature)) {
@@ -92,6 +115,10 @@ class ProjectFeatureController extends Controller
         ], 'Project feature deleted successfully');
     }
 
+    /**
+     * change feature status
+     * @return JsonResponse
+     */
     public function changeStatus(ChangeProjectFeatureStatusRequest $request, string $project, string $version, string $feature): JsonResponse
     {
         if (!$this->findForVersion((int) $project, (int) $version, (int) $feature)) {

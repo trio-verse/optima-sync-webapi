@@ -18,10 +18,10 @@ class ProjectAllDataResource extends JsonResource
     public function toArray(Request $request): array
     {
         $project = $this->store->projects()->find($this->project['id']);
-        $versions = $this->store->versions()->where('project_id', $this->project['id']);
-        $features = $this->store->features()->where('project_version_id', $this->project['id']);
-        $costs = $this->store->costs()->where('project_version_id', $this->project['id']);
-        $quotations = $this->store->quotations()->where('project_version_id', $this->project['id']);
+        $versions = $this->store->versions()->where(fn(array $version) => $version['project_id'] === $this->project['id']);
+        $features = $this->store->features()->where(fn(array $feature) => $feature['project_version_id'] === $this->project['id']);
+        $costs = $this->store->costs()->where(fn(array $cost) => $cost['project_version_id'] === $this->project['id']);
+        $quotations = $this->store->quotations()->where(fn(array $quotation) => $quotation['project_version_id'] === $this->project['id']);
         return [
             'project' => new ProjectResource($project),
             'versions' => ProjectVersionResource::collection($versions),

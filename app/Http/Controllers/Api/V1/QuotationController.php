@@ -23,10 +23,14 @@ class QuotationController extends Controller
     ) {
     }
 
+    /**
+     * list
+     * @return JsonResponse
+     */
     public function index(string $project, string $version): JsonResponse
     {
         $quotations = $this->store->quotations()->where(
-            fn (array $quotation) => (int) $quotation['project_version_id'] === (int) $version
+            fn(array $quotation) => (int) $quotation['project_version_id'] === (int) $version
         );
 
         return ApiResponse::success(
@@ -35,6 +39,10 @@ class QuotationController extends Controller
         );
     }
 
+    /**
+     * store
+     * @return JsonResponse
+     */
     public function store(StoreQuotationRequest $request, string $project, string $version): JsonResponse
     {
         $validated = $request->validated();
@@ -57,6 +65,10 @@ class QuotationController extends Controller
         return ApiResponse::success(new QuotationResource($quotation), 'Quotation created successfully', 201);
     }
 
+    /**
+     * show
+     * @return JsonResponse
+     */
     public function show(string $project, string $version, string $quotation): JsonResponse
     {
         $item = $this->findForVersion((int) $version, (int) $quotation);
@@ -68,6 +80,10 @@ class QuotationController extends Controller
         return ApiResponse::success(new QuotationResource($item), 'Quotation retrieved successfully');
     }
 
+    /**
+     * update
+     * @return JsonResponse
+     */
     public function update(UpdateQuotationRequest $request, string $project, string $version, string $quotation): JsonResponse
     {
         if (!$this->findForVersion((int) $version, (int) $quotation)) {
@@ -87,6 +103,25 @@ class QuotationController extends Controller
         return ApiResponse::success(new QuotationResource($item), 'Quotation updated successfully');
     }
 
+    /**
+     * delete quotation
+     */
+    public function destroy(string $project, string $version, string $quotation)
+    {
+        if (!$this->findForVersion((int) $version, (int) $quotation)) {
+            return ApiResponse::notFound('Quotation not found');
+        }
+
+
+        $item = $this->store->quotations()->delete((int) $quotation);
+
+        return ApiResponse::success(new QuotationResource($item), 'Quotation updated successfully');
+
+    }
+    /**
+     * generate pdf
+     * @return JsonResponse
+     */
     public function generatePdf(string $project, string $version, string $quotation): JsonResponse
     {
         if (!$this->findForVersion((int) $version, (int) $quotation)) {

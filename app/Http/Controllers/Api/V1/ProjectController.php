@@ -13,6 +13,11 @@ use App\Support\FakePersistence\ProjectModuleFakeStore;
 use Database\Factories\ProjectFactory;
 use Illuminate\Http\JsonResponse;
 
+/**
+ * @group Projects
+ *
+ * APIs for managing projects (fake persistence — no DB yet)
+ */
 class ProjectController extends Controller
 {
     public function __construct(
@@ -20,6 +25,10 @@ class ProjectController extends Controller
     ) {
     }
 
+    /**
+     * index projects
+     * @return JsonResponse
+     */
     public function index(): JsonResponse
     {
         $projects = ProjectResource::collection($this->store->projects()->all());
@@ -27,6 +36,10 @@ class ProjectController extends Controller
         return ApiResponse::success($projects, 'Projects retrieved successfully');
     }
 
+    /**
+     * store project
+     * @return JsonResponse
+     */
     public function store(StoreProjectRequest $request): JsonResponse
     {
         $validated = $request->validated();
@@ -58,7 +71,10 @@ class ProjectController extends Controller
 
         return ApiResponse::success(new ProjectResource($project), 'Project created successfully', 201);
     }
-
+    /**
+     * show project
+     * @return JsonResponse
+     */
     public function show(string $project): JsonResponse
     {
         $item = $this->store->projects()->find((int) $project);
@@ -70,6 +86,10 @@ class ProjectController extends Controller
         return ApiResponse::success(new ProjectAllDataResource($item), 'Project retrieved successfully');
     }
 
+    /**
+     * update project
+     * @return JsonResponse
+     */
     public function update(UpdateProjectRequest $request, string $project): JsonResponse
     {
         $item = $this->store->projects()->update((int) $project, $request->validated());
@@ -81,6 +101,10 @@ class ProjectController extends Controller
         return ApiResponse::success(new ProjectResource($item), 'Project updated successfully');
     }
 
+    /**
+     * delete project
+     * @return JsonResponse
+     */
     public function destroy(string $project): JsonResponse
     {
         if (!$this->store->projects()->delete((int) $project)) {
@@ -93,6 +117,10 @@ class ProjectController extends Controller
         ], 'Project deleted successfully');
     }
 
+    /**
+     * change project status
+     * @return JsonResponse
+     */
     public function changeStatus(ChangeProjectStatusRequest $request, string $project): JsonResponse
     {
         $item = $this->store->projects()->update((int) $project, [

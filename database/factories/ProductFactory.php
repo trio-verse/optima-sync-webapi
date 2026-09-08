@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use App\Models\Organization;
 use App\Models\Product;
-use App\Singleton\TenantManager;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -15,10 +14,8 @@ class ProductFactory extends Factory
     public function definition(): array
     {
         $name = $this->faker->unique()->words(3, true);
-        $organization
-            = Organization::factory()->create();
-        $tenantManager = app(TenantManager::class);
-        $tenantManager->setOrganizationId($organization->id);
+        $organization = Organization::factory()->create();
+
         return [
             'name' => $name,
             'slug' => Str::slug($name),
@@ -26,7 +23,5 @@ class ProductFactory extends Factory
             'description' => $this->faker->paragraph(),
             'organization_id' => $organization->id,
         ];
-        // dd($organization->id);
-
     }
 }
