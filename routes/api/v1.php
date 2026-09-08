@@ -13,6 +13,11 @@ use App\Http\Controllers\Api\V1\OrganizationController;
 use App\Http\Controllers\Api\V1\OrganizationLogoController;
 use App\Http\Controllers\Api\V1\OtpAuthenticationController;
 use App\Http\Controllers\Api\V1\ProductController;
+use App\Http\Controllers\Api\V1\ProjectController;
+use App\Http\Controllers\Api\V1\ProjectCostController;
+use App\Http\Controllers\Api\V1\ProjectFeatureController;
+use App\Http\Controllers\Api\V1\ProjectVersionController;
+use App\Http\Controllers\Api\V1\QuotationController;
 use App\Http\Controllers\Api\V1\StakeholderController;
 use App\Http\Controllers\Api\V1\UploadController;
 use App\Models\User;
@@ -125,6 +130,21 @@ Route::prefix('v1')->group(function () {
             Route::get('campaigns/{campaign}/capture', [CampaignCaptureController::class, 'show']);
             Route::patch('campaigns/{campaign}/capture', [CampaignCaptureController::class, 'update']);
             Route::post('campaigns/{campaign}/capture/regenerate', [CampaignCaptureController::class, 'regenerateToken']);
+
+            /**
+             * =====================================
+             *      Project Management Module (mock)
+             * =====================================
+             */
+
+            require_once __DIR__ . '/../modules/projectmanagment.php';
+            // require_once __DIR__ . '/modules/marketing.php';
+            // require_once __DIR__ . '/modules/content.php';
+            // require_once __DIR__ . '/modules/analytics.php';
+            // require_once __DIR__ . '/modules/leadcapture.php';
+            // require_once __DIR__ . '/modules/stakeholder.php';
+            // require_once __DIR__ . '/modules/connection.php';
+            // require_once __DIR__ . '/modules/product.php';
         });
 
     });
