@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\V1;
 
+use App\Support\FakePersistence\ProjectModuleFakeStore;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -10,10 +11,18 @@ class QuotationResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-        $subtotal = (float) ($this['subtotal'] ?? 0);
+        $store = app(ProjectModuleFakeStore::class);
+        $version = $store->versions()->find((int) ($this['project_version_id'] ?? 0));
+        $project = $version ? $store->projects()->find((int) ($version['project_id'] ?? 0)) : null;
+
+        $projectSubTotal = (float) ($project['sub_total'] ?? 0);
+        $projectProfitPercentage = (float) ($project['profit_percentage'] ?? 0);
+        $projectTotalAmount = (float) ($project['total_amount'] ?? ($projectSubTotal * (1 + ($projectProfitPercentage / 100))));
+
+        $subtotal = $projectTotalAmount > 0 ? $projectTotalAmount : (float) ($this['subtotal'] ?? 0);
         $discount = (float) ($this['discount'] ?? 0);
         $tax = (float) ($this['tax'] ?? 0);
-        $total = (float) ($this['total'] ?? 0);
+        $total = $subtotal - $discount + $tax;
         $validUntil = $this['valid_until'] ?? null;
 
         return [

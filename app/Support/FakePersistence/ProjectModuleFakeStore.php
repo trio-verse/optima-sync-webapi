@@ -17,6 +17,7 @@ class ProjectModuleFakeStore
     private FakeStore $versions;
     private FakeStore $features;
     private FakeStore $costs;
+    private FakeStore $members;
     private FakeStore $quotations;
 
     public function __construct()
@@ -25,6 +26,7 @@ class ProjectModuleFakeStore
         $this->versions = new FakeStore('project_versions');
         $this->features = new FakeStore('project_features');
         $this->costs = new FakeStore('project_costs');
+        $this->members = new FakeStore('project_members');
         $this->quotations = new FakeStore('quotations');
 
         $this->seed();
@@ -50,6 +52,11 @@ class ProjectModuleFakeStore
         return $this->costs;
     }
 
+    public function members(): FakeStore
+    {
+        return $this->members;
+    }
+
     public function quotations(): FakeStore
     {
         return $this->quotations;
@@ -57,7 +64,7 @@ class ProjectModuleFakeStore
 
     private function seed(): void
     {
-        $this->projects->seedIfEmpty(fn () => [
+        $this->projects->seedIfEmpty(fn() => [
             ProjectFactory::dto(1, [
                 'reference_id' => 'PRJ-2026-001',
                 'status' => 'new',
@@ -82,7 +89,7 @@ class ProjectModuleFakeStore
             ]),
         ]);
 
-        $this->versions->seedIfEmpty(fn () => [
+        $this->versions->seedIfEmpty(fn() => [
             ProjectVersionFactory::dto(1, 1, [
                 'freeze' => true,
                 'features_snapshot' => [
@@ -115,7 +122,7 @@ class ProjectModuleFakeStore
             ]),
         ]);
 
-        $this->features->seedIfEmpty(fn () => [
+        $this->features->seedIfEmpty(fn() => [
             ProjectFeatureFactory::dto(1, 1, 1),
             ProjectFeatureFactory::dto(2, 1, 1, [
                 'name' => 'Dashboard Analytics',
@@ -128,7 +135,7 @@ class ProjectModuleFakeStore
             ]),
         ]);
 
-        $this->costs->seedIfEmpty(fn () => [
+        $this->costs->seedIfEmpty(fn() => [
             ProjectCostFactory::dto(1, 1, 1),
             ProjectCostFactory::dto(2, 1, 1, [
                 'name' => 'UI/UX Design',
@@ -143,14 +150,52 @@ class ProjectModuleFakeStore
             ]),
         ]);
 
-        $this->quotations->seedIfEmpty(fn () => [
-            QuotationFactory::dto(1, 1),
+        $this->members->seedIfEmpty(fn() => [
+            [
+                'id' => 1,
+                'project_id' => 1,
+                'user_id' => 1,
+                'name' => 'John Doe',
+                'email' => 'john.doe@example.com',
+                'role' => 'frontend developer',
+                'created_at' => now()->toISOString(),
+                'updated_at' => now()->toISOString(),
+            ],
+            [
+                'id' => 2,
+                'project_id' => 1,
+                'user_id' => 2,
+                'name' => 'Jane Smith',
+                'email' => 'jane.smith@example.com',
+                'role' => 'project manager',
+                'created_at' => now()->toISOString(),
+                'updated_at' => now()->toISOString(),
+            ],
+            [
+                'id' => 3,
+                'project_id' => 2,
+                'user_id' => 3,
+                'name' => 'Alex Johnson',
+                'email' => 'alex.johnson@example.com',
+                'role' => 'backend developer',
+                'created_at' => now()->toISOString(),
+                'updated_at' => now()->toISOString(),
+            ],
+        ]);
+
+        $this->quotations->seedIfEmpty(fn() => [
+            QuotationFactory::dto(1, 1, [
+                'subtotal' => '12000.00',
+                'discount' => '0.00',
+                'tax' => '350.00',
+                'total' => '12350.00',
+            ]),
             QuotationFactory::dto(2, 2, [
                 'quotation_number' => 'QTN-202609-0002',
-                'subtotal' => '18500.00',
+                'subtotal' => '23125.00',
                 'discount' => '0.00',
                 'tax' => '1850.00',
-                'total' => '20350.00',
+                'total' => '24975.00',
             ]),
         ]);
     }

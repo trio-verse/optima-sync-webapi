@@ -22,6 +22,11 @@ Route::patch('projects/{project}', [ProjectController::class, 'update'])->name('
 Route::delete('projects/{project}', [ProjectController::class, 'destroy'])->name('projects.destroy');
 Route::patch('projects/{project}/status', [ProjectController::class, 'changeStatus'])->name('projects.status');
 
+// Project Members
+Route::get('projects/{project}/members', [ProjectController::class, 'members'])->name('projects.members.index');
+Route::patch('projects/{project}/members/{member}', [ProjectController::class, 'updateMember'])->name('projects.members.update');
+Route::delete('projects/{project}/members/{member}', [ProjectController::class, 'deleteMember'])->name('projects.members.destroy');
+
 // Project Versions
 Route::get('projects/{project}/versions', [ProjectVersionController::class, 'index'])->name('project.versions.index');
 Route::post('projects/{project}/versions', [ProjectVersionController::class, 'store'])->name('project.versions.store');

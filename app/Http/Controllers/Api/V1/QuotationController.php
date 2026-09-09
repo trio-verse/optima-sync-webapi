@@ -46,13 +46,20 @@ class QuotationController extends Controller
     public function store(StoreQuotationRequest $request, string $project, string $version): JsonResponse
     {
         $validated = $request->validated();
+        $projectItem = $this->store->projects()->find((int) $project);
+        $projectSubTotal = (float) ($projectItem['sub_total'] ?? 0);
+        $projectProfitPercentage = (float) ($projectItem['profit_percentage'] ?? 0);
+        $subtotal = (float) ($projectItem['total_amount'] ?? ($projectSubTotal * (1 + ($projectProfitPercentage / 100))));
+        $discount = (float) ($validated['discount'] ?? 0);
+        $tax = (float) ($validated['tax'] ?? 0);
+        $total = $subtotal - $discount + $tax;
 
         $quotation = $this->store->quotations()->create(QuotationFactory::dto(0, (int) $version, array_merge($validated, [
             'quotation_number' => $validated['quotation_number'] ?? sprintf('QTN-%s-%04d', now()->format('Ym'), random_int(1, 9999)),
-            'subtotal' => number_format((float) ($validated['subtotal'] ?? 0), 2, '.', ''),
-            'discount' => number_format((float) ($validated['discount'] ?? 0), 2, '.', ''),
-            'tax' => number_format((float) ($validated['tax'] ?? 0), 2, '.', ''),
-            'total' => number_format((float) ($validated['total'] ?? 0), 2, '.', ''),
+            'subtotal' => number_format($subtotal, 2, '.', ''),
+            'discount' => number_format($discount, 2, '.', ''),
+            'tax' => number_format($tax, 2, '.', ''),
+            'total' => number_format($total, 2, '.', ''),
             'pdf_path' => null,
             'created_by' => 1,
             'created_by_user' => [
@@ -91,12 +98,18 @@ class QuotationController extends Controller
         }
 
         $validated = $request->validated();
+        $projectItem = $this->store->projects()->find((int) $project);
+        $projectSubTotal = (float) ($projectItem['sub_total'] ?? 0);
+        $projectProfitPercentage = (float) ($projectItem['profit_percentage'] ?? 0);
+        $subtotal = (float) ($projectItem['total_amount'] ?? ($projectSubTotal * (1 + ($projectProfitPercentage / 100))));
+        $discount = (float) ($validated['discount'] ?? $this->findForVersion((int) $version, (int) $quotation)['discount'] ?? 0);
+        $tax = (float) ($validated['tax'] ?? $this->findForVersion((int) $version, (int) $quotation)['tax'] ?? 0);
+        $total = $subtotal - $discount + $tax;
 
-        foreach (['subtotal', 'discount', 'tax', 'total'] as $moneyField) {
-            if (isset($validated[$moneyField])) {
-                $validated[$moneyField] = number_format((float) $validated[$moneyField], 2, '.', '');
-            }
-        }
+        $validated['subtotal'] = number_format($subtotal, 2, '.', '');
+        $validated['discount'] = number_format($discount, 2, '.', '');
+        $validated['tax'] = number_format($tax, 2, '.', '');
+        $validated['total'] = number_format($total, 2, '.', '');
 
         $item = $this->store->quotations()->update((int) $quotation, $validated);
 

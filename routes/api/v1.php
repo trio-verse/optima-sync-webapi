@@ -29,6 +29,8 @@ Route::prefix('v1')->group(function () {
     Route::post('/register-email', [OtpAuthenticationController::class, 'store']);
     Route::post('verify-otp', [OtpAuthenticationController::class, 'verify']);
 
+    Route::post('{token}/project-request', [ProjectController::class, 'requestProject']);
+
     Route::middleware(['auth:sanctum'])->group(function () {
 
         // organizations get
@@ -38,6 +40,7 @@ Route::prefix('v1')->group(function () {
 
         Route::middleware(['active_org'])->group(function () {
             // Organizations
+            Route::get('/organizations/get-token', [OrganizationController::class, 'getHashId']);
             Route::patch('/organizations/{id}', [OrganizationController::class, 'update']);
             Route::get('/organizations/{id}', [OrganizationController::class, 'show']);
 

@@ -10,26 +10,27 @@ class OrgSecureCryptService
 {
 
     // Generate a keyed hash value using the HMAC method using the app_key and org_Id
-    private static function getSalt(int $orgId): string
+    private static function getHashids(): Hashids
     {
-        return hash_hmac('sha256', "org_salt_{$orgId}", config('app.key'));
+        // استخدام مفتاح النظام السري كـ Salt موحد لجميع المنظمات
+        $salt = hash_hmac('sha256', 'organization_public_tokens', config('app.key'));
+        return new Hashids($salt, 20);
     }
     /**
      * encode the org_id to unique and short code
      */
-    public static function encrypt(int $orgId , int $minLength = 20 ): string
+    public static function encrypt(int $orgId): string
     {
-        $hashids = new Hashids(self::getSalt($orgId), $minLength);
-        return $hashids->encode($orgId);    }
+        return self::getHashids()->encode($orgId);
+    }
 
     /**
      * decoded and verification
      */
-    public static function decrypt(string $code, int $targetOrgId, int $minLength = 20): ?int
+    public static function decrypt(string $code): ?int
     {
         try {
-            $hashids = new Hashids(self::getSalt($targetOrgId) , $minLength);
-            $decoded = $hashids->decode($code);
+            $decoded = self::getHashids()->decode($code);
 
             return !empty($decoded) ? $decoded[0] : null;
 
