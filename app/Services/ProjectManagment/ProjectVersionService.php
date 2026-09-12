@@ -174,7 +174,7 @@ class ProjectVersionService
         return DB::transaction(function () use ($version) {
             $version->freezeVersion(); // Uses Eloquent Model snapshot logic
 
-            $version->project->update(['current_version_id' => $version->id]);
+            // $version->project->update(['current_version_id' => $version->id]);
 
             return $version->fresh();
         });

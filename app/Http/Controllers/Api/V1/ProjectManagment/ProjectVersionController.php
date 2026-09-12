@@ -7,7 +7,7 @@ use App\Helper\V1\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProjectVersion\StoreProjectVersionRequest;
 use App\Http\Requests\ProjectVersion\UpdateProjectVersionRequest;
-use App\Http\Resources\V1\ProjectVersionResource;
+use App\Http\Resources\V1\ProjectManagment\ProjectVersionResource;
 use App\Models\Project;
 use App\Models\ProjectVersion;
 use App\Services\ProjectManagment\ProjectVersionService;
