@@ -7,20 +7,16 @@ use App\Http\Controllers\Api\V1\CityController;
 use App\Http\Controllers\Api\V1\ClientController;
 use App\Http\Controllers\Api\V1\ConnectionController;
 use App\Http\Controllers\Api\V1\ContentController;
+use App\Http\Controllers\Api\V1\EmployeeController;
 use App\Http\Controllers\Api\V1\IndustryController;
 use App\Http\Controllers\Api\V1\MarketingAnalyticsController;
 use App\Http\Controllers\Api\V1\OrganizationController;
 use App\Http\Controllers\Api\V1\OrganizationLogoController;
 use App\Http\Controllers\Api\V1\OtpAuthenticationController;
 use App\Http\Controllers\Api\V1\ProductController;
-use App\Http\Controllers\Api\V1\ProjectController;
-use App\Http\Controllers\Api\V1\ProjectCostController;
-use App\Http\Controllers\Api\V1\ProjectFeatureController;
-use App\Http\Controllers\Api\V1\ProjectVersionController;
-use App\Http\Controllers\Api\V1\QuotationController;
+use App\Http\Controllers\Api\V1\ProjectManagment\ProjectController;
 use App\Http\Controllers\Api\V1\StakeholderController;
 use App\Http\Controllers\Api\V1\UploadController;
-use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
@@ -29,6 +25,7 @@ Route::prefix('v1')->group(function () {
     Route::post('/register-email', [OtpAuthenticationController::class, 'store']);
     Route::post('verify-otp', [OtpAuthenticationController::class, 'verify']);
 
+    // user request a project from organization (public link)
     Route::post('{token}/project-request', [ProjectController::class, 'requestProject']);
 
     Route::middleware(['auth:sanctum'])->group(function () {
@@ -141,6 +138,8 @@ Route::prefix('v1')->group(function () {
              */
 
             require_once __DIR__ . '/../modules/projectmanagment.php';
+            require_once __DIR__ . '/../modules/hr.php';
+
             // require_once __DIR__ . '/modules/marketing.php';
             // require_once __DIR__ . '/modules/content.php';
             // require_once __DIR__ . '/modules/analytics.php';

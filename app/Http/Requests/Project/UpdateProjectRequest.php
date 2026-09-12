@@ -17,7 +17,6 @@ class UpdateProjectRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'reference_id' => ['sometimes', 'string', 'max:100'],
             'client_id' => ['sometimes', 'integer', 'min:1'],
             'status' => ['sometimes', 'string', Rule::in(enProjectStatus::all())],
             'source' => ['sometimes', 'string', Rule::in(enProjectSource::all())],
