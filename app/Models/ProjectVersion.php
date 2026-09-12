@@ -42,9 +42,9 @@ class ProjectVersion extends Model
         ];
     }
 
-    protected $with =[
+    protected $with = [
         'features',
-        'costs',
+        // 'costs',
         'project',
     ];
 
@@ -91,18 +91,6 @@ class ProjectVersion extends Model
      * Helper Methods
      */
 
-    public function calculateTotalCosts(): float
-    {
-        return (float) $this->costs->sum(
-            fn(ProjectCost $cost) => $cost->quantity * $cost->amount
-        );
-    }
-
-    public function getTotalAmountAttribute(): float
-    {
-        return $this->calculateTotalCosts();
-    }
-
     public function isEditable(): bool
     {
         return !$this->freeze;
@@ -111,7 +99,7 @@ class ProjectVersion extends Model
     public function freezeVersion(): bool
     {
         $this->features_snapshot = $this->features->toArray();
-        $this->costs_snapshot = $this->costs->toArray();
+        $this->costs_snapshot = $this->project->costs->toArray();
         $this->employees_snapshot = $this->project?->employees->map(function ($employee) {
             $points = (int) ($employee->pivot->total_points ?? 0);
             $hoursPerPoint = (int) ($employee->houres_per_point ?? 2);

@@ -199,7 +199,7 @@ class ProjectVersionService
 
         return DB::transaction(function () use ($version) {
             $version->features()->delete();
-            $version->costs()->delete();
+            // $version->costs()->delete();
             return $version->delete();
         });
     }
@@ -236,6 +236,6 @@ class ProjectVersionService
     private function convertVersionRelationsReference(ProjectVersion $sourceVersion, ProjectVersion $targetVersion): void
     {
         $sourceVersion->features()->update(['project_version_id' => $targetVersion->id]);
-        $sourceVersion->costs()->update(['project_version_id' => $targetVersion->id]);
+        // $sourceVersion->costs()->update(['project_version_id' => $targetVersion->id]);
     }
 }

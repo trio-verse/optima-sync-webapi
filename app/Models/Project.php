@@ -127,6 +127,16 @@ class Project extends Model
     /**
      * Helper Methods
      */
+    public function calculateTotalCosts(): float
+    {
+        return (float) $this->costs->sum(
+            fn(ProjectCost $cost) => $cost->quantity * $cost->amount
+        );
+    }
+    public function getTotalAmountAttribute(): float
+    {
+        return $this->calculateTotalCosts();
+    }
 
     public function getActiveVersionAttribute(): ?ProjectVersion
     {

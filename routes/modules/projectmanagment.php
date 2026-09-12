@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\V1\ProjectManagment\ProjectController;
+use App\Http\Controllers\Api\V1\ProjectManagment\ProjectCostController;
 use App\Http\Controllers\Api\V1\ProjectManagment\ProjectEmployeesController;
 use App\Http\Controllers\Api\V1\ProjectManagment\ProjectFeatureController;
 use App\Http\Controllers\Api\V1\ProjectManagment\ProjectVersionController;
@@ -46,12 +47,13 @@ Route::patch('projects/{project}/features/{feature}', [ProjectFeatureController:
 Route::delete('projects/{project}/features/{feature}', [ProjectFeatureController::class, 'destroy'])->name('project.features.destroy');
 Route::patch('projects/{project}/features/{feature}/status', [ProjectFeatureController::class, 'changeStatus'])->name('project.features.status');
 
-// // Project Costs
-// Route::get('projects/{project}/versions/{version}/costs', [ProjectCostController::class, 'index'])->name('project.costs.index');
-// Route::post('projects/{project}/versions/{version}/costs', [ProjectCostController::class, 'store'])->name('project.costs.store');
-// Route::get('projects/{project}/versions/{version}/costs/{cost}', [ProjectCostController::class, 'show'])->name('project.costs.show');
-// Route::patch('projects/{project}/versions/{version}/costs/{cost}', [ProjectCostController::class, 'update'])->name('project.costs.update');
-// Route::delete('projects/{project}/versions/{version}/costs/{cost}', [ProjectCostController::class, 'destroy'])->name('project.costs.destroy');
+// Project Costs
+Route::get('projects/{project}/costs', [ProjectCostController::class, 'index'])->name('project.costs.index');
+Route::post('projects/{project}/costs', [ProjectCostController::class, 'store'])->name('project.costs.store');
+Route::get('projects/{project}/costs/total-budget', [ProjectCostController::class, 'totalBudget'])->name('project.costs.total-budget');
+Route::get('projects/{project}/costs/{cost}', [ProjectCostController::class, 'show'])->name('project.costs.show');
+Route::patch('projects/{project}/costs/{cost}', [ProjectCostController::class, 'update'])->name('project.costs.update');
+Route::delete('projects/{project}/costs/{cost}', [ProjectCostController::class, 'destroy'])->name('project.costs.destroy');
 
 // // Quotations
 // Route::get('projects/{project}/versions/{version}/quotations', [QuotationController::class, 'index'])->name('project.quotations.index');
