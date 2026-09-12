@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\V1\ProjectManagment\ProjectController;
 use App\Http\Controllers\Api\V1\ProjectManagment\ProjectEmployeesController;
+use App\Http\Controllers\Api\V1\ProjectManagment\ProjectFeatureController;
 use App\Http\Controllers\Api\V1\ProjectManagment\ProjectVersionController;
 use Illuminate\Support\Facades\Route;
 
@@ -37,13 +38,13 @@ Route::delete('projects/{project}/versions/{version}', [ProjectVersionController
 // Route::patch('projects/{project}/versions/{version}/freeze', [ProjectVersionController::class, 'freeze'])->name('project.versions.freeze');
 // Route::post('projects/{project}/versions/{version}/clone', [ProjectVersionController::class, 'clone'])->name('project.versions.clone');
 
-// // Project Features
-// Route::get('projects/{project}/versions/{version}/features', [ProjectFeatureController::class, 'index'])->name('project.features.index');
-// Route::post('projects/{project}/versions/{version}/features', [ProjectFeatureController::class, 'store'])->name('project.features.store');
-// Route::get('projects/{project}/versions/{version}/features/{feature}', [ProjectFeatureController::class, 'show'])->name('project.features.show');
-// Route::patch('projects/{project}/versions/{version}/features/{feature}', [ProjectFeatureController::class, 'update'])->name('project.features.update');
-// Route::delete('projects/{project}/versions/{version}/features/{feature}', [ProjectFeatureController::class, 'destroy'])->name('project.features.destroy');
-// Route::patch('projects/{project}/versions/{version}/features/{feature}/status', [ProjectFeatureController::class, 'changeStatus'])->name('project.features.status');
+// Project Features
+Route::get('projects/{project}/features', [ProjectFeatureController::class, 'index'])->name('project.features.index');
+Route::post('projects/{project}/features', [ProjectFeatureController::class, 'store'])->name('project.features.store');
+Route::get('projects/{project}/features/{feature}', [ProjectFeatureController::class, 'show'])->name('project.features.show');
+Route::patch('projects/{project}/features/{feature}', [ProjectFeatureController::class, 'update'])->name('project.features.update');
+Route::delete('projects/{project}/features/{feature}', [ProjectFeatureController::class, 'destroy'])->name('project.features.destroy');
+Route::patch('projects/{project}/features/{feature}/status', [ProjectFeatureController::class, 'changeStatus'])->name('project.features.status');
 
 // // Project Costs
 // Route::get('projects/{project}/versions/{version}/costs', [ProjectCostController::class, 'index'])->name('project.costs.index');
