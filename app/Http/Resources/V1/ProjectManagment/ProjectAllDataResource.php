@@ -19,7 +19,7 @@ class ProjectAllDataResource extends JsonResource
 
         // URL : previos versions
         $prevVersions = $this->freeze_versions
-            ->filter(fn(array $version) => (int) ($version['id'] ?? 0) !== $this->current_version_id)
+            ->filter(fn(ProjectVersion $version) => (int) ($version->id ?? 0) !== $this->current_version_id)
             ->map(fn(ProjectVersion $version) => [
                 'id' => $version['id'],
                 'url' => route('project.versions.show', ['project' => $this->id, 'version' => $version->id]),

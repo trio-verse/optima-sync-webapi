@@ -94,9 +94,11 @@ class ProjectService
 
     public function updateProject(Project $project, array $data): Project
     {
-        if (!$project->versions()->where('id', $data['current_version_id'])->exists()) {
+        if (!empty($data['current_version_id']) && !$project->versions()->where('id', $data['current_version_id'])->exists()) {
             throw new \Exception('Invalid version ID.');
         }
+        if (empty($data['total_amount']))
+            $data['total_amount'] = $data['sub_total'] * (1 + ($data['profit_percentage'] ?? 20) / 100);
 
         try {
             $project->update($data);
@@ -114,17 +116,20 @@ class ProjectService
 
     public function getProject(Project $project): Project
     {
-        $project = $project
-            ->load(['client', 'currentVersion', 'createdBy', 'versions', 'features', 'employees', 'quotations'])
-            ->withCount(
-                'versions',
-                'features',
-                'employees',
-                'costs'
-            )
-            // ->load(['client', 'currentVersion', 'createdBy', 'versions', 'features', 'members', 'quotations'])
-            ->first();
-        return $project;
+        return $project->load([
+            'client',
+            'currentVersion',
+            'createdBy',
+            'versions',
+            'features',
+            'employees',
+            'quotations'
+        ])->loadCount([
+            'versions',
+            'features',
+            'employees',
+            'costs'
+        ]);
     }
 
     public function deleteProject(Project $project): bool

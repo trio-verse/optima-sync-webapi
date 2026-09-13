@@ -92,6 +92,11 @@ class Project extends Model
         return $this->hasMany(ProjectCost::class);
     }
 
+    public function meetings(): HasMany
+    {
+        return $this->hasMany(ProjectMeeting::class);
+    }
+
     public function quotations(): HasManyThrough
     {
         return $this->hasManyThrough(
@@ -133,7 +138,7 @@ class Project extends Model
             fn(ProjectCost $cost) => $cost->quantity * $cost->amount
         );
     }
-    public function getTotalAmountAttribute(): float
+    public function getTotalCostsBudgetAttribute(): float
     {
         return $this->calculateTotalCosts();
     }

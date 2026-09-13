@@ -62,10 +62,10 @@ class ProjectVersion extends Model
         return $this->belongsTo(ProjectVersion::class, 'based_on_version_id');
     }
 
-    public function createdBy(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'created_by');
-    }
+    // public function createdBy(): BelongsTo
+    // {
+    //     return $this->belongsTo(User::class, 'created_by');
+    // }
 
     public function features(): HasMany
     {

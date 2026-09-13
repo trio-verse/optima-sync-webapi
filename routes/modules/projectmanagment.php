@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\V1\ProjectManagment\ProjectController;
 use App\Http\Controllers\Api\V1\ProjectManagment\ProjectCostController;
 use App\Http\Controllers\Api\V1\ProjectManagment\ProjectEmployeesController;
 use App\Http\Controllers\Api\V1\ProjectManagment\ProjectFeatureController;
+use App\Http\Controllers\Api\V1\ProjectManagment\ProjectMeetingController;
 use App\Http\Controllers\Api\V1\ProjectManagment\ProjectVersionController;
 use Illuminate\Support\Facades\Route;
 
@@ -36,7 +37,7 @@ Route::get('projects/{project}/versions', [ProjectVersionController::class, 'ind
 Route::get('projects/{project}/versions/{version}', [ProjectVersionController::class, 'show'])->name('project.versions.show');
 Route::patch('projects/{project}/versions/{version}', [ProjectVersionController::class, 'update'])->name('project.versions.update');
 Route::delete('projects/{project}/versions/{version}', [ProjectVersionController::class, 'destroy'])->name('project.versions.destroy');
-// Route::patch('projects/{project}/versions/{version}/freeze', [ProjectVersionController::class, 'freeze'])->name('project.versions.freeze');
+Route::patch('projects/{project}/versions/{version}/freeze', [ProjectVersionController::class, 'freeze'])->name('project.versions.freeze');
 // Route::post('projects/{project}/versions/{version}/clone', [ProjectVersionController::class, 'clone'])->name('project.versions.clone');
 
 // Project Features
@@ -54,6 +55,13 @@ Route::get('projects/{project}/costs/total-budget', [ProjectCostController::clas
 Route::get('projects/{project}/costs/{cost}', [ProjectCostController::class, 'show'])->name('project.costs.show');
 Route::patch('projects/{project}/costs/{cost}', [ProjectCostController::class, 'update'])->name('project.costs.update');
 Route::delete('projects/{project}/costs/{cost}', [ProjectCostController::class, 'destroy'])->name('project.costs.destroy');
+
+// Project Meetings
+Route::get('projects/{project}/meetings', [ProjectMeetingController::class, 'index'])->name('project.meetings.index');
+Route::post('projects/{project}/meetings', [ProjectMeetingController::class, 'store'])->name('project.meetings.store');
+Route::get('projects/{project}/meetings/{meeting}', [ProjectMeetingController::class, 'show'])->name('project.meetings.show');
+Route::patch('projects/{project}/meetings/{meeting}', [ProjectMeetingController::class, 'update'])->name('project.meetings.update');
+Route::delete('projects/{project}/meetings/{meeting}', [ProjectMeetingController::class, 'destroy'])->name('project.meetings.destroy');
 
 // // Quotations
 // Route::get('projects/{project}/versions/{version}/quotations', [QuotationController::class, 'index'])->name('project.quotations.index');

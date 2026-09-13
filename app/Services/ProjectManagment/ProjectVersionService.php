@@ -86,11 +86,11 @@ class ProjectVersionService
     /**
      * Update an existing version. If the version is frozen, branch a new version instead.
      */
-    public function updateVersion(Project $project , ProjectVersion $version, array $data): ProjectVersion
+    public function updateVersion(Project $project, ProjectVersion $version, array $data): ProjectVersion
     {
-        if(!$version)
+        if (!$version)
             $version = $project->currentVersion;
-        
+
         // Business Rule: Frozen versions are immutable. Branch a new version from frozen base.
         if ($version->freeze) {
             return $this->branchVersion($version, $data);
@@ -147,7 +147,7 @@ class ProjectVersionService
             // Update current version pointer on project
             $project->update(['current_version_id' => $newVersion->id]);
 
-            return $newVersion->fresh(['basedOnVersion', 'features', 'costs']);
+            return $newVersion->fresh(['basedOnVersion', 'features', 'createdBy']);
         });
     }
 

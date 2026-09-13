@@ -24,7 +24,7 @@ class ProjectResource extends JsonResource
 
             // budget related fields
             'sub_total' => number_format($this->sub_total, 2, '.', ''),
-            'profit_percentage' => $this->profit_percentage,
+            'profit_percentage' => $this->profit_percentage. ' %',
             'total_amount' => number_format($this->total_amount, 2, '.', ''),
 
             'created_by' => $this->created_by,
