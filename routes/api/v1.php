@@ -7,15 +7,16 @@ use App\Http\Controllers\Api\V1\CityController;
 use App\Http\Controllers\Api\V1\ClientController;
 use App\Http\Controllers\Api\V1\ConnectionController;
 use App\Http\Controllers\Api\V1\ContentController;
+use App\Http\Controllers\Api\V1\EmployeeController;
 use App\Http\Controllers\Api\V1\IndustryController;
 use App\Http\Controllers\Api\V1\MarketingAnalyticsController;
 use App\Http\Controllers\Api\V1\OrganizationController;
 use App\Http\Controllers\Api\V1\OrganizationLogoController;
 use App\Http\Controllers\Api\V1\OtpAuthenticationController;
 use App\Http\Controllers\Api\V1\ProductController;
+use App\Http\Controllers\Api\V1\ProjectManagment\ProjectController;
 use App\Http\Controllers\Api\V1\StakeholderController;
 use App\Http\Controllers\Api\V1\UploadController;
-use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
@@ -23,6 +24,9 @@ Route::prefix('v1')->group(function () {
     // Otp Authentication Routes
     Route::post('/register-email', [OtpAuthenticationController::class, 'store']);
     Route::post('verify-otp', [OtpAuthenticationController::class, 'verify']);
+
+    // user request a project from organization (public link)
+    Route::post('{token}/project-request', [ProjectController::class, 'requestProject']);
 
     Route::middleware(['auth:sanctum'])->group(function () {
 
@@ -33,6 +37,7 @@ Route::prefix('v1')->group(function () {
 
         Route::middleware(['active_org'])->group(function () {
             // Organizations
+            Route::get('/organizations/get-token', [OrganizationController::class, 'getHashId']);
             Route::patch('/organizations/{id}', [OrganizationController::class, 'update']);
             Route::get('/organizations/{id}', [OrganizationController::class, 'show']);
 
@@ -125,6 +130,23 @@ Route::prefix('v1')->group(function () {
             Route::get('campaigns/{campaign}/capture', [CampaignCaptureController::class, 'show']);
             Route::patch('campaigns/{campaign}/capture', [CampaignCaptureController::class, 'update']);
             Route::post('campaigns/{campaign}/capture/regenerate', [CampaignCaptureController::class, 'regenerateToken']);
+
+            /**
+             * =====================================
+             *      Project Management Module (mock)
+             * =====================================
+             */
+
+            require_once __DIR__ . '/../modules/projectmanagment.php';
+            require_once __DIR__ . '/../modules/hr.php';
+
+            // require_once __DIR__ . '/modules/marketing.php';
+            // require_once __DIR__ . '/modules/content.php';
+            // require_once __DIR__ . '/modules/analytics.php';
+            // require_once __DIR__ . '/modules/leadcapture.php';
+            // require_once __DIR__ . '/modules/stakeholder.php';
+            // require_once __DIR__ . '/modules/connection.php';
+            // require_once __DIR__ . '/modules/product.php';
         });
 
     });
