@@ -97,17 +97,17 @@ class Project extends Model
         return $this->hasMany(ProjectMeeting::class);
     }
 
-    public function quotations(): HasManyThrough
-    {
-        return $this->hasManyThrough(
-            Quotation::class,
-            ProjectVersion::class,
-            'project_id',
-            'project_version_id',
-            'id',
-            'id'
-        );
-    }
+    // public function quotations(): HasManyThrough
+    // {
+    //     return $this->hasManyThrough(
+    //         Quotation::class,
+    //         ProjectVersion::class,
+    //         'project_id',
+    //         'project_version_id',
+    //         'id',
+    //         'id'
+    //     );
+    // }
     public function employees()
     {
         return $this->belongsToMany(Employee::class, 'project_employees', 'project_id', 'employee_id')
