@@ -77,10 +77,10 @@ class ProjectVersion extends Model
         return $this->hasMany(ProjectCost::class);
     }
 
-    public function quotation(): HasOne
-    {
-        return $this->hasOne(Quotation::class);
-    }
+    // public function quotation(): HasOne
+    // {
+    //     return $this->hasOne(Quotation::class);
+    // }
 
     public function derivedVersions(): HasMany
     {
