@@ -4,6 +4,7 @@ namespace App\Helper\V1;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 
 class ApiResponse
@@ -49,7 +50,9 @@ class ApiResponse
         $paginator = $data instanceof AnonymousResourceCollection
             ? $data->resource
             : $data;
-
+        if ($data instanceof LengthAwarePaginator) {
+            $data = $data->collect();
+        }
         return response()->json([
             'success' => true,
             'message' => $message,

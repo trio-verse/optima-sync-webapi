@@ -127,9 +127,9 @@ Route::prefix('v1')->group(function () {
 
 
             // Lead capture
-            Route::get('campaigns/{campaign}/capture', [CampaignCaptureController::class, 'show']);
-            Route::patch('campaigns/{campaign}/capture', [CampaignCaptureController::class, 'update']);
-            Route::post('campaigns/{campaign}/capture/regenerate', [CampaignCaptureController::class, 'regenerateToken']);
+            // Route::get('campaigns/{campaign}/capture', [CampaignCaptureController::class, 'show']);
+            // Route::patch('campaigns/{campaign}/capture', [CampaignCaptureController::class, 'update']);
+            // Route::post('campaigns/{campaign}/capture/regenerate', [CampaignCaptureController::class, 'regenerateToken']);
 
             /**
              * =====================================

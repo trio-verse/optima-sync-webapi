@@ -38,18 +38,24 @@ class MarketingAnalyticsController extends Controller
     public function effectiveCampaigns(Request $request): JsonResponse
     {
         $sortBy = $request->input('sort');
-        $sortBy = in_array($sortBy ,['cpl', 'roi']) ? $sortBy : 'cpl';
+        $sortBy = in_array($sortBy, ['cpl', 'roi']) ? $sortBy : 'cpl';
         $status = $request->input('status');
-        $per_page = $request->input('per_page' , 15) ;
+        $per_page = $request->input('per_page', 15);
+        $page = $request->input('page', 1);
 
         $campaigns = $this->dashboardService->getEffectiveCampaigns(
             $this->organization,
             $sortBy,
             $status,
-            $per_page
+            $per_page,
+            $page ?? 1,
+            [
+                "path" => $request->url()
+            ]
         );
+        // dd($campaigns['items']);
 
-        return ApiResponse::pagination($campaigns , 'effictave campaigns fetched successfully');
+        return ApiResponse::pagination($campaigns, 'effictave campaigns fetched successfully');
     }
 
 }

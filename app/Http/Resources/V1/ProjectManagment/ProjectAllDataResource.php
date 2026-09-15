@@ -55,7 +55,7 @@ class ProjectAllDataResource extends JsonResource
             'features' => ProjectFeatureResource::collection($this->features),
             'costs' => ProjectCostResource::collection($this->costs),
             'employees' => ProjectEmployeeResource::collection($this->whenLoaded('employees')),
-            'quotations' => QuotationResource::collection($this->quotations),
+            'quotations' => QuotationResource::collection($this->quotat+ions),
 
             'counts' => [
                 'versions_count' => $this->versions_count,

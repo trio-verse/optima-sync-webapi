@@ -4,13 +4,14 @@ namespace App\Services;
 
 use App\Models\Channel;
 use App\Singleton\TenantManager;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\DB;
 
 class ChannelService
 {
 
-    public function getAllChannels(int $perPage = 15): Paginator
+    public function getAllChannels(int $perPage = 15): LengthAwarePaginator
     {
         return Channel::latest()->paginate($perPage);
     }

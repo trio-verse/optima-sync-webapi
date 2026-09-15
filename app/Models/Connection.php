@@ -82,7 +82,7 @@ class Connection extends Model
     }
     public function campaign()
     {
-        return $this->belongsTo(campaign::class, 'campaign_id');
+        return $this->belongsTo(Campaign::class, 'campaign_id');
     }
 
 
@@ -97,6 +97,6 @@ class Connection extends Model
     public function scopeSearchByClientName(Builder $query , string $name)
     {
         return $query->whereHas('client', fn($query) => $query->where('name', 'like', "%{$name}%"));
-    }    
-    
+    }
+
 }

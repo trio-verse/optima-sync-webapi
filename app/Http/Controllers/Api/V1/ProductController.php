@@ -64,14 +64,14 @@ class ProductController extends Controller
     public function update(UpdateProductRequest $request, Product $product)
     {
         try {
-            
+
             $validated = $request->validated();
-            
+
             $product = $this->productService->updateProduct(
                 $validated,
                 $product
             );
-            return ApiResponse::success([], "product retrieved successfully", 200);
+            return ApiResponse::success(new ProductResource($product), "product updated successfully", 200);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             return ApiResponse::error(null, "server error", 500);
@@ -86,7 +86,7 @@ class ProductController extends Controller
         try {
             $this->productService->deleteProduct($product);
             return ApiResponse::success(null, "product deleted successfully", 200);
-            
+
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             return ApiResponse::error(null, "server error", 500);
