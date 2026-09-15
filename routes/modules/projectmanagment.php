@@ -6,6 +6,10 @@ use App\Http\Controllers\Api\V1\ProjectManagment\ProjectEmployeesController;
 use App\Http\Controllers\Api\V1\ProjectManagment\ProjectFeatureController;
 use App\Http\Controllers\Api\V1\ProjectManagment\ProjectMeetingController;
 use App\Http\Controllers\Api\V1\ProjectManagment\ProjectVersionController;
+use App\Http\Controllers\Api\V1\ProjectManagment\QuotationController;
+use App\Models\Project;
+use App\Models\ProjectVersion;
+use App\Models\Quotation;
 use Illuminate\Support\Facades\Route;
 
 
@@ -63,7 +67,16 @@ Route::get('projects/{project}/meetings/{meeting}', [ProjectMeetingController::c
 Route::patch('projects/{project}/meetings/{meeting}', [ProjectMeetingController::class, 'update'])->name('project.meetings.update');
 Route::delete('projects/{project}/meetings/{meeting}', [ProjectMeetingController::class, 'destroy'])->name('project.meetings.destroy');
 
-// // Quotations
+// Quotations
+// Route::get('/projects/{project}/versions/{version}/quotations/preview', [QuotationController::class, 'preview'])
+//     ->name('project.quotations.preview');
+
+// Route::post('/projects/{project}/versions/{version}/quotations/{quotation}/generate-pdf', [QuotationController::class, 'generatePdf'])
+//     ->name('project.quotations.generate-pdf');
+
+// Route::get('/projects/{project}/versions/{version}/quotations/{quotation}/download', [QuotationController::class, 'downloadPdf'])
+//     ->name('project.quotations.download-pdf');
+
 // Route::get('projects/{project}/versions/{version}/quotations', [QuotationController::class, 'index'])->name('project.quotations.index');
 // Route::post('projects/{project}/versions/{version}/quotations', [QuotationController::class, 'store'])->name('project.quotations.store');
 // Route::get('projects/{project}/versions/{version}/quotations/{quotation}', [QuotationController::class, 'show'])->name('project.quotations.show');

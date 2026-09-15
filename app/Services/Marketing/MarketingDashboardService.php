@@ -4,6 +4,7 @@ namespace App\Services\Marketing;
 use App\Enums\enCampaignStatus;
 use App\Models\Campaign;
 use App\Models\Organization;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class MarketingDashboardService
 {
@@ -62,7 +63,7 @@ class MarketingDashboardService
         ];
     }
 
-    public function getEffectiveCampaigns(Organization $org, string $sortBy = 'cpl', $status = null, int $per_page = 15)
+    public function getEffectiveCampaigns(Organization $org, string $sortBy = 'cpl', $status = null, int $per_page = 15, int $page = 1, array $options = [])
     {
         $campaigns = $org->campaigns()->withCount('connections')
             ->withSum(
@@ -72,7 +73,7 @@ class MarketingDashboardService
                 ['contents as current_spent' => fn($q) => $q->whereNotNull('cost_confirmed_by')],
                 'cost'
             )->when(in_array($status, enCampaignStatus::all()), function ($query) use ($status) {
-                $query->where('status' , $status);
+                $query->where('status', $status);
             })->paginate($per_page)
             ->map(function ($campaign) {
                 $spent = (float) $campaign->current_spent;
@@ -88,7 +89,8 @@ class MarketingDashboardService
                 return $campaign;
             });
 
-        return match ($sortBy) {
+
+        $campaigns = match ($sortBy) {
             'roi' => $campaigns
                 ->sortByDesc('roi')
                 ->values(),
@@ -96,6 +98,21 @@ class MarketingDashboardService
                 ->sortBy('cpl')
                 ->values(),
         };
+
+        // return LengthAwarePaginator::cre($campaigns);
+        $currentPageItems = $campaigns->forPage($page, $per_page);
+
+        // dd($currentPageItems->toArray());
+        $campaigns = new LengthAwarePaginator(
+            $currentPageItems->toArray(),
+            $campaigns->count(), // Total items
+            $per_page,        // Items per page
+            $page,           // Current page
+            $options        // Options like 'path' and 'pageName'
+        );
+
+        return $campaigns;
+
     }
 
 

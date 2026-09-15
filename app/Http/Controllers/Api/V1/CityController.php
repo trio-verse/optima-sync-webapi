@@ -23,13 +23,13 @@ class CityController extends Controller
     }
     /**
      * Display a listing of the cities.
-     * 
+     *
      * this endpoint display all cities from DB
      * response get all cities
      */
     public function index(Request $request)
     {
-        $per_page = $request->query('per_page') ?? null;
+        $per_page = (int)$request->query('per_page') ?? null;
         $cities = $this->city_service->getAllCities($per_page);
         return ApiResponse::pagination(CityResource::collection($cities), 'Cities fetched successfully');
     }
@@ -38,7 +38,7 @@ class CityController extends Controller
 
     /**
      * create city.
-     * 
+     *
      * this endpoint create new city
      * response new city
      */
@@ -52,7 +52,7 @@ class CityController extends Controller
 
     /**
      * Update city.
-     * 
+     *
      * this endpoint update city data
      * response updated city data
      */
@@ -67,7 +67,7 @@ class CityController extends Controller
 
     /**
      * Delete city.
-     * 
+     *
      * this endpoint delete city data from DB
      * response remove the specified city from DB
      */

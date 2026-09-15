@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 class CityService
 {
 
-    public function getAllCities(int $perPage = 15): Paginator
+    public function getAllCities(int $perPage = 15)
     {
         return City::latest()->paginate($perPage);
     }

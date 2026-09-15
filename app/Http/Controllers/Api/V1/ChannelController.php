@@ -20,16 +20,16 @@ class ChannelController extends Controller
     public function __construct(
         protected ChannelService $channel_service
     ) {}
-   
+
      /**
      * Display a listing of the channels.
-     * 
+     *
      * this endpoint display all channels from DB
      * response get all channels
      */
     public function index(Request $request)
     {
-        $per_page = $request->query('per_page') ?? null;
+        $per_page = (int)$request->query('per_page') ;
         $channels = $this->channel_service->getAllChannels($per_page);
         return ApiResponse::pagination(ChannelResource::collection($channels), 'Channels fetched succsesfully');
     }
@@ -38,7 +38,7 @@ class ChannelController extends Controller
 
     /**
      * create channel.
-     * 
+     *
      * this endpoint create new channel
      * response new channel
      */
@@ -51,7 +51,7 @@ class ChannelController extends Controller
 
     /**
      * Update channel.
-     * 
+     *
      * this endpoint update channel data
      * response updated channel data
      */
@@ -65,18 +65,18 @@ class ChannelController extends Controller
 
     /**
      * Delete channel.
-     * 
+     *
      * this endpoint delete channel data from DB
      * response remove the specified channel from DB
      */
     public function destroy(Channel $channel)
     {
-        
+
         $isDeleted = $this->channel_service->deleteChannel($channel);
         if (!$isDeleted) {
             return ApiResponse::error([], 'deleting fail', 500);
         }
-        
+
         return ApiResponse::success(
             [],
             'Channel deleted successfully',
