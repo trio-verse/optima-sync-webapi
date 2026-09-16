@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\enProjectSource;
 use App\Enums\enProjectStatus;
 use App\Trait\BelongsToOrganization;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -114,7 +115,20 @@ class Project extends Model
             ->withPivot('total_points', 'organization_id')
             ->withTimestamps();
     }
+    /**
+     * Scopes
+     */
 
+    public function scopeStatus(Builder $query, array $status):Builder
+    {
+        return $query->whereIn('status', $status, 'or');
+    }
+
+    /**
+     * Helper Methods
+     */
+
+    // employees
     public function getTotalEmployeePointsAttribute(): int
     {
         return (int) $this->employees->sum('pivot.total_points');
@@ -129,9 +143,7 @@ class Project extends Model
         });
     }
 
-    /**
-     * Helper Methods
-     */
+    // costs
     public function calculateTotalCosts(): float
     {
         return (float) $this->costs->sum(
@@ -143,10 +155,13 @@ class Project extends Model
         return $this->calculateTotalCosts();
     }
 
+    // get the current version
     public function getActiveVersionAttribute(): ?ProjectVersion
     {
         return $this->versions()->where('freeze', false)->first();
     }
+
+    // get the freeze versions
     public function getFreezeVersionsAttribute(): ProjectVersion|Collection
     {
         return $this->versions()->where('freeze', true)->get();
@@ -157,6 +172,7 @@ class Project extends Model
         return $this->versions()->latest('version_number')->first();
     }
 
+    // get total quotations count
     public function getTotalQuotationsAttribute(): int
     {
         return $this->quotations()->count();

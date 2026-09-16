@@ -2,6 +2,8 @@
 
 namespace App\Services\ProjectManagment;
 
+use App\Events\ProjectEmployeeAssigned;
+use App\Events\ProjectEmployeePointsUpdated;
 use App\Models\Employee;
 use App\Models\Project;
 use Illuminate\Database\Eloquent\Collection;
@@ -32,6 +34,8 @@ class ProjectEmployeeService
                 ]
             ]);
         });
+        // dispatch this event to recalculate project cost price (sub_total)
+        ProjectEmployeeAssigned::dispatch($project , $employee);
 
         return $project->employees()->where('employee_id', $employee->id)->first();
     }
@@ -58,6 +62,9 @@ class ProjectEmployeeService
                 'total_points' => $totalPoints,
             ]);
         });
+
+        // dispatch this event to recalculate project cost price (sub_total)
+        ProjectEmployeePointsUpdated::dispatch($project , $employee);
 
         return $project->employees()->where('employee_id', $employee->id)->first();
     }

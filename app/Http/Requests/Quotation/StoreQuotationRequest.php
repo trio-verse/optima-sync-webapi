@@ -14,13 +14,14 @@ class StoreQuotationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'quotation_number' => ['nullable', 'string', 'max:100'],
-            'issue_date' => ['required', 'date'],
-            'valid_until' => ['required', 'date', 'after_or_equal:issue_date'],
+            // 'quotation_number' => ['nullable', 'string', 'max:100'],
+            // 'issue_date' => ['required', 'date'],
+            'valid_until_days' => ['required', 'integer' , 'min:2'],
             'subtotal' => ['sometimes', 'numeric', 'min:0'],
             'discount' => ['sometimes', 'numeric', 'min:0'],
             'tax' => ['sometimes', 'numeric', 'min:0'],
             'total' => ['sometimes', 'numeric', 'min:0'],
+            'payment_terms' => ['required', 'string']
         ];
     }
 
