@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\enProjectSource;
 use App\Enums\enProjectStatus;
+use App\Models\Scopes\OrganizationScope;
 use App\Trait\BelongsToOrganization;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -54,7 +55,7 @@ class Project extends Model
         parent::boot();
 
         static::creating(function ($project) {
-            $project->reference_id = 'PRJ-' . str_pad(static::max('id') + 1, 4, '0', STR_PAD_LEFT);
+            $project->reference_id = 'PRJ-' . str_pad(static::withoutGlobalScope(OrganizationScope::class)->max('id') + 1, 4, '0', STR_PAD_LEFT);
             $project->created_by = auth()->id();
         });
     }
