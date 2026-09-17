@@ -30,7 +30,8 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->trustProxies(at: '*');
         $middleware->alias([
-            'active_org' => SetActiveOrganization::class
+            'active_org'      => SetActiveOrganization::class,
+            'active_version'  => \App\Http\Middleware\EnsureActiveProjectVersion::class,
         ]);
 
     })

@@ -64,7 +64,7 @@ class ProjectVersionController extends Controller
             return ApiResponse::notFound('Project version not found for this project');
         }
 
-        $version->load(['features', 'costs', 'basedOnVersion', 'createdBy']);
+        $version->load(['features', 'basedOnVersion', 'createdBy']);
 
         return ApiResponse::success(new ProjectVersionResource($version), 'Project version retrieved successfully');
     }

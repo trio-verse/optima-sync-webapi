@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Events\EmployeeHourlyCostChanged;
 use App\Models\Employee;
 use App\Singleton\TenantManager;
 use Illuminate\Database\Eloquent\Collection;
@@ -36,7 +37,11 @@ class EmployeeService
         return DB::transaction(function () use ($employee, $data) {
             $employee->update($data);
 
-            return $employee->fresh();
+            $employee->refresh();
+
+            if ($data['cost_per_hour'] || $data['houres_per_point'])
+                // dispatch this event to recalculate project cost price (sub_total)
+                EmployeeHourlyCostChanged::dispatch($employee);
         });
     }
 

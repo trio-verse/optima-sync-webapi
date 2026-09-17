@@ -2,14 +2,17 @@
 
 namespace App\Providers;
 
+use App\Contracts\AffectsProjectCost;
 use App\Contracts\FileStorageInterface;
 use App\Http\Middleware\SetActiveOrganization;
+use App\Listeners\RecalculateProjectCostListener;
 use App\Services\FileStorageService;
 use App\Services\LocalStorageService;
 use App\Services\S3StorageService;
 use App\Singleton\TenantManager;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
@@ -42,6 +45,12 @@ class AppServiceProvider extends ServiceProvider
         if (config('app.env') !== 'local' || isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
             URL::forceScheme('https');
         }
+
+        /**
+         *  any future event that implements AffectsProjectCost will automatically
+         *  be caught by RecalculateProjectCostListener with zero additional registration
+         */
+        Event::listen(AffectsProjectCost::class, RecalculateProjectCostListener::class);
 
 
         // for all apis
@@ -76,7 +85,7 @@ class AppServiceProvider extends ServiceProvider
             ];
 
             // $maxRequests = $limits[$user->subscription_tier] ?? 100;
-            $maxRequests = 60 ;
+            $maxRequests = 60;
 
             return Limit::perMinute($maxRequests)->by($user->id);
         });
