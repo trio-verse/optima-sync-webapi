@@ -115,8 +115,6 @@ class QuotationService
                 'amount' => $cost['line_total'],
             ])->toArray();
 
-            // $total_emps_cost = collect($version->employees_snapshot)->sum(fn($emp) => $emp['calculated_cost']);
-
         } else {
             // Features with name + description
             $features = $project->features->map(fn($feature) => [
@@ -130,8 +128,6 @@ class QuotationService
                 'description' => $cost->description ?? '',
                 'amount' => $cost->line_total,
             ])->toArray();
-
-            // $total_emp_costs =(int) (new ProjectEmployeeService())->calculatePointsSummary($project)['total_cost'];
         }
 
 
@@ -139,13 +135,8 @@ class QuotationService
         $developmentFee = $this->calculateDevelopmentFee($project);
         $total_budget = $developmentFee + $addedCostsTotal;
 
-        // mocking
         $tax_number = $quotation->tax ?? 0;
-        // $tax = $tax_number * (1 / 100) + 1;
         $discount_number = $quotation->discount ?? 0;
-        // $discount = $discount_number * (1 / 100) + 1;
-        // final price
-        // $final_price = ($total_budget * $tax) / $discount;
         $final_price = $total_budget + $tax_number - $discount_number;
 
         $data = [
@@ -165,8 +156,8 @@ class QuotationService
             'development_fee' => $developmentFee,
             'added_costs_total' => $addedCostsTotal,
             'subtotal' => $total_budget,
-            'tax' => $tax_number . " %",
-            'discount' => $discount_number . " %",
+            'tax' => $tax_number ,
+            'discount' => $discount_number ,
             'total' => $final_price,
             'currency' => config('app.currency', 'USD'),
             'payment_terms' => $quotation->payment_terms ?? config('app.payment_terms', 'Net 30'),
@@ -192,6 +183,7 @@ class QuotationService
                 ->format('A4')
                 ->showBackground()
                 ->timeout(120)
+                ->setCustomTempPath(asset('/temp'))
                 ->pdf();
 
             Storage::disk('public')->put($pdfPath, $pdfBytes);
@@ -243,7 +235,7 @@ class QuotationService
 
     protected function calculateDevelopmentFee(Project $project): float
     {
-        return $project->sub_total * ($project->profit_percentage / 100) + $project->sub_total;
+        return $project->total_amount == 0 ? ($project->sub_total * ($project->profit_percentage / 100) + $project->sub_total ) : $project->total_amount;
     }
 
     protected function shouldRecalculateTotals(array $data, Quotation $quotation): bool

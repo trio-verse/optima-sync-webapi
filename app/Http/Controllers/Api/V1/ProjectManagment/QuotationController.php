@@ -37,7 +37,7 @@ class QuotationController extends Controller
     public function index(Project $project): JsonResponse
     {
 
-        $quotations = $project->quotations ;
+        $quotations = $project->quotations;
 
         return ApiResponse::success(
             \App\Http\Resources\V1\ProjectManagment\QuotationResource::collection($quotations),
@@ -51,6 +51,9 @@ class QuotationController extends Controller
      */
     public function store(StoreQuotationRequest $request, int $project, ProjectVersion $version): JsonResponse
     {
+        if ($version->freeze && $version->quotation)
+            return ApiResponse::error('this version already have quotation');
+
         $validated = $request->validated();
         // $quotation = Quotation::create($validated);
         $validated['issue_date'] = now();
@@ -73,6 +76,19 @@ class QuotationController extends Controller
         return ApiResponse::success([], 'Quotation created successfully', 201);
     }
 
+    public function update(UpdateQuotationRequest $request, int $project, ProjectVersion $version)
+    {
+        if($version->freeze)
+            return ApiResponse::error("can't update Frozen version Quotation");
+
+        $validated = $request->validated();
+
+        if(!$version->quotation)
+            return ApiResponse::notFound("no quotation found for this version");
+
+        $version->quotation()->update($validated);
+        return ApiResponse::success([] , "Quotation updated successfully");
+    }
 
 
     /**
@@ -129,7 +145,7 @@ class QuotationController extends Controller
 
         $html = view('quotations.quotation', ['data' => $data])->render();
 
-        // return $html ;
+        return $html;
         return ApiResponse::success([
             'html' => $html,
             'meta' => [

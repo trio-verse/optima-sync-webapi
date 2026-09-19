@@ -43,7 +43,7 @@ class ProjectAllDataResource extends JsonResource
             // project_amounts
             'sub_total' => number_format((float) ($this->sub_total ?? 0), 2, '.', ''),
             'profit_percentage' => (int) ($this->profit_percentage ?? 0),
-            'total_amount' => number_format((float) ($this->total_amount ?? 0), 2, '.', ''),
+            'total_amount' => number_format((float) ($this->total_amount == 0 ? $this->total_budget : $this->total_amount ), 2, '.', ''),
             // client details
             'client_details' => $this->whenLoaded('client', new ClientResource($this->client), []),
             // versions

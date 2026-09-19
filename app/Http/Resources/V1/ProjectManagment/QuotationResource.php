@@ -48,6 +48,7 @@ class QuotationResource extends JsonResource
                 : null,
             'created_by' => $this['created_by'] ?? null,
             'created_by_user' => $this['created_by_user'] ?? null,
+            'data' => $this->data,
             'created_at' => $this['created_at'] ?? null,
             'updated_at' => $this['updated_at'] ?? null,
         ];

@@ -120,7 +120,7 @@ class Project extends Model
      * Scopes
      */
 
-    public function scopeStatus(Builder $query, array $status):Builder
+    public function scopeStatus(Builder $query, array $status): Builder
     {
         return $query->whereIn('status', $status, 'or');
     }
@@ -184,5 +184,10 @@ class Project extends Model
         $latestQuotation = $this->quotations()->latest()->first();
 
         return $latestQuotation ? (float) $latestQuotation->total : 0;
+    }
+
+    public function getTotalBudgetAttribute(): float
+    {
+        return (float) $this->sub_total * ($this->profit_percentage / 100 + 1);
     }
 }

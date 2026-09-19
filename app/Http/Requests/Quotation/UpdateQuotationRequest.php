@@ -14,9 +14,9 @@ class UpdateQuotationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'quotation_number' => ['sometimes', 'string', 'max:100'],
+
             'issue_date' => ['sometimes', 'date'],
-            'valid_until' => ['sometimes', 'date', 'after_or_equal:issue_date'],
+            'valid_until_days' => ['sometimes', 'integer', 'min:2'],
             'subtotal' => ['sometimes', 'numeric', 'min:0'],
             'discount' => ['sometimes', 'numeric', 'min:0'],
             'tax' => ['sometimes', 'numeric', 'min:0'],
@@ -25,10 +25,4 @@ class UpdateQuotationRequest extends FormRequest
         ];
     }
 
-    public function messages(): array
-    {
-        return [
-            'valid_until.after_or_equal' => 'Valid until date must be after or equal to issue date',
-        ];
-    }
 }
