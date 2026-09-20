@@ -4,6 +4,7 @@ namespace App\Services\ProjectManagment;
 
 use App\Events\ProjectEmployeeAssigned;
 use App\Events\ProjectEmployeePointsUpdated;
+use App\Events\ProjectEmployeeRemoved;
 use App\Models\Employee;
 use App\Models\Project;
 use Illuminate\Database\Eloquent\Collection;
@@ -33,9 +34,9 @@ class ProjectEmployeeService
                     'total_points' => $totalPoints,
                 ]
             ]);
+
+            DB::afterCommit(fn () => ProjectEmployeeAssigned::dispatch($project, $employee));
         });
-        // dispatch this event to recalculate project cost price (sub_total)
-        ProjectEmployeeAssigned::dispatch($project , $employee);
 
         return $project->employees()->where('employee_id', $employee->id)->first();
     }
@@ -61,10 +62,9 @@ class ProjectEmployeeService
             $project->employees()->updateExistingPivot($employee->id, [
                 'total_points' => $totalPoints,
             ]);
-        });
 
-        // dispatch this event to recalculate project cost price (sub_total)
-        ProjectEmployeePointsUpdated::dispatch($project , $employee);
+            DB::afterCommit(fn () => ProjectEmployeePointsUpdated::dispatch($project, $employee));
+        });
 
         return $project->employees()->where('employee_id', $employee->id)->first();
     }
@@ -78,9 +78,17 @@ class ProjectEmployeeService
             throw new \DomainException('Employee is not assigned to this project.');
         }
 
-        return DB::transaction(function () use ($project, $employee) {
-            return (bool) $project->employees()->detach($employee->id);
+        $detached = DB::transaction(function () use ($project, $employee) {
+            $detached = (bool) $project->employees()->detach($employee->id);
+
+            if ($detached) {
+                DB::afterCommit(fn () => ProjectEmployeeRemoved::dispatch($project, $employee));
+            }
+
+            return $detached;
         });
+
+        return $detached;
     }
 
     /**

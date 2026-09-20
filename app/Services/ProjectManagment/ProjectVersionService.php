@@ -181,7 +181,7 @@ class ProjectVersionService
     }
 
     /**
-     * Delete an un-frozen, non-current version without active quotations.
+     * Delete an un-frozen, non-current version.
      */
     public function deleteVersion(ProjectVersion $version): bool
     {
@@ -191,10 +191,6 @@ class ProjectVersionService
 
         if ($version->project->current_version_id === $version->id) {
             throw new \DomainException('Cannot delete the current active version.');
-        }
-
-        if ($version->quotation()->exists()) {
-            throw new \DomainException('Cannot delete a version associated with an active quotation.');
         }
 
         return DB::transaction(function () use ($version) {

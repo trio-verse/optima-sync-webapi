@@ -14,6 +14,10 @@ use Illuminate\Support\Str;
 
 class ProjectService
 {
+    public function __construct(private ProjectPricingService $pricingService)
+    {
+    }
+
     public function getFilteredProjects(array $filters = [])
     {
         $query = Project::with(['client', 'currentVersion', 'createdBy']);
@@ -97,8 +101,16 @@ class ProjectService
         if (!empty($data['current_version_id']) && !$project->versions()->where('id', $data['current_version_id'])->exists()) {
             throw new \Exception('Invalid version ID.');
         }
-        if (empty($data['total_amount']))
-            $data['total_amount'] = $data['sub_total'] * (1 + ($data['profit_percentage'] ?? 20) / 100);
+
+        // Commercial baseline is derived from project pricing; it is never a
+        // caller-controlled total_amount value.
+        unset($data['total_amount']);
+
+        if (array_key_exists('sub_total', $data) || array_key_exists('profit_percentage', $data)) {
+            $subTotal = (float) ($data['sub_total'] ?? $project->sub_total);
+            $profitPercentage = (float) ($data['profit_percentage'] ?? $project->profit_percentage);
+            $data['total_amount'] = $this->pricingService->calculateCommercialCost($subTotal, $profitPercentage);
+        }
 
         try {
             $project->update($data);
@@ -123,13 +135,12 @@ class ProjectService
             'versions',
             'features',
             'employees',
-            'quotations'
         ])->loadCount([
-            'versions',
-            'features',
-            'employees',
-            'costs'
-        ]);
+                    'versions',
+                    'features',
+                    'employees',
+                    'costs'
+                ]);
     }
 
     public function deleteProject(Project $project): bool
@@ -188,9 +199,9 @@ class ProjectService
         $data['source'] = enProjectSource::INTERNAL->value;
 
         // financial
-        $subTotal = (float) ($validated['sub_total'] ?? 0);
-        $profit = (int) ($validated['profit_percentage'] ?? 20);
-        $total = $validated['total_amount'] ?? number_format($subTotal * (1 + $profit / 100), 2, '.', '');
+        $subTotal = (float) ($data['sub_total'] ?? 0);
+        $profit = (int) ($data['profit_percentage'] ?? 20);
+        $total = $this->pricingService->calculateCommercialCost($subTotal, $profit);
 
 
         $data = array_merge($data, [

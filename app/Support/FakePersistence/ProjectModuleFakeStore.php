@@ -6,7 +6,6 @@ use Database\Factories\ProjectCostFactory;
 use Database\Factories\ProjectFactory;
 use Database\Factories\ProjectFeatureFactory;
 use Database\Factories\ProjectVersionFactory;
-use Database\Factories\QuotationFactory;
 
 /**
  * Seeds and exposes fake stores for the project management module.
@@ -18,7 +17,6 @@ class ProjectModuleFakeStore
     private FakeStore $features;
     private FakeStore $costs;
     private FakeStore $members;
-    private FakeStore $quotations;
 
     public function __construct()
     {
@@ -27,7 +25,6 @@ class ProjectModuleFakeStore
         $this->features = new FakeStore('project_features');
         $this->costs = new FakeStore('project_costs');
         $this->members = new FakeStore('project_members');
-        $this->quotations = new FakeStore('quotations');
 
         $this->seed();
     }
@@ -57,11 +54,6 @@ class ProjectModuleFakeStore
         return $this->members;
     }
 
-    public function quotations(): FakeStore
-    {
-        return $this->quotations;
-    }
-
     private function seed(): void
     {
         $this->projects->seedIfEmpty(fn() => [
@@ -72,6 +64,11 @@ class ProjectModuleFakeStore
                 'sub_total' => '10000.00',
                 'profit_percentage' => 20,
                 'total_amount' => '12000.00',
+                'discount' => '0.00',
+                'tax' => '350.00',
+                'issue_date' => '2026-09-01',
+                'valid_until' => '2026-10-01',
+                'payment_terms' => 'Net 30',
                 'client' => ['id' => 1, 'name' => 'Acme Ltd', 'email' => 'hello@acme.test'],
                 'current_version' => ['id' => 1, 'version_number' => 1, 'title' => 'Initial Version', 'freeze' => false],
             ]),
@@ -84,6 +81,11 @@ class ProjectModuleFakeStore
                 'sub_total' => '18500.00',
                 'profit_percentage' => 25,
                 'total_amount' => '23125.00',
+                'discount' => '0.00',
+                'tax' => '1850.00',
+                'issue_date' => '2026-09-01',
+                'valid_until' => '2026-10-01',
+                'payment_terms' => 'Net 30',
                 'client' => ['id' => 2, 'name' => 'Beta Corp', 'email' => 'ops@beta.test'],
                 'current_version' => ['id' => 2, 'version_number' => 2, 'title' => 'Revised Scope', 'freeze' => false],
             ]),
@@ -183,20 +185,5 @@ class ProjectModuleFakeStore
             ],
         ]);
 
-        $this->quotations->seedIfEmpty(fn() => [
-            QuotationFactory::dto(1, 1, [
-                'subtotal' => '12000.00',
-                'discount' => '0.00',
-                'tax' => '350.00',
-                'total' => '12350.00',
-            ]),
-            QuotationFactory::dto(2, 2, [
-                'quotation_number' => 'QTN-202609-0002',
-                'subtotal' => '23125.00',
-                'discount' => '0.00',
-                'tax' => '1850.00',
-                'total' => '24975.00',
-            ]),
-        ]);
     }
 }

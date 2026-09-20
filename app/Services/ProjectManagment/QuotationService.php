@@ -2,253 +2,177 @@
 
 namespace App\Services\ProjectManagment;
 
-use App\Models\Project;
 use App\Models\ProjectVersion;
-use App\Models\Quotation;
-use DateTime;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Browsershot\Browsershot;
 
 class QuotationService
 {
-    public function getVersionQuotations(ProjectVersion $version)
+    public function __construct(private ProjectPricingService $pricingService)
     {
-        return $version->quotation()
-            ? [$version->quotation]
-            : [];
     }
 
-    public function createQuotation(ProjectVersion $version, array $data)
+    public function previewData(ProjectVersion $version): array
     {
-        return DB::transaction(function () use ($version, $data) {
-            if (empty($data['quotation_number'])) {
-                $data['quotation_number'] = Quotation::generateQuotationNumber();
-            }
+        $version->loadMissing(['project.organization', 'project.client', 'project.costs', 'features']);
 
-            $data['created_by'] = auth()->id();
-            $data['project_version_id'] = $version->id;
-
-            $totals = $this->calculateQuotationTotals($version);
-            $data = array_merge($data, $totals);
-
-            $quotation = Quotation::create($data);
-
-            return $quotation;
-        });
-    }
-
-    public function getQuotation($quotationId, ProjectVersion $version)
-    {
-        return $version->quotation()->find($quotationId);
-    }
-
-    public function updateQuotation($quotationId, ProjectVersion $version, array $data)
-    {
-        $quotation = $this->getQuotation($quotationId, $version);
-
-        if (!$quotation) {
-            return null;
+        if ($version->freeze && is_array($version->quotation_data)) {
+            return $version->quotation_data;
         }
 
-        if ($this->shouldRecalculateTotals($data, $quotation)) {
-            $totals = $this->calculateQuotationTotals($version);
-            $data = array_merge($data, $totals);
-        }
-
-        $quotation->update($data);
-
-        return $quotation->fresh();
-    }
-
-    public function changeStatus($quotationId, ProjectVersion $version, string $status)
-    {
-        $quotation = $this->getQuotation($quotationId, $version);
-
-        if (!$quotation) {
-            return null;
-        }
-
-        $quotation->update(['status' => $status]);
-
-        if ($status === 'sent' && !$version->freeze) {
-            $version->freezeVersion();
-        }
-
-        return $quotation->fresh();
-    }
-
-    /**
-     * Build the data array for the quotation-invoice blade view.
-     * Matches the contract:
-     *   optimasync_logo, organization_name, org_location,
-     *   quo_number, issue_date, client_name, quotation_based_version_id,
-     *   valid_until, project_title, project_description,
-     *   project_features [{name, description}],
-     *   costs [{title, description, amount}],
-     *   development_fee, added_costs_total, tax, discount, subtotal, total,
-     *   payment_terms, currency
-     */
-    public function previewData(Quotation $quotation): array
-    {
-        $version = $quotation->projectVersion;
         $project = $version->project;
-
-        if ($quotation->data != [] && $version->freeze)
-            return $quotation->data;
-
-        $organization = $project->organization;
-        $client = $project->client;
-
-
-        if ($version->freeze) {
-            // dd($version->features_snapshot);
-            $features = collect($version->features_snapshot)->map(fn($feature) => [
-                'name' => $feature['name'],
+        $features = $version->freeze
+            ? collect($version->features_snapshot)->map(fn(array $feature) => [
+                'name' => $feature['name'] ?? '',
                 'description' => $feature['description'] ?? '',
-            ])->toArray();
-
-            $costs = collect($version->costs_snapshot)->map(fn($cost) => [
-                'title' => $cost['name'],
-                'description' => $cost['description'] ?? '',
-                'amount' => $cost['line_total'],
-            ])->toArray();
-
-        } else {
-            // Features with name + description
-            $features = $project->features->map(fn($feature) => [
+            ])->values()->all()
+            : $version->features->map(fn($feature) => [
                 'name' => $feature->name,
                 'description' => $feature->description ?? '',
-            ])->toArray();
+            ])->values()->all();
 
-            // Costs with title + description + amount (line_total = quantity * amount)
-            $costs = $project->costs->map(fn($cost) => [
+        $costs = $version->freeze
+            ? collect($version->costs_snapshot)->map(fn(array $cost) => [
+                'title' => $cost['name'] ?? '',
+                'description' => $cost['description'] ?? '',
+                'amount' => $cost['line_total'] ?? (($cost['quantity'] ?? 0) * ($cost['amount'] ?? 0)),
+            ])->values()->all()
+            : $project->costs->map(fn($cost) => [
                 'title' => $cost->name,
                 'description' => $cost->description ?? '',
                 'amount' => $cost->line_total,
-            ])->toArray();
-        }
+            ])->values()->all();
 
-
-        $addedCostsTotal = (float) collect($costs)->sum('amount');
-        $developmentFee = $this->calculateDevelopmentFee($project);
-        $total_budget = $developmentFee + $addedCostsTotal;
-
-        $tax_number = $quotation->tax ?? 0;
-        $discount_number = $quotation->discount ?? 0;
-        $final_price = $total_budget + $tax_number - $discount_number;
+        $totals = $this->pricingService->calculateQuotationTotals($project);
 
         $data = [
             'optimasync_logo' => asset('images/optima-sync-logo.jpg'),
-            'organization_name' => $organization?->name ?? config('app.name', 'OptimaSync'),
-            'org_location' => $organization?->address ?? '',
-            'quo_number' => $quotation->quotation_number,
-            'issue_date' => $quotation->issue_date?->format('M d, Y') ?? now()->format('M d, Y'),
-            'client_name' => $client?->name ?? 'Valued Client',
+            'organization_name' => $project->organization?->name ?? config('app.name', 'OptimaSync'),
+            'org_location' => $project->organization?->address ?? '',
+            'quo_number' => $version->quotation_number ?? $this->quotationNumber($version),
+            'issue_date' => $project->issue_date?->format('M d, Y') ?? now()->format('M d, Y'),
+            'client_name' => $project->client?->name ?? 'Valued Client',
             'quotation_based_version_id' => $version->version_number,
-            'valid_until' => $quotation->valid_until?->format('M d, Y') ?? null,
+            'valid_until' => $project->valid_until?->format('M d, Y'),
             'project_number' => $project->reference_id ?? 'Project_1',
-            'project_title' => $version->title ?? 'Project_test',
-            'project_description' => $version->description ?? 'test description',
+            'project_title' => $version->title ?? 'Project',
+            'project_description' => $version->description ?? '',
             'project_features' => $features,
             'costs' => $costs,
-            'development_fee' => $developmentFee,
-            'added_costs_total' => $addedCostsTotal,
-            'subtotal' => $total_budget,
-            'tax' => $tax_number ,
-            'discount' => $discount_number ,
-            'total' => $final_price,
+            'development_fee' => $totals['development_fee'],
+            'added_costs_total' => $totals['added_costs_total'],
+            'subtotal' => $totals['subtotal'],
+            'tax' => $totals['tax'],
+            'discount' => $totals['discount'],
+            'total' => $totals['total'],
             'currency' => config('app.currency', 'USD'),
-            'payment_terms' => $quotation->payment_terms ?? config('app.payment_terms', 'Net 30'),
+            'payment_terms' => $project->payment_terms ?? config('app.payment_terms', 'Net 30'),
         ];
 
-        $quotation->update(['data' => $data]);
+        if ($version->freeze) {
+            $version->forceFill([
+                'quotation_number' => $data['quo_number'],
+                'quotation_data' => $data,
+            ])->save();
+        }
 
         return $data;
     }
 
-    public function generatePdf(Quotation $quotation): array
+    public function generatePdf(ProjectVersion $version): array
     {
-        try {
-            $data = $this->previewData($quotation);
+        if ($version->quotation_pdf_path ) {
+            return [
+                'success' => true,
+                'message' => 'PDF retreived successfully',
+                // 'pdf_path' => $version->quotation_pdf_path,
+                'pdf_url' => asset("storage/". $version->quotation_pdf_path),
+            ];
 
-            $html = view('index', [
-                'data' => $data
+        }
+
+        try {
+            $data = $this->previewData($version);
+
+            $logoPath = public_path('images/optima-sync-logo.jpg');
+
+            if (!file_exists($logoPath)) {
+                throw new \Exception("Logo not found: {$logoPath}");
+            }
+
+            $data['optimasync_logo'] = 'data:image/jpeg;base64,' .
+                base64_encode(file_get_contents($logoPath));
+
+            $html = view('quotations.quotation', [
+                'data' => $data,
             ])->render();
 
-            $pdfPath = $this->buildPdfPath($quotation);
 
+
+            $pdfPath = $this->buildPdfPath($version);
             $pdfBytes = Browsershot::html($html)
                 ->format('A4')
-                ->showBackground()
                 ->timeout(120)
-                ->setCustomTempPath(asset('/temp'))
                 ->pdf();
 
             Storage::disk('public')->put($pdfPath, $pdfBytes);
 
-            $quotation->update([
-                'pdf_path' => $pdfPath
-            ]);
+            return DB::transaction(function () use ($version, $pdfPath, $data) {
 
-            return [
-                'success' => true,
-                'message' => 'PDF generated successfully',
-                'pdf_path' => $pdfPath,
-                'pdf_url' => url('storage/' . $pdfPath),
-                'quotation' => $quotation->fresh(),
-            ];
+                $version->forceFill([
+                    'quotation_number' => $data['quo_number'],
+                    'quotation_data' => $data,
+                    'quotation_pdf_path' => $pdfPath,
+                    'quotation_generated_at' => now(),
+                ])->save();
 
-        } catch (\Exception $e) {
+                if (!$version->freeze) {
+                    $version->loadMissing(['features', 'project.costs', 'project.employees']);
+                    $version->freezeVersion();
+                }
+
+                return [
+                    'success' => true,
+                    'message' => 'PDF generated successfully',
+                    'pdf_path' => $pdfPath,
+                    'pdf_url' => url('storage/' . $pdfPath),
+                    'version' => $version->fresh(),
+                ];
+            });
+
+        } catch (\Throwable $exception) {
             return [
                 'success' => false,
-                'message' => 'Failed to generate PDF: ' . $e->getMessage(),
+                'message' => 'Failed to generate PDF: ' . $exception->getMessage(),
             ];
         }
     }
 
-    public function downloadPdf(Quotation $quotation)
+    public function downloadPdf(ProjectVersion $version)
     {
-        if (!$quotation->pdf_path || !Storage::disk('public')->exists($quotation->pdf_path)) {
+        if (!$version->quotation_pdf_path || !Storage::disk('public')->exists($version->quotation_pdf_path)) {
             abort(404, 'PDF not found. Please generate the PDF first.');
         }
 
-        $pdfBytes = Storage::disk('public')->get($quotation->pdf_path);
-
-        return response($pdfBytes, 200, [
+        return response(Storage::disk('public')->get($version->quotation_pdf_path), 200, [
             'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'attachment; filename="' . $quotation->quotation_number . '.pdf"',
+            'Content-Disposition' => 'attachment; filename="' . $version->quotation_number . '.pdf"',
         ]);
     }
 
-    protected function calculateQuotationTotals(ProjectVersion $version): array
+    private function quotationNumber(ProjectVersion $version): string
     {
-        $project = $version->project;
-        $subtotal = (float) ($project->total_amount ?? $project->calculateTotalCosts());
-
-        return [
-            'subtotal' => $subtotal,
-            'total' => $subtotal,
-        ];
+        return sprintf('QTN-%s-%d-%d', now()->format('Ym'), $version->project_id, $version->id);
     }
 
-    protected function calculateDevelopmentFee(Project $project): float
+    private function buildPdfPath(ProjectVersion $version): string
     {
-        return $project->total_amount == 0 ? ($project->sub_total * ($project->profit_percentage / 100) + $project->sub_total ) : $project->total_amount;
-    }
-
-    protected function shouldRecalculateTotals(array $data, Quotation $quotation): bool
-    {
-        return isset($data['discount']) || isset($data['tax']);
-    }
-
-    protected function buildPdfPath(Quotation $quotation): string
-    {
-        $project = $quotation->projectVersion->project;
-        $organizationId = $project->organization_id;
-        $quotationNumber = str_replace(['/', '\\'], '-', $quotation->quotation_number);
-
-        return "quotations/{$organizationId}/{$project->id}/{$quotationNumber}.pdf";
+        return sprintf(
+            'quotations/%d/%d/version-%d.pdf',
+            $version->project->organization_id,
+            $version->project_id,
+            $version->version_number,
+        );
     }
 }

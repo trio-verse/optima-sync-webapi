@@ -36,6 +36,11 @@ class StoreProjectRequest extends FormRequest
             'sub_total' => ['sometimes', 'numeric', 'min:0'],
             'profit_percentage' => ['sometimes', 'integer', 'min:0', 'max:100'],
             'total_amount' => ['sometimes', 'numeric', 'min:0'],
+            'discount' => ['sometimes', 'numeric', 'min:0'],
+            'tax' => ['sometimes', 'numeric', 'min:0'],
+            'issue_date' => ['sometimes', 'date'],
+            'valid_until' => ['sometimes', 'date', 'after_or_equal:issue_date'],
+            'payment_terms' => ['sometimes', 'string', 'max:255'],
         ];
     }
 

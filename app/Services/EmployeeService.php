@@ -39,9 +39,11 @@ class EmployeeService
 
             $employee->refresh();
 
-            if ($data['cost_per_hour'] || $data['houres_per_point'])
-                // dispatch this event to recalculate project cost price (sub_total)
-                EmployeeHourlyCostChanged::dispatch($employee);
+            if (array_key_exists('cost_per_hour', $data) || array_key_exists('houres_per_point', $data)) {
+                DB::afterCommit(fn () => EmployeeHourlyCostChanged::dispatch($employee));
+            }
+
+            return $employee;
         });
     }
 

@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class ProjectVersion extends Model
 {
@@ -26,6 +25,10 @@ class ProjectVersion extends Model
         'features_snapshot',
         'costs_snapshot',
         'employees_snapshot',
+        'quotation_number',
+        'quotation_pdf_path',
+        'quotation_data',
+        'quotation_generated_at',
         'created_by',
     ];
 
@@ -39,6 +42,8 @@ class ProjectVersion extends Model
             'features_snapshot' => 'array',
             'costs_snapshot' => 'array',
             'employees_snapshot' => 'array',
+            'quotation_data' => 'array',
+            'quotation_generated_at' => 'datetime',
         ];
     }
 
@@ -70,16 +75,6 @@ class ProjectVersion extends Model
     public function features(): HasMany
     {
         return $this->hasMany(ProjectFeature::class);
-    }
-
-    public function costs(): HasMany
-    {
-        return $this->hasMany(ProjectCost::class);
-    }
-
-    public function quotation(): HasOne
-    {
-        return $this->hasOne(Quotation::class);
     }
 
     public function derivedVersions(): HasMany
