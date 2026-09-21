@@ -29,6 +29,7 @@ RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache
 
 # 7. تحديد مجلد الـ public كـ Document Root
 ENV DOCUMENT_ROOT=/app/public
+ENV BROWSERSHOT_CHROME_PATH=/usr/bin/chromium
 
 # فتح البورت
 EXPOSE 8080

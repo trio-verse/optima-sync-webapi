@@ -113,12 +113,16 @@ class QuotationService
 
 
             $pdfPath = $this->buildPdfPath($version);
-            $pdfBytes = Browsershot::html($html)
-                // ->setNodeModulePath(base_path('node_modules'))
-                // ->setChromePath('/usr/bin/chromium')
+            $browserShot = Browsershot::html($html)
+                ->setNodeModulePath(base_path('node_modules'))
                 ->format('A4')
-                ->timeout(120)
-                ->pdf();
+                ->timeout(120);
+
+            if ($chromePath = env('BROWSERSHOT_CHROME_PATH')) {
+                $browserShot->setChromePath($chromePath);
+            }
+
+            $pdfBytes = $browserShot->pdf();
 
             Storage::disk('public')->put($pdfPath, $pdfBytes);
 
