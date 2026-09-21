@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Project extends Model
 {
@@ -29,6 +28,11 @@ class Project extends Model
         'sub_total',
         'profit_percentage',
         'total_amount',
+        'discount',
+        'tax',
+        'issue_date',
+        'valid_until',
+        'payment_terms',
     ];
 
     protected function casts(): array
@@ -39,6 +43,10 @@ class Project extends Model
             'sub_total' => 'decimal:2',
             'profit_percentage' => 'integer',
             'total_amount' => 'decimal:2',
+            'discount' => 'decimal:2',
+            'tax' => 'decimal:2',
+            'issue_date' => 'date',
+            'valid_until' => 'date',
         ];
     }
 
@@ -99,17 +107,6 @@ class Project extends Model
         return $this->hasMany(ProjectMeeting::class);
     }
 
-    public function quotations(): HasManyThrough
-    {
-        return $this->hasManyThrough(
-            Quotation::class,
-            ProjectVersion::class,
-            'project_id',
-            'project_version_id',
-            'id',
-            'id'
-        );
-    }
     public function employees()
     {
         return $this->belongsToMany(Employee::class, 'project_employees', 'project_id', 'employee_id')
@@ -120,7 +117,7 @@ class Project extends Model
      * Scopes
      */
 
-    public function scopeStatus(Builder $query, array $status):Builder
+    public function scopeStatus(Builder $query, array $status): Builder
     {
         return $query->whereIn('status', $status, 'or');
     }
@@ -176,13 +173,16 @@ class Project extends Model
     // get total quotations count
     public function getTotalQuotationsAttribute(): int
     {
-        return $this->quotations()->count();
+        return $this->versions()->whereNotNull('quotation_pdf_path')->count();
     }
 
     public function getTotalValueAttribute(): float
     {
-        $latestQuotation = $this->quotations()->latest()->first();
+        return (float) $this->total_amount;
+    }
 
-        return $latestQuotation ? (float) $latestQuotation->total : 0;
+    public function getTotalBudgetAttribute(): float
+    {
+        return (float) $this->total_amount;
     }
 }

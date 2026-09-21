@@ -4,6 +4,10 @@ namespace App\Providers;
 
 use App\Contracts\AffectsProjectCost;
 use App\Contracts\FileStorageInterface;
+use App\Events\EmployeeHourlyCostChanged;
+use App\Events\ProjectEmployeeAssigned;
+use App\Events\ProjectEmployeePointsUpdated;
+use App\Events\ProjectEmployeeRemoved;
 use App\Http\Middleware\SetActiveOrganization;
 use App\Listeners\RecalculateProjectCostListener;
 use App\Services\FileStorageService;

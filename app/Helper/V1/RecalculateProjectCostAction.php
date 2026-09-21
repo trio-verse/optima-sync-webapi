@@ -3,30 +3,28 @@
 namespace App\Helper\V1;
 
 use App\Models\Project;
-use App\Services\ProjectManagment\ProjectEmployeeService;
+use App\Services\ProjectManagment\ProjectPricingService;
+use Illuminate\Support\Facades\DB;
 
 class RecalculateProjectCostAction
 {
+    public function __construct(private ProjectPricingService $pricingService)
+    {
+    }
 
     public function execute(int $projectId): void
     {
+        DB::transaction(function () use ($projectId) {
+            $project = Project::query()
+                ->with('employees')
+                ->lockForUpdate()
+                ->find($projectId);
 
-        $project = Project::with(['employees'])->find($projectId);
+            if (!$project || $project->latest_version?->freeze) {
+                return;
+            }
 
-        if (!$project || $project->latest_version->freeze)
-            return;
-
-        $total_emp_costs = (int) (new ProjectEmployeeService())->calculatePointsSummary($project)['total_cost'];
-
-        if (
-            $project->sub_total == null || $project->sub_total == 0 ||
-            $total_emp_costs > $project->sub_total
-        )
-            $project->update([
-                'sub_total' => $total_emp_costs
-            ]);
-
+            $this->pricingService->recalculate($project);
+        });
     }
-
 }
-

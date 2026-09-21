@@ -88,7 +88,7 @@ class ProjectController extends Controller
         }
 
         return ApiResponse::success([
-            'id' => (int) $project,
+            'id' => $project->id,
             'deleted' => true,
         ], 'Project deleted successfully');
     }

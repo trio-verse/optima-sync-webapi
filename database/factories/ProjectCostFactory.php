@@ -16,7 +16,6 @@ class ProjectCostFactory extends Factory
     {
         return [
             'project_id' => 1,
-            'project_version_id' => 1,
             'name' => fake()->words(2, true),
             'description' => fake()->sentence(),
             'quantity' => fake()->numberBetween(1, 40),

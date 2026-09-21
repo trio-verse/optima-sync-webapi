@@ -30,6 +30,11 @@ class UpdateProjectRequest extends FormRequest
             'profit_percentage' => ['sometimes', 'integer', 'min:0', 'max:100'],
             'total_amount' => ['sometimes', 'numeric', 'min:0'],
             'current_version_id' => ['sometimes', 'nullable', 'integer', 'min:1'],
+            'discount' => ['sometimes', 'numeric', 'min:0'],
+            'tax' => ['sometimes', 'numeric', 'min:0'],
+            'issue_date' => ['sometimes', 'date'],
+            'valid_until' => ['sometimes', 'date', 'after_or_equal:issue_date'],
+            'payment_terms' => ['sometimes', 'string', 'max:255'],
         ];
     }
 }

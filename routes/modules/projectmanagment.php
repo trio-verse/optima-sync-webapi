@@ -7,9 +7,6 @@ use App\Http\Controllers\Api\V1\ProjectManagment\ProjectFeatureController;
 use App\Http\Controllers\Api\V1\ProjectManagment\ProjectMeetingController;
 use App\Http\Controllers\Api\V1\ProjectManagment\ProjectVersionController;
 use App\Http\Controllers\Api\V1\ProjectManagment\QuotationController;
-use App\Models\Project;
-use App\Models\ProjectVersion;
-use App\Models\Quotation;
 use Illuminate\Support\Facades\Route;
 
 
@@ -41,12 +38,10 @@ Route::middleware('active_version')->group(function () {
 
 // Project Versions (version management itself is never gated by active_version)
 Route::get('projects/{project}/versions', [ProjectVersionController::class, 'index'])->name('project.versions.index');
-// Route::post('projects/{project}/versions', [ProjectVersionController::class, 'store'])->name('project.versions.store');
 Route::get('projects/{project}/versions/{version}', [ProjectVersionController::class, 'show'])->name('project.versions.show');
 Route::patch('projects/{project}/versions/{version}', [ProjectVersionController::class, 'update'])->name('project.versions.update');
 Route::delete('projects/{project}/versions/{version}', [ProjectVersionController::class, 'destroy'])->name('project.versions.destroy');
-Route::patch('projects/{project}/versions/{version}/freeze', [ProjectVersionController::class, 'freeze'])->name('project.versions.freeze');
-// Route::post('projects/{project}/versions/{version}/clone', [ProjectVersionController::class, 'clone'])->name('project.versions.clone');
+
 
 // Project Features — read routes
 Route::get('projects/{project}/features', [ProjectFeatureController::class, 'index'])->name('project.features.index');
@@ -83,15 +78,8 @@ Route::delete('projects/{project}/meetings/{meeting}', [ProjectMeetingController
 Route::get('/projects/{project}/versions/{version}/quotations/preview', [QuotationController::class, 'preview'])
     ->name('project.quotations.preview');
 
-// Route::post('/projects/{project}/versions/{version}/quotations/{quotation}/generate-pdf', [QuotationController::class, 'generatePdf'])
-//     ->name('project.quotations.generate-pdf');
+Route::post('/projects/{project}/versions/{version}/quotations/generate-pdf', [QuotationController::class, 'generatePdf'])
+    ->name('project.quotations.generate-pdf');
 
-// Route::get('/projects/{project}/versions/{version}/quotations/{quotation}/download', [QuotationController::class, 'downloadPdf'])
-//     ->name('project.quotations.download-pdf');
-
-Route::get('projects/{project}/quotations', [QuotationController::class, 'index'])->name('project.quotations.index');
-Route::post('projects/{project}/versions/{version}/quotations', [QuotationController::class, 'store'])->name('project.quotations.store');
-// Route::get('projects/{project}/versions/{version}/quotations/{quotation}', [QuotationController::class, 'show'])->name('project.quotations.show');
-// Route::patch('projects/{project}/versions/{version}/quotations/{quotation}', [QuotationController::class, 'update'])->name('project.quotations.update');
-// Route::delete('projects/{project}/versions/{version}/quotations/{quotation}', [QuotationController::class, 'destroy'])->name('project.quotations.destroy');
-// Route::post('projects/{project}/versions/{version}/quotations/{quotation}/generate-pdf', [QuotationController::class, 'generatePdf'])->name('project.quotations.generate-pdf');
+Route::get('/projects/{project}/versions/{version}/quotations/download', [QuotationController::class, 'downloadPdf'])
+    ->name('project.quotations.download-pdf');

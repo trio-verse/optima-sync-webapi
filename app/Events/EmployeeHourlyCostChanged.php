@@ -33,6 +33,6 @@ class EmployeeHourlyCostChanged implements AffectsProjectCost
         return $this->employee->projects()->whereIn('status', [
             enProjectStatus::NEW ->value,
             enProjectStatus::UNDER_REVIEW->value
-        ], 'or')->pluck('products.id')->toArray();
+        ], 'or')->pluck('projects.id')->toArray();
     }
 }

@@ -12,7 +12,6 @@ class ProjectCost extends Model
 
     protected $fillable = [
         'project_id',
-        'project_version_id',
         'name',
         'description',
         'quantity',
@@ -41,11 +40,6 @@ class ProjectCost extends Model
     {
         return $this->belongsTo(Project::class);
     }
-
-    // public function projectVersion(): BelongsTo
-    // {
-    //     return $this->belongsTo(ProjectVersion::class);
-    // }
 
     /**
      * Helper Methods
