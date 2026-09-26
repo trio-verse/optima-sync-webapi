@@ -109,7 +109,7 @@ class ProjectService
         if (array_key_exists('sub_total', $data) || array_key_exists('profit_percentage', $data)) {
             $subTotal = (float) ($data['sub_total'] ?? $project->sub_total);
             $profitPercentage = (float) ($data['profit_percentage'] ?? $project->profit_percentage);
-            $data['total_amount'] = $this->pricingService->calculateCommercialCost($subTotal, $profitPercentage);
+            $data['total_amount'] = $this->pricingService->calculateQuotationTotals($project)['total'];
         }
 
         try {
@@ -201,8 +201,15 @@ class ProjectService
         // financial
         $subTotal = (float) ($data['sub_total'] ?? 0);
         $profit = (int) ($data['profit_percentage'] ?? 20);
-        $total = $this->pricingService->calculateCommercialCost($subTotal, $profit);
-
+        
+        // Create a temporary project instance to calculate totals with provided data
+        $tempProject = new Project();
+        $tempProject->sub_total = $subTotal;
+        $tempProject->profit_percentage = $profit;
+        $tempProject->discount = (float) ($data['discount'] ?? 0);
+        $tempProject->tax = (float) ($data['tax'] ?? 0);
+        
+        $total = $this->pricingService->calculateQuotationTotals($tempProject)['total'];
 
         $data = array_merge($data, [
             'sub_total' => $subTotal,
