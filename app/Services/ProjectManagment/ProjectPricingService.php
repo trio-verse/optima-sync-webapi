@@ -37,10 +37,7 @@ class ProjectPricingService
         $developmentCost = $this->calculateDevelopmentCost($project);
         $project->forceFill([
             'sub_total' => $developmentCost,
-            'total_amount' => $this->calculateCommercialCost(
-                $developmentCost,
-                (float) $project->profit_percentage,
-            ),
+            'total_amount' => $this->calculateQuotationTotals($project)['total'],
         ])->save();
     }
 
@@ -49,7 +46,10 @@ class ProjectPricingService
      */
     public function calculateQuotationTotals(Project $project, ?float $discount = null, ?float $tax = null): array
     {
-        $developmentFee = (float) $project->total_amount;
+        $developmentFee = $this->calculateCommercialCost(
+            (float) $project->sub_total,
+            (float) $project->profit_percentage
+        );
         $addedCostsTotal = round($project->calculateTotalCosts(), 2);
         $subtotal = round($developmentFee + $addedCostsTotal, 2);
         $discount = round($discount ?? (float) $project->discount, 2);

@@ -4,6 +4,7 @@ namespace App\Services\ProjectManagment;
 
 use App\Models\ProjectVersion;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Browsershot\Browsershot;
 
@@ -82,14 +83,15 @@ class QuotationService
 
     public function generatePdf(ProjectVersion $version): array
     {
-        if ($version->quotation_pdf_path ) {
-            return [
-                'success' => true,
-                'message' => 'PDF retreived successfully',
-                // 'pdf_path' => $version->quotation_pdf_path,
-                'pdf_url' => asset("storage/". $version->quotation_pdf_path),
-            ];
-
+        // dd(Storage::disk('public')->exists($version->quotation_pdf_path ?: "xfsdecx"));
+        if ($version->quotation_pdf_path && $version->quotation_pdf_path != "") {
+            if (Storage::disk('public')->exists($version->quotation_pdf_path))
+                return [
+                    'success' => true,
+                    'message' => 'PDF retreived successfully',
+                    // 'pdf_path' => $version->quotation_pdf_path,
+                    'pdf_url' => asset("storage/" . $version->quotation_pdf_path),
+                ];
         }
 
         try {
@@ -111,10 +113,16 @@ class QuotationService
 
 
             $pdfPath = $this->buildPdfPath($version);
-            $pdfBytes = Browsershot::html($html)
+            $browserShot = Browsershot::html($html)
+                ->setNodeModulePath(base_path('node_modules'))
                 ->format('A4')
-                ->timeout(120)
-                ->pdf();
+                ->timeout(120);
+
+            if ($chromePath = env('BROWSERSHOT_CHROME_PATH')) {
+                $browserShot->setChromePath($chromePath);
+            }
+
+            $pdfBytes = $browserShot->pdf();
 
             Storage::disk('public')->put($pdfPath, $pdfBytes);
 
@@ -127,17 +135,19 @@ class QuotationService
                     'quotation_generated_at' => now(),
                 ])->save();
 
+                Log::info("version info saved => time : " . now());
                 if (!$version->freeze) {
                     $version->loadMissing(['features', 'project.costs', 'project.employees']);
                     $version->freezeVersion();
                 }
+
+                Log::info("version freezed info saved => time : " . now());
 
                 return [
                     'success' => true,
                     'message' => 'PDF generated successfully',
                     'pdf_path' => $pdfPath,
                     'pdf_url' => url('storage/' . $pdfPath),
-                    'version' => $version->fresh(),
                 ];
             });
 

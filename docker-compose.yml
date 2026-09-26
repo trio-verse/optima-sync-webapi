@@ -21,6 +21,10 @@ services:
         restart: always
         expose:
             - "8080"
+        command: >-
+            sh -c "php artisan migrate --force &&
+            php artisan scribe:generate --force &&
+            exec frankenphp php-server --listen :8080 --root /app/public"
         depends_on:
             - laravel-db
         volumes:

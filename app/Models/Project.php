@@ -55,7 +55,7 @@ class Project extends Model
         'freeze_versions',
         'latest_version',
         'total_quotations',
-        'total_value',
+        'total_budget',
     ];
 
     protected static function boot()
@@ -174,11 +174,6 @@ class Project extends Model
     public function getTotalQuotationsAttribute(): int
     {
         return $this->versions()->whereNotNull('quotation_pdf_path')->count();
-    }
-
-    public function getTotalValueAttribute(): float
-    {
-        return (float) $this->total_amount;
     }
 
     public function getTotalBudgetAttribute(): float

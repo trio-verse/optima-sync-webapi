@@ -4,6 +4,7 @@ namespace App\Http\Resources\V1\ProjectManagment;
 
 use App\Http\Resources\V1\ClientResource;
 use App\Models\ProjectVersion;
+use App\Services\ProjectManagment\ProjectPricingService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -31,6 +32,10 @@ class ProjectAllDataResource extends JsonResource
 
         $currentVersion = $this->active_version ?? $this->currentVersion;
 
+        // Get quotation totals
+        $pricingService = new ProjectPricingService(new \App\Services\ProjectManagment\ProjectEmployeeService());
+        $quotationTotals = $pricingService->calculateQuotationTotals($this->resource);
+
         return [
             'id' => $this->id,
             'project_refrence_number' => $this->reference_id,
@@ -39,12 +44,18 @@ class ProjectAllDataResource extends JsonResource
             'status' => $this->status,
             'source' => $this->source,
             'current_version_number' => $currentVersion->version_number ?? null,
+
             // project_amounts
             'sub_total' => number_format((float) ($this->sub_total ?? 0), 2, '.', ''),
             'profit_percentage' => (int) ($this->profit_percentage ?? 0),
-            'total_amount' => number_format((float) ($this->total_amount == 0 ? $this->total_budget : $this->total_amount), 2, '.', ''),
+            'development_fee' => number_format($quotationTotals['development_fee'], 2, '.', ''),
+            // 'total_amount' => number_format((float) ($this->total_amount == 0 ? $this->total_budget : $this->total_amount), 2, '.', ''),
             'discount' => number_format((float) ($this->discount ?? 0), 2, '.', ''),
             'tax' => number_format((float) ($this->tax ?? 0), 2, '.', ''),
+            'added_costs_total' => number_format($quotationTotals['added_costs_total'], 2, '.', ''),
+            'total_amount' => number_format($quotationTotals['total'], 2, '.', ''),
+
+
             'issue_date' => $this->issue_date ?? null,
             'valid_until' => $this->valid_until ?? null,
             'payment_terms' => $this->payment_terms ?? null,
@@ -54,9 +65,6 @@ class ProjectAllDataResource extends JsonResource
             'current_version' => new ProjectVersionResource($currentVersion),
 
 
-
-            'freeze_versions_data' => ProjectVersionResource::collection($this->freeze_versions),
-            'features' => ProjectFeatureResource::collection($this->features),
             'costs' => ProjectCostResource::collection($this->costs),
             'employees' => ProjectEmployeeResource::collection($this->whenLoaded('employees')),
             'counts' => [
@@ -70,6 +78,9 @@ class ProjectAllDataResource extends JsonResource
                 'current_version_url' => $currentVersionUrl,
                 'prev_versions' => $prevVersions,
             ],
+            'freeze_versions_data' => ProjectVersionResource::collection($this->freeze_versions),
+            'features' => ProjectFeatureResource::collection($this->features),
+
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
 

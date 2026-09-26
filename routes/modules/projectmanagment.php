@@ -5,16 +5,21 @@ use App\Http\Controllers\Api\V1\ProjectManagment\ProjectCostController;
 use App\Http\Controllers\Api\V1\ProjectManagment\ProjectEmployeesController;
 use App\Http\Controllers\Api\V1\ProjectManagment\ProjectFeatureController;
 use App\Http\Controllers\Api\V1\ProjectManagment\ProjectMeetingController;
+use App\Http\Controllers\Api\V1\ProjectManagment\ProjectQueryController;
 use App\Http\Controllers\Api\V1\ProjectManagment\ProjectVersionController;
 use App\Http\Controllers\Api\V1\ProjectManagment\QuotationController;
 use Illuminate\Support\Facades\Route;
-
 
 /**
  * =====================================
  *      Project Management Module
  * =====================================
  */
+
+// Query Builder & Analytics
+Route::get('projects/query-builder', [ProjectQueryController::class, 'getQueryStructure'])->name('projects.query-builder');
+Route::post('projects/query', [ProjectQueryController::class, 'executeQuery'])->name('projects.query');
+Route::post('projects/analytics', [ProjectQueryController::class, 'analytics'])->name('projects.analytics');
 
 // Projects
 Route::get('projects', [ProjectController::class, 'index'])->name('projects.index');
@@ -41,7 +46,6 @@ Route::get('projects/{project}/versions', [ProjectVersionController::class, 'ind
 Route::get('projects/{project}/versions/{version}', [ProjectVersionController::class, 'show'])->name('project.versions.show');
 Route::patch('projects/{project}/versions/{version}', [ProjectVersionController::class, 'update'])->name('project.versions.update');
 Route::delete('projects/{project}/versions/{version}', [ProjectVersionController::class, 'destroy'])->name('project.versions.destroy');
-
 
 // Project Features — read routes
 Route::get('projects/{project}/features', [ProjectFeatureController::class, 'index'])->name('project.features.index');
