@@ -14,12 +14,14 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            if (Schema::hasForeignKey($this->tableName, ['project_version_id']))
+            if (\Illuminate\Support\Facades\DB::getDriverName() === 'sqlite') {
+                $table->dropIndex(['project_version_id']);
                 $table->dropConstrainedForeignIdFor(ProjectVersion::class);
-
-            if (Schema::hasIndex($this->tableName, [$this->tableName . '_project_version_id_index']))
-                $table->dropIndex([$this->tableName . '_project_version_id_index']);
-
+            } else {
+                $table->dropForeign(['project_version_id']);
+                $table->dropIndex(['project_version_id']);
+                $table->dropColumn('project_version_id');
+            }
         });
     }
 
