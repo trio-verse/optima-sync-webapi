@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1\ProjectManagment;
 use App\Helper\V1\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Project\Query\ProjectQueryRequest;
+use App\Http\Resources\V1\ProjectManagment\ProjectResource;
 use App\Services\ProjectManagment\ProjectQueryService;
 
 class ProjectQueryController extends Controller
@@ -42,7 +43,7 @@ class ProjectQueryController extends Controller
                 $validated['per_page'] ?? 15
             );
 
-            return ApiResponse::pagination($projects, 'Query executed successfully');
+            return ApiResponse::pagination(ProjectResource::collection($projects), 'Query executed successfully');
         } catch (\Throwable $e) {
             return ApiResponse::error($e->getMessage(), 'Failed to execute query', 500);
         }
