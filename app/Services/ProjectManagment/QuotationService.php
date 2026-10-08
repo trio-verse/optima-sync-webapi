@@ -10,9 +10,7 @@ use Spatie\Browsershot\Browsershot;
 
 class QuotationService
 {
-    public function __construct(private ProjectPricingService $pricingService)
-    {
-    }
+    public function __construct(private ProjectPricingService $pricingService) {}
 
     public function previewData(ProjectVersion $version): array
     {
@@ -24,22 +22,22 @@ class QuotationService
 
         $project = $version->project;
         $features = $version->freeze
-            ? collect($version->features_snapshot)->map(fn(array $feature) => [
+            ? collect($version->features_snapshot)->map(fn (array $feature) => [
                 'name' => $feature['name'] ?? '',
                 'description' => $feature['description'] ?? '',
             ])->values()->all()
-            : $version->features->map(fn($feature) => [
+            : $version->features->map(fn ($feature) => [
                 'name' => $feature->name,
                 'description' => $feature->description ?? '',
             ])->values()->all();
 
         $costs = $version->freeze
-            ? collect($version->costs_snapshot)->map(fn(array $cost) => [
+            ? collect($version->costs_snapshot)->map(fn (array $cost) => [
                 'title' => $cost['name'] ?? '',
                 'description' => $cost['description'] ?? '',
                 'amount' => $cost['line_total'] ?? (($cost['quantity'] ?? 0) * ($cost['amount'] ?? 0)),
             ])->values()->all()
-            : $project->costs->map(fn($cost) => [
+            : $project->costs->map(fn ($cost) => [
                 'title' => $cost->name,
                 'description' => $cost->description ?? '',
                 'amount' => $cost->line_total,
@@ -83,15 +81,14 @@ class QuotationService
 
     public function generatePdf(ProjectVersion $version): array
     {
-        // dd(Storage::disk('public')->exists($version->quotation_pdf_path ?: "xfsdecx"));
-        if ($version->quotation_pdf_path && $version->quotation_pdf_path != "") {
-            if (Storage::disk('public')->exists($version->quotation_pdf_path))
+        if ($version->quotation_pdf_path && $version->quotation_pdf_path !== '') {
+            if (Storage::disk('public')->exists($version->quotation_pdf_path)) {
                 return [
                     'success' => true,
-                    'message' => 'PDF retreived successfully',
-                    // 'pdf_path' => $version->quotation_pdf_path,
-                    'pdf_url' => asset("storage/" . $version->quotation_pdf_path),
+                    'message' => 'PDF retrieved successfully',
+                    'pdf_url' => asset('storage/'.$version->quotation_pdf_path),
                 ];
+            }
         }
 
         try {
@@ -99,30 +96,19 @@ class QuotationService
 
             $logoPath = public_path('images/optima-sync-logo.jpg');
 
-            if (!file_exists($logoPath)) {
+            if (! file_exists($logoPath)) {
                 throw new \Exception("Logo not found: {$logoPath}");
             }
 
-            $data['optimasync_logo'] = 'data:image/jpeg;base64,' .
+            $data['optimasync_logo'] = 'data:image/jpeg;base64,'.
                 base64_encode(file_get_contents($logoPath));
 
             $html = view('quotations.quotation', [
                 'data' => $data,
             ])->render();
 
-
-
             $pdfPath = $this->buildPdfPath($version);
-            $browserShot = Browsershot::html($html)
-                ->setNodeModulePath(base_path('node_modules'))
-                ->format('A4')
-                ->timeout(120);
-
-            if ($chromePath = env('BROWSERSHOT_CHROME_PATH')) {
-                $browserShot->setChromePath($chromePath);
-            }
-
-            $pdfBytes = $browserShot->pdf();
+            $pdfBytes = $this->renderPdf($html, $version);
 
             Storage::disk('public')->put($pdfPath, $pdfBytes);
 
@@ -135,39 +121,98 @@ class QuotationService
                     'quotation_generated_at' => now(),
                 ])->save();
 
-                Log::info("version info saved => time : " . now());
-                if (!$version->freeze) {
+                Log::info('version info saved => time : '.now());
+                if (! $version->freeze) {
                     $version->loadMissing(['features', 'project.costs', 'project.employees']);
                     $version->freezeVersion();
                 }
 
-                Log::info("version freezed info saved => time : " . now());
+                Log::info('version freezed info saved => time : '.now());
 
                 return [
                     'success' => true,
                     'message' => 'PDF generated successfully',
                     'pdf_path' => $pdfPath,
-                    'pdf_url' => url('storage/' . $pdfPath),
+                    'pdf_url' => url('storage/'.$pdfPath),
                 ];
             });
 
         } catch (\Throwable $exception) {
+            Log::error('Failed to generate quotation PDF.', [
+                'version_id' => $version->id,
+                'project_id' => $version->project_id,
+                'exception' => $exception,
+            ]);
+
             return [
                 'success' => false,
-                'message' => 'Failed to generate PDF: ' . $exception->getMessage(),
+                'message' => 'Failed to generate PDF: '.$exception->getMessage(),
             ];
         }
     }
 
+    /**
+     * Render HTML to PDF bytes via Browsershot.
+     *
+     * A fresh Browsershot instance is created on every attempt, and the
+     * render is retried on failure (a stale browser process can still
+     * die mid-stream). The Windows process environment is restored
+     * first so the spawned node/chrome processes have what they need.
+     */
+    private function renderPdf(string $html, ProjectVersion $version): string
+    {
+        $attempts = 3;
+        $lastException = null;
+
+        for ($attempt = 1; $attempt <= $attempts; $attempt++) {
+            $browserShot = Browsershot::html($html)
+                ->setNodeModulePath(base_path('node_modules'))
+                ->format('A4')
+                ->timeout(120);
+
+            $chromePath = env('BROWSERSHOT_CHROME_PATH');
+            if ($chromePath) {
+                if (is_file($chromePath)) {
+                    $browserShot->setChromePath($chromePath);
+                } else {
+                    Log::warning("BROWSERSHOT_CHROME_PATH [{$chromePath}] not found; using bundled browser.");
+                }
+            }
+
+            try {
+                return $browserShot->pdf();
+            } catch (\Throwable $exception) {
+                $lastException = $exception;
+
+                Log::warning('Browsershot PDF render attempt failed.', [
+                    'version_id' => $version->id,
+                    'attempt' => $attempt,
+                    'of' => $attempts,
+                    'message' => $exception->getMessage(),
+                ]);
+
+                if ($attempt < $attempts) {
+                    sleep(2);
+                }
+            }
+        }
+
+        throw new \RuntimeException(
+            'PDF generation failed after '.$attempts.' attempts: '.$lastException->getMessage(),
+            0,
+            $lastException
+        );
+    }
+
     public function downloadPdf(ProjectVersion $version)
     {
-        if (!$version->quotation_pdf_path || !Storage::disk('public')->exists($version->quotation_pdf_path)) {
+        if (! $version->quotation_pdf_path || ! Storage::disk('public')->exists($version->quotation_pdf_path)) {
             abort(404, 'PDF not found. Please generate the PDF first.');
         }
 
         return response(Storage::disk('public')->get($version->quotation_pdf_path), 200, [
             'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'attachment; filename="' . $version->quotation_number . '.pdf"',
+            'Content-Disposition' => 'attachment; filename="'.$version->quotation_number.'.pdf"',
         ]);
     }
 

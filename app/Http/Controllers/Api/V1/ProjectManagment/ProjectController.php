@@ -26,22 +26,20 @@ class ProjectController extends Controller
 {
     public function __construct(
         protected ProjectService $service
-    ) {
-    }
+    ) {}
 
     /**
      * index projects
-     * @return JsonResponse
      */
     public function index(Request $request): JsonResponse
     {
         $projects = $this->service->getFilteredProjects($request->all());
+
         return ApiResponse::pagination(ProjectResource::collection($projects), 'Projects retrieved successfully');
     }
 
     /**
      * store project
-     * @return JsonResponse
      */
     public function store(StoreProjectRequest $request): JsonResponse
     {
@@ -51,13 +49,13 @@ class ProjectController extends Controller
 
         return ApiResponse::success(new ProjectResource($project), 'Project created successfully', 201);
     }
+
     /**
      * show project
-     * @return JsonResponse
      */
     public function show(Project $project): JsonResponse
     {
-        if (!$project) {
+        if (! $project) {
             return ApiResponse::notFound('Project not found');
         }
         $project = $this->service->getProject($project);
@@ -65,25 +63,23 @@ class ProjectController extends Controller
         return ApiResponse::success(new ProjectAllDataResource($project), 'Project retrieved successfully');
     }
 
-
     /**
      * update project
-     * @return JsonResponse
      */
     public function update(UpdateProjectRequest $request, Project $project): JsonResponse
     {
         $validated = $request->validated();
         $project = $this->service->updateProject($project, $validated);
+
         return ApiResponse::success(new ProjectResource($project), 'Project updated successfully');
     }
 
     /**
      * delete project
-     * @return JsonResponse
      */
     public function destroy(Project $project): JsonResponse
     {
-        if (!$this->service->deleteProject($project)) {
+        if (! $this->service->deleteProject($project)) {
             return ApiResponse::notFound('Project not found');
         }
 
@@ -95,7 +91,6 @@ class ProjectController extends Controller
 
     /**
      * change project status
-     * @return JsonResponse
      */
     public function changeStatus(ChangeProjectStatusRequest $request, Project $project): JsonResponse
     {
@@ -104,7 +99,7 @@ class ProjectController extends Controller
             $request->validated('status')
         );
 
-        if (!$item) {
+        if (! $item) {
             return ApiResponse::notFound('Project not found');
         }
 
@@ -113,6 +108,7 @@ class ProjectController extends Controller
 
     /**
      * project-request
+     *
      * @unauthenticated
      */
     public function requestProject(RequestProjectRequest $request, string $token)
@@ -120,18 +116,18 @@ class ProjectController extends Controller
 
         $orgId = OrgSecureCryptService::decrypt($token);
 
-        if (!$orgId)
+        if (! $orgId) {
             return ApiResponse::notFound('Invalid or malformed token.', 404);
+        }
         $request->validated();
 
         $organization = Organization::find($orgId);
 
-        if (!$organization)
+        if (! $organization) {
             return ApiResponse::notFound('Organization not found.', 404);
+        }
 
-        return ApiResponse::success(null, "project request created successfully");
+        return ApiResponse::success(null, 'project request created successfully');
 
     }
-
-
 }
