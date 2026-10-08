@@ -27,7 +27,7 @@ class ProjectVersionFactory extends Factory
             'freeze' => false,
             'features_snapshot' => null,
             'costs_snapshot' => null,
-            'members_snapshot' => null,
+            'employees_snapshot' => null,
             'created_by' => 1,
         ];
     }

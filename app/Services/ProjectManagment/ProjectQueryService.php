@@ -49,8 +49,8 @@ class ProjectQueryService
         return [
             'fields' => $formattedFields,
             'logic_operators' => [
-                ['value' => 'and', 'label' => 'All conditions'],
-                ['value' => 'or', 'label' => 'Any condition'],
+                ['value' => 'and', 'label' => 'AND'],
+                ['value' => 'or', 'label' => 'OR'],
             ],
         ];
     }

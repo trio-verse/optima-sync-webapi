@@ -28,44 +28,6 @@ class AuthService
         return $this->sendOtp($email);
     }
 
-    // public function verifyUser(string $email, string $code): array
-    // {
-    //     if (!$this->verifyOtp($email, $code))
-    //         return [
-    //             'code' => 422,
-    //             'message' => 'Invalid or expired OTP'
-    //         ];
-
-    //     $user = $this->userService->findOrFail($email);
-
-    //     // the user not exists/register in the system before
-    //     if (!$user) {
-    //         $user = $this->userService->createUser(['email' => $email]);
-    //         $token = $user->createToken('erp-auth-token')->plainTextToken;
-    //         return [
-    //             'code' => 201,
-    //             'message' => 'User created successfully',
-    //             'data' => [
-    //                 // 'user' => $user,
-    //                 'token' => $token
-    //             ]
-    //         ];
-    //     }
-
-    //     // the user registered before
-    //     $token = $user->createToken('erp-auth-token')->plainTextToken;
-    //     return [
-    //         'code' => 200,
-    //         'message' => 'User verified successfully',
-    //         'data' => [
-    //             // 'user' => $user,
-    //             'token' => $token
-    //         ]
-    //     ];
-    // }
-
-
-
     public function verifyUser(string $email, string $code): array
     {
         $message = '';
