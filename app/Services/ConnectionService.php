@@ -14,17 +14,46 @@ use Throwable;
 class ConnectionService
 {
 
-    public function getAllConnections(array $data): LengthAwarePaginator
+    public function getAllConnections(array $data)
     {
+        $timer = microtime(true);
+        log::info("start timing getAllConnections : " . 0);
         try {
-            return Connection::with(['client', 'channel', 'assignee', 'product', 'campaign'])
-                ->orderBy($data['order'] ?? 'created_at', $data['sort'] ?? 'desc')
-                ->when(isset($data['stage']), fn($query) => $query->byStage($data['stage']))
-                ->when(isset($data['clientName']), fn($query) => $query->searchByClientName($data['clientName']))
-                ->paginate($data['per_page'] ?? null);
-                
+            return Connection::query()
+                ->select([
+                    'id',
+                    'client_id',
+                    'product_id',
+                    'channel_id',
+                    'assignee_id',
+                    'campaign_id',
+                    'stage',
+                    'deal_value',
+                    'initiated_by',
+                    'updated_at',
+                    'created_at',
+                ])
+                ->with([
+                    'client:id,name,email,phone,city_id,industry_id,client_type,notes',
+                    'product:id,name,price',
+                    'channel:id,name',
+                    'assignee:id,name',
+                    'campaign:id,name',
+                ])
+                ->when($data['stage'] ?? null, fn($q, $stage) => $q->byStage($stage))
+                ->when($data['clientName'] ?? null, fn($q, $name) => $q->searchByClientName($name))
+                ->when(
+                    in_array($data['order'] ?? null, ['created_at', 'id', 'stage']), // حماية حقل الترتيب
+                    fn($q) => $q->orderBy($data['order'], $data['sort'] ?? 'desc'),
+                    fn($q) => $q->latest()
+                )
+                ->paginate($data['per_page'] ?? 15);
+
         } catch (Throwable $th) {
             throw $th;
+        } finally {
+            $timer = microtime(true) - $timer;
+            log::info("end timing getAllConnections : " . $timer);
         }
     }
 
@@ -34,7 +63,6 @@ class ConnectionService
             return $client->connections()
                 ->when(isset($data['stage']), fn($query) => $query->byStage($data['stage']))
                 ->paginate($data['per_page'] ?? null);
-
         } catch (Throwable $th) {
             Log::error('Error getting client connections: ' . $th->getMessage());
             throw $th;
@@ -149,5 +177,4 @@ class ConnectionService
             return false;
         }
     }
-
 }

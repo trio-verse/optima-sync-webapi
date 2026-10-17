@@ -2,32 +2,31 @@
 
 namespace App\Services\ProjectManagment;
 
-
 use App\Enums\enProjectSource;
 use App\Enums\enProjectStatus;
 use App\Models\Project;
-use App\Singleton\TenantManager;
-use App\Support\FakePersistence\FakeStore;
+use App\Models\ProjectCost;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 
 class ProjectService
 {
-    public function __construct(private ProjectPricingService $pricingService)
-    {
-    }
+    public function __construct(private ProjectPricingService $pricingService) {}
 
     public function getFilteredProjects(array $filters = [])
     {
-        $query = Project::with(['client', 'currentVersion', 'createdBy']);
+        // Eager-load everything the resource layer reads so list responses
+        // never lazy-load per item. Cost totals are preloaded in a single
+        // aggregate below instead of materializing every cost row.
+        $query = Project::with(['client', 'client.city', 'currentVersion', 'createdBy']);
 
         // Apply filters
-        if (!empty($filters['status'])) {
+        if (! empty($filters['status'])) {
             $query->where('status', $filters['status']);
         }
 
-        if (!empty($filters['client_id'])) {
+        if (! empty($filters['client_id'])) {
             $query->where('client_id', $filters['client_id']);
         }
 
@@ -35,19 +34,52 @@ class ProjectService
             $search = $filters['search'];
             $query->where(function ($q) use ($search) {
                 $q->where('reference_id', 'like', "%{$search}%")
-                    ->orWhere('name', 'like', "%{$search}%")
                     ->orWhereHas('client', function ($q) use ($search) {
                         $q->where('name', 'like', "%{$search}%");
                     });
             });
         }
 
-        // Sort
-        $sortBy = $filters['sort_by'] ?? 'created_at';
-        $sortOrder = $filters['sort_order'] ?? 'desc';
-        $query->orderBy($sortBy, $sortOrder);
+        // Sort — user input must never reach ORDER BY unvalidated.
+        $allowedSortColumns = [
+            'created_at', 'updated_at', 'reference_id', 'status', 'sub_total', 'total_amount',
+        ];
+        $sortBy = in_array($filters['sort_by'] ?? '', $allowedSortColumns, true)
+            ? $filters['sort_by']
+            : 'created_at';
+        $sortOrder = strtolower((string) ($filters['sort_order'] ?? 'desc')) === 'asc' ? 'asc' : 'desc';
+        $query->orderBy($sortBy, $sortOrder)
+            ->orderBy('projects.id', $sortOrder);
 
-        return $query->paginate($filters['per_page'] ?? 15);
+        $projects = $query->paginate(min((int) ($filters['per_page'] ?? 15), 10000));
+
+        $this->preloadCostsTotals($projects);
+
+        return $projects;
+    }
+
+    /**
+     * Replace per-project cost-row materialization with one server-side
+     * aggregate. The list response only needs each project's cost total, so
+     * fetching every row (28k rows for 2000 projects) is pure waste.
+     * Sets $project->costsTotal, which Project::calculateTotalCosts()
+     * short-circuits on. Other flows keep the original relation behaviour.
+     */
+    protected function preloadCostsTotals(LengthAwarePaginator $projects): void
+    {
+        if ($projects->isEmpty()) {
+            return;
+        }
+
+        $totals = ProjectCost::query()
+            ->whereIn('project_id', $projects->getCollection()->modelKeys())
+            ->groupBy('project_id')
+            ->selectRaw('project_id, SUM(quantity * amount) AS total')
+            ->pluck('total', 'project_id');
+
+        foreach ($projects as $project) {
+            $project->costsTotal = (float) ($totals[(int) $project->id] ?? 0);
+        }
     }
 
     public function createProject(array $data): Project
@@ -55,7 +87,7 @@ class ProjectService
         $data = $this->preparingProjectData($data);
 
         try {
-            //code...
+            // code...
             $project = DB::transaction(function () use (&$data): Project {
                 $project = Project::create($data);
 
@@ -81,13 +113,14 @@ class ProjectService
                 ]);
 
                 $project->save();
+
                 return $project;
             });
 
-            return $project->load(['client', 'currentVersion']);
+            return $project->load(['client', 'client.city', 'currentVersion', 'currentVersion.createdBy', 'createdBy', 'costs']);
 
         } catch (\Throwable $th) {
-            Log::error('Failed to create project: ' . $th->getMessage(), [
+            Log::error('Failed to create project: '.$th->getMessage(), [
                 'exception' => $th,
                 'data' => $data,
             ]);
@@ -98,7 +131,7 @@ class ProjectService
 
     public function updateProject(Project $project, array $data): Project
     {
-        if (!empty($data['current_version_id']) && !$project->versions()->where('id', $data['current_version_id'])->exists()) {
+        if (! empty($data['current_version_id']) && ! $project->versions()->where('id', $data['current_version_id'])->exists()) {
             throw new \Exception('Invalid version ID.');
         }
 
@@ -116,14 +149,15 @@ class ProjectService
             $project->update($data);
 
         } catch (\Throwable $th) {
-            Log::error('Failed to update the project: ' . $th->getMessage(), [
+            Log::error('Failed to update the project: '.$th->getMessage(), [
                 'exception' => $th,
                 'data' => $data,
             ]);
 
             throw new \Exception('Failed to update the project.', 500);
         }
-        return $project->fresh();
+
+        return $project->fresh()->load(['client', 'client.city', 'currentVersion', 'currentVersion.createdBy', 'createdBy', 'costs']);
     }
 
     public function getProject(Project $project): Project
@@ -136,16 +170,16 @@ class ProjectService
             'features',
             'employees',
         ])->loadCount([
-                    'versions',
-                    'features',
-                    'employees',
-                    'costs'
-                ]);
+            'versions',
+            'features',
+            'employees',
+            'costs',
+        ]);
     }
 
     public function deleteProject(Project $project): bool
     {
-        if (!$project) {
+        if (! $project) {
             return false;
         }
         // Check if project can be deleted (no active versions or quotations)
@@ -161,9 +195,8 @@ class ProjectService
     {
         $project->update(['status' => $status]);
 
-        return $project->fresh();
+        return $project->fresh()->load(['client', 'client.city', 'currentVersion', 'currentVersion.createdBy', 'createdBy', 'costs']);
     }
-
 
     // PRIVATE Methods
     protected function generateReferenceId(): string
@@ -186,6 +219,7 @@ class ProjectService
 
         return "{$prefix}-{$year}{$month}-{$nextNumber}";
     }
+
     private function preparingProjectData(array $data): array
     {
         // Generate reference ID if not provided
@@ -195,26 +229,26 @@ class ProjectService
         // Set created_by
         $data['created_by'] = auth()->id();
         // Set default status
-        $data['status'] = $data['status'] ?? enProjectStatus::NEW ->value;
+        $data['status'] = $data['status'] ?? enProjectStatus::NEW->value;
         $data['source'] = enProjectSource::INTERNAL->value;
 
         // financial
         $subTotal = (float) ($data['sub_total'] ?? 0);
         $profit = (int) ($data['profit_percentage'] ?? 20);
-        
+
         // Create a temporary project instance to calculate totals with provided data
-        $tempProject = new Project();
+        $tempProject = new Project;
         $tempProject->sub_total = $subTotal;
         $tempProject->profit_percentage = $profit;
         $tempProject->discount = (float) ($data['discount'] ?? 0);
         $tempProject->tax = (float) ($data['tax'] ?? 0);
-        
+
         $total = $this->pricingService->calculateQuotationTotals($tempProject)['total'];
 
         $data = array_merge($data, [
             'sub_total' => $subTotal,
             'profit_percentage' => $profit,
-            'total_amount' => $total
+            'total_amount' => $total,
         ]);
 
         return $data;

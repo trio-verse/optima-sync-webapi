@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\enContentStatus;
 use App\QueriesBuilder\CampaignQuery;
 use App\Trait\BelongsToOrganization;
 use Illuminate\Database\Eloquent\Builder;
@@ -81,6 +82,11 @@ class Campaign extends Model
         return $this->hasMany(Content::class);
     }
 
+    public function approvedAndPublishedContents()
+    {
+        return $this->contents()->whereIn('status', [enContentStatus::PUBLISHED->value, enContentStatus::APPROVED->value]);
+    }
+
     public function connections()
     {
         return $this->hasMany(Connection::class);
@@ -119,7 +125,8 @@ class Campaign extends Model
             return 0;
         }
 
-        $completedContents = $this->contents()->where('status', 'completed')->count();
+        $completedContents = $this->getAttribute('approved_and_published_contents_count')
+            ?? $this->approvedAndPublishedContents()->count();
         return ($completedContents / $totalContents) * 100;
     }
     public function getContentPerformanceAttribute()

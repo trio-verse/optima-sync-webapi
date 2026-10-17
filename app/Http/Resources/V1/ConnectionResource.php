@@ -22,11 +22,11 @@ class ConnectionResource extends JsonResource
             'channel_id' => $this->channel_id,
             'assignee_id' => $this->assignee_id,
             'campaign_id' => $this->campaign_id,
-            'campaign_name' => $this->campaign->name ?? null,
+            'campaign_name' => $this->whenLoaded('campaign', fn() => $this->campaign->name),
             'deal_value' => $this->deal_value ?? null,
             'initiated_by' => $this->initiated_by,
-            'created_at' => $this->created_at->format('Y-m-d\TH:i:s\Z'),
-            'updated_at' => $this->updated_at->format('Y-m-d\TH:i:s\Z'),
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
             // 'client' => $this->whenLoaded('client' , fn() => new ClientResource($this->client)),
             'client' => $this->whenLoaded('client', function () {
                 return [
@@ -34,7 +34,7 @@ class ConnectionResource extends JsonResource
                     'name' => $this->client->name,
                     'email' => $this->client->email,
                     'phone' => $this->client->phone,
-                    'full_address' => $this->client->full_address,
+                    // 'full_address' => $this->client->full_address,
                     'city_id' => $this->client->city_id,
                     'industry_id' => $this->client->industry_id,
                     'client_type' => $this->client->client_type,
@@ -45,7 +45,7 @@ class ConnectionResource extends JsonResource
                 'id' => $this->product->id,
                 'name' => $this->product->name,
                 'price' => $this->product->price,
-                'description' => $this->product->description,
+                // 'description' => $this->product->description,
             ]),
             'channel' => $this->whenLoaded('channel', fn() => [
                 'id' => $this->channel->id,
@@ -54,7 +54,7 @@ class ConnectionResource extends JsonResource
             'assignee' => $this->whenLoaded('assignee', fn() => [
                 'id' => $this->assignee->id,
                 'name' => $this->assignee->name,
-                'email' => $this->assignee->email,
+                // 'email' => $this->assignee->email,
             ]),
         ];
     }
