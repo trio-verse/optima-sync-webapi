@@ -15,7 +15,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Project extends Model
 {
-    use HasFactory, BelongsToOrganization;
+    use BelongsToOrganization, HasFactory;
+
+    /**
+     * Precomputed per-project cost total. Set by the list route instead of
+     * loading every cost row (see ProjectService::preloadCostsTotals).
+     * When null, calculateTotalCosts() falls back to the eager/lazy relation.
+     */
+    public ?float $costsTotal = null;
 
     protected $fillable = [
         'reference_id',
@@ -63,7 +70,7 @@ class Project extends Model
         parent::boot();
 
         static::creating(function ($project) {
-            $project->reference_id = 'PRJ-' . str_pad(static::withoutGlobalScope(OrganizationScope::class)->max('id') + 1, 4, '0', STR_PAD_LEFT);
+            $project->reference_id = 'PRJ-'.str_pad(static::withoutGlobalScope(OrganizationScope::class)->max('id') + 1, 4, '0', STR_PAD_LEFT);
             $project->created_by = auth()->id();
         });
     }
@@ -71,7 +78,6 @@ class Project extends Model
     /**
      * Relationships
      */
-
     public function client(): BelongsTo
     {
         return $this->belongsTo(Client::class);
@@ -113,10 +119,10 @@ class Project extends Model
             ->withPivot('total_points', 'organization_id')
             ->withTimestamps();
     }
+
     /**
      * Scopes
      */
-
     public function scopeStatus(Builder $query, array $status): Builder
     {
         return $query->whereIn('status', $status, 'or');
@@ -137,6 +143,7 @@ class Project extends Model
         return (float) $this->employees->sum(function ($employee) {
             $points = (int) ($employee->pivot->total_points ?? 0);
             $hoursPerPoint = (int) ($employee->houres_per_point ?? 2);
+
             return $points * $hoursPerPoint * (float) $employee->cost_per_hour;
         });
     }
@@ -144,10 +151,15 @@ class Project extends Model
     // costs
     public function calculateTotalCosts(): float
     {
+        if ($this->costsTotal !== null) {
+            return $this->costsTotal;
+        }
+
         return (float) $this->costs->sum(
-            fn(ProjectCost $cost) => $cost->quantity * $cost->amount
+            fn (ProjectCost $cost) => $cost->quantity * $cost->amount
         );
     }
+
     public function getTotalCostsBudgetAttribute(): float
     {
         return $this->calculateTotalCosts();

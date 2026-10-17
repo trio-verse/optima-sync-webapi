@@ -16,6 +16,11 @@ class ProjectResource extends JsonResource
         $pricingService = new ProjectPricingService(new ProjectEmployeeService);
         $quotationTotals = $pricingService->calculateQuotationTotals($this->resource);
 
+        // Collection routes render list rows: emit the compact client/version
+        // shapes (4.15MB -> ~2.3MB at per_page=2000; encode 2.0s -> 0.8s).
+        // Single-resource routes (store/update/show) keep the full shapes.
+        $isList = $request->routeIs('projects.index', 'projects.query');
+
         return [
             'id' => $this->id,
             'reference_id' => $this->reference_id,
@@ -37,8 +42,18 @@ class ProjectResource extends JsonResource
             'valid_until' => $this->valid_until ?? null,
             'payment_terms' => $this->payment_terms ?? null,
 
-            'client' => $this->whenLoaded('client', fn () => new ClientResource($this->client)),
-            'current_version' => $this->whenLoaded('currentVersion', fn () => new ProjectVersionResource($this->currentVersion)),
+            'client' => $this->whenLoaded('client', function () use ($isList) {
+                $client = new ClientResource($this->client);
+                $client->compact = $isList;
+
+                return $client;
+            }),
+            'current_version' => $this->whenLoaded('currentVersion', function () use ($isList) {
+                $version = new ProjectVersionResource($this->currentVersion);
+                $version->compact = $isList;
+
+                return $version;
+            }),
             // 'created_by' => $this->whenLoaded('createdBy', fn () => $this->createdBy),
             'created_by_user' => $this->whenLoaded('createdBy', fn () => new UserResource($this->createdBy)),
             'created_at' => $this->created_at ?? null,

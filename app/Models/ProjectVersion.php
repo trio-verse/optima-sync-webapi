@@ -47,16 +47,12 @@ class ProjectVersion extends Model
         ];
     }
 
-    protected $with = [
-        'features',
-        // 'costs',
-        'project',
-    ];
+   
+    protected $with = [];
 
     /**
      * Relationships
      */
-
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class);
@@ -85,10 +81,9 @@ class ProjectVersion extends Model
     /**
      * Helper Methods
      */
-
     public function isEditable(): bool
     {
-        return !$this->freeze;
+        return ! $this->freeze;
     }
 
     public function freezeVersion(): bool

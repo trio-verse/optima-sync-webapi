@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services\Marketing;
 
 use App\Enums\enCampaignStatus;
@@ -11,8 +12,7 @@ class MarketingDashboardService
 
     public function __construct(
         private CampaignAnalyticsService $campaignAnalytics
-    ) {
-    }
+    ) {}
 
     /**
      * get Marketing Dashboard analytics
@@ -65,7 +65,7 @@ class MarketingDashboardService
 
     public function getEffectiveCampaigns(Organization $org, string $sortBy = 'cpl', $status = null, int $per_page = 15, int $page = 1, array $options = [])
     {
-        $campaigns = $org->campaigns()->withCount('connections')
+        $campaigns = $org->campaigns()->withCount(['connections', 'approvedAndPublishedContents'])
             ->withSum(
                 ['connections as total_revenue' => fn($query) => $query->where('stage', 'win')],
                 'deal_Value'
@@ -112,7 +112,6 @@ class MarketingDashboardService
         );
 
         return $campaigns;
-
     }
 
 
@@ -139,7 +138,6 @@ class MarketingDashboardService
             })
             ->toArray();
         return $campaigns;
-
     }
 
     private function calculateOverallROI(float $spent, float $revenue): null|float
@@ -148,5 +146,6 @@ class MarketingDashboardService
             return null;
         return round(($revenue - $spent) / $spent * 100, 2);
     }
-
 }
+
+// danial love qusay and he miss you
