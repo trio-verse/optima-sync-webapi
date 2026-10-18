@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\QueriesBuilder\Mapper;
 
 use App\QueriesBuilder\Dtos\QueryCondition;
@@ -9,7 +8,6 @@ use App\QueriesBuilder\Dtos\QueryGroup;
 
 class ProjectQueryMapper
 {
-
     public function create(array $data): QueryDefinition
     {
         return new QueryDefinition($this->cearteGroup($data['query']));
@@ -23,6 +21,7 @@ class ProjectQueryMapper
         foreach ($data['conditions'] as $condition) {
             $conditions[] = $this->createNode($condition);
         }
+
         return new QueryGroup(
             $data['logic'],
             $conditions
@@ -30,7 +29,7 @@ class ProjectQueryMapper
     }
 
     // for every one condation scope
-    private function createNode(array $data): QueryCondition
+    private function createNode(array $data): QueryCondition|QueryGroup
     {
         if (isset($data['field'])) {
             // if the data are condition => return new QueryCondition
@@ -41,7 +40,7 @@ class ProjectQueryMapper
             );
         }
 
-        // if the data are Group not a condation => recursive call to cearteGroup 
+        // if the data are Group not a condation => recursive call to cearteGroup
         return $this->cearteGroup($data);
     }
 }
