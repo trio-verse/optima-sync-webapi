@@ -82,11 +82,11 @@ class QuotationService
     public function generatePdf(ProjectVersion $version): array
     {
         if ($version->quotation_pdf_path && $version->quotation_pdf_path !== '') {
-            if (Storage::disk('public')->exists($version->quotation_pdf_path)) {
+            if (Storage::disk('local')->exists($version->quotation_pdf_path)) {
                 return [
                     'success' => true,
                     'message' => 'PDF retrieved successfully',
-                    'pdf_url' => asset('storage/'.$version->quotation_pdf_path),
+                    'pdf_path' => $version->quotation_pdf_path,
                 ];
             }
         }
@@ -110,7 +110,7 @@ class QuotationService
             $pdfPath = $this->buildPdfPath($version);
             $pdfBytes = $this->renderPdf($html, $version);
 
-            Storage::disk('public')->put($pdfPath, $pdfBytes);
+            Storage::disk('local')->put($pdfPath, $pdfBytes);
 
             return DB::transaction(function () use ($version, $pdfPath, $data) {
 
@@ -133,7 +133,7 @@ class QuotationService
                     'success' => true,
                     'message' => 'PDF generated successfully',
                     'pdf_path' => $pdfPath,
-                    'pdf_url' => url('storage/'.$pdfPath),
+                    'pdf_path' => $pdfPath,
                 ];
             });
 
@@ -206,11 +206,11 @@ class QuotationService
 
     public function downloadPdf(ProjectVersion $version)
     {
-        if (! $version->quotation_pdf_path || ! Storage::disk('public')->exists($version->quotation_pdf_path)) {
+        if (! $version->quotation_pdf_path || ! Storage::disk('local')->exists($version->quotation_pdf_path)) {
             abort(404, 'PDF not found. Please generate the PDF first.');
         }
 
-        return response(Storage::disk('public')->get($version->quotation_pdf_path), 200, [
+        return response(Storage::disk('local')->get($version->quotation_pdf_path), 200, [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'attachment; filename="'.$version->quotation_number.'.pdf"',
         ]);

@@ -39,11 +39,11 @@ class ProjectAllDataResource extends JsonResource
         return [
             'id' => $this->id,
             'project_refrence_number' => $this->reference_id,
-            'title' => $currentVersion->title,
-            'description' => $currentVersion->description ?? null,
+            'title' => $currentVersion?->title,
+            'description' => $currentVersion?->description,
             'status' => $this->status,
             'source' => $this->source,
-            'current_version_number' => $currentVersion->version_number ?? null,
+            'current_version_number' => $currentVersion?->version_number,
 
             // project_amounts
             'sub_total' => number_format((float) ($this->sub_total ?? 0), 2, '.', ''),
@@ -62,7 +62,9 @@ class ProjectAllDataResource extends JsonResource
             // client details
             'client_details' => $this->whenLoaded('client', new ClientResource($this->client), []),
             // versions
-            'current_version' => new ProjectVersionResource($currentVersion),
+            'current_version' => $currentVersion
+                ? new ProjectVersionResource($currentVersion)
+                : null,
 
 
             'costs' => ProjectCostResource::collection($this->costs),

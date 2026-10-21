@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\DB;
 
 class ProjectCostService
 {
+    public function __construct(private ProjectPricingService $pricingService) {}
+
     /**
      * Get all costs belonging to a project.
      */
@@ -28,7 +30,7 @@ class ProjectCostService
             ? ProjectCost::find($cost)
             : $cost;
 
-        if (!$costModel || $costModel->project_id !== $project->id) {
+        if (! $costModel || $costModel->project_id !== $project->id) {
             throw new \DomainException('Cost item does not belong to the specified project.');
         }
 
@@ -44,7 +46,10 @@ class ProjectCostService
             $data['project_id'] = $project->id;
             $data['quantity'] = $data['quantity'] ?? 1;
 
-            return $project->costs()->create($data);
+            $cost = $project->costs()->create($data);
+            $this->pricingService->recalculateQuotationTotal($project->fresh());
+
+            return $cost;
         });
     }
 
@@ -57,6 +62,7 @@ class ProjectCostService
 
         return DB::transaction(function () use ($costModel, $data) {
             $costModel->update($data);
+            $this->pricingService->recalculateQuotationTotal($costModel->project()->lockForUpdate()->firstOrFail());
 
             return $costModel->fresh();
         });
@@ -70,7 +76,11 @@ class ProjectCostService
         $costModel = $this->getCost($project, $cost);
 
         return DB::transaction(function () use ($costModel) {
-            return (bool) $costModel->delete();
+            $project = $costModel->project()->lockForUpdate()->firstOrFail();
+            $deleted = (bool) $costModel->delete();
+            $this->pricingService->recalculateQuotationTotal($project->fresh());
+
+            return $deleted;
         });
     }
 

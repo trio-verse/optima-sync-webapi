@@ -1,8 +1,8 @@
 <?php
 
 // namespace App\Http\Controllers\Api\V1;
-namespace App\Http\Controllers\Api\V1\ProjectManagment;
 
+namespace App\Http\Controllers\Api\V1\ProjectManagment;
 
 use App\Helper\V1\ApiResponse;
 use App\Http\Controllers\Controller;
@@ -26,10 +26,10 @@ class QuotationController extends Controller
 
     /**
      * generate pdf via browsershot
-     * @return JsonResponse
      */
     public function generatePdf(Project $project, ProjectVersion $version): JsonResponse
     {
+        $this->authorize('manageFinancials', $project);
         if ($version->project_id !== $project->id) {
             return ApiResponse::notFound('Version not found for this project');
         }
@@ -46,12 +46,12 @@ class QuotationController extends Controller
      */
     public function preview(Project $project, ProjectVersion $version)
     {
+        $this->authorize('view', $project);
         if ($version->project_id !== $project->id) {
             return ApiResponse::notFound('Version not found for this project');
         }
 
         $data = $this->service->previewData($version);
-
 
         $html = view('quotations.quotation', ['data' => $data])->render();
 
@@ -72,12 +72,11 @@ class QuotationController extends Controller
      */
     public function downloadPdf(Project $project, ProjectVersion $version): Response
     {
+        $this->authorize('view', $project);
         if ($version->project_id !== $project->id) {
             abort(404, 'Version not found for this project');
         }
 
         return $this->service->downloadPdf($version);
     }
-
-
 }

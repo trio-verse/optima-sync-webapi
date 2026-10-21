@@ -19,8 +19,7 @@ class ProjectEmployeesController extends Controller
 {
     public function __construct(
         protected ProjectEmployeeService $service
-    ) {
-    }
+    ) {}
 
     /**
      * List employees.
@@ -28,6 +27,7 @@ class ProjectEmployeesController extends Controller
      */
     public function index(Project $project): JsonResponse
     {
+        $this->authorize('view', $project);
         $employees = $this->service->getProjectEmployees($project);
 
         return ApiResponse::success(
@@ -42,6 +42,7 @@ class ProjectEmployeesController extends Controller
      */
     public function store(StoreProjectEmployeeRequest $request, Project $project): JsonResponse
     {
+        $this->authorize('manageVersions', $project);
         $validated = $request->validated();
         $attachedEmployee = $this->service->attachEmployee(
             $project,
@@ -61,9 +62,10 @@ class ProjectEmployeesController extends Controller
      */
     public function show(Project $project, Employee $employee): JsonResponse
     {
+        $this->authorize('view', $project);
         $attachedEmployee = $this->service->getProjectEmployee($project, $employee->id);
 
-        if (!$attachedEmployee) {
+        if (! $attachedEmployee) {
             return ApiResponse::notFound('Employee is not assigned to this project');
         }
 
@@ -78,6 +80,7 @@ class ProjectEmployeesController extends Controller
      */
     public function update(UpdateProjectEmployeeRequest $request, Project $project, Employee $employee): JsonResponse
     {
+        $this->authorize('manageVersions', $project);
         try {
             $validated = $request->validated();
             $updatedEmployee = $this->service->updateEmployeePoints(
@@ -101,6 +104,7 @@ class ProjectEmployeesController extends Controller
      */
     public function destroy(Project $project, Employee $employee): JsonResponse
     {
+        $this->authorize('manageVersions', $project);
         try {
             $this->service->detachEmployee($project, $employee);
 
@@ -120,6 +124,7 @@ class ProjectEmployeesController extends Controller
      */
     public function pointsSummary(Project $project): JsonResponse
     {
+        $this->authorize('view', $project);
         $summary = $this->service->calculatePointsSummary($project);
 
         return ApiResponse::success(

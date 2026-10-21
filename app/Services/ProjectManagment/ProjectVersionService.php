@@ -113,7 +113,14 @@ class ProjectVersionService
     public function branchVersion(ProjectVersion $sourceVersion, array $overrides = []): ProjectVersion
     {
         return DB::transaction(function () use ($sourceVersion, $overrides) {
-            $project = $sourceVersion->project;
+            $sourceVersion = ProjectVersion::query()
+                ->whereKey($sourceVersion->id)
+                ->lockForUpdate()
+                ->firstOrFail();
+            $project = Project::query()
+                ->whereKey($sourceVersion->project_id)
+                ->lockForUpdate()
+                ->firstOrFail();
 
             // Freeze any existing active draft versions
             $project->versions()->where('freeze', false)->update(['freeze' => true]);
@@ -138,11 +145,10 @@ class ProjectVersionService
 
             $newVersion = $project->versions()->create($versionData);
 
-            // convert features and costs from source version to new version
-            $this->convertVersionRelationsReference($sourceVersion, $newVersion);
-
-            // take a snapshot of the old version relationships and freeze it
+            // Snapshot the source before copying its immutable historical data.
+            $sourceVersion->load(['features', 'project.costs', 'project.employees']);
             $sourceVersion->freezeVersion();
+            $this->copyFeatures($sourceVersion, $newVersion);
 
             // Update current version pointer on project
             $project->update(['current_version_id' => $newVersion->id]);
@@ -225,13 +231,16 @@ class ProjectVersionService
     /**
      * Convert features and costs from a source version to a target version by updating their foreign keys.
      * This is used when branching or cloning a version to ensure the new version has its own set of features and costs.
-     * @param ProjectVersion $sourceVersion The version to copy from
-     * @param ProjectVersion $targetVersion The version to copy to
-     * @return void
+     *
+     * @param  ProjectVersion  $sourceVersion  The version to copy from
+     * @param  ProjectVersion  $targetVersion  The version to copy to
      */
-    private function convertVersionRelationsReference(ProjectVersion $sourceVersion, ProjectVersion $targetVersion): void
+    private function copyFeatures(ProjectVersion $sourceVersion, ProjectVersion $targetVersion): void
     {
-        $sourceVersion->features()->update(['project_version_id' => $targetVersion->id]);
-        // $sourceVersion->costs()->update(['project_version_id' => $targetVersion->id]);
+        foreach ($sourceVersion->features as $feature) {
+            $copy = $feature->replicate();
+            $copy->project_version_id = $targetVersion->id;
+            $copy->save();
+        }
     }
 }

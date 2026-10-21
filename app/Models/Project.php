@@ -5,7 +5,9 @@ namespace App\Models;
 use App\Enums\enProjectSource;
 use App\Enums\enProjectStatus;
 use App\Models\Scopes\OrganizationScope;
+use App\Policies\ProjectPolicy;
 use App\Trait\BelongsToOrganization;
+use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -13,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+#[UsePolicy(ProjectPolicy::class)]
 class Project extends Model
 {
     use BelongsToOrganization, HasFactory;

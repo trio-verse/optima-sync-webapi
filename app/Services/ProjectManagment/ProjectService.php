@@ -140,9 +140,14 @@ class ProjectService
         unset($data['total_amount']);
 
         if (array_key_exists('sub_total', $data) || array_key_exists('profit_percentage', $data)) {
-            $subTotal = (float) ($data['sub_total'] ?? $project->sub_total);
-            $profitPercentage = (float) ($data['profit_percentage'] ?? $project->profit_percentage);
-            $data['total_amount'] = $this->pricingService->calculateQuotationTotals($project)['total'];
+            $calculationProject = $project->replicate();
+            $calculationProject->fill([
+                'sub_total' => $data['sub_total'] ?? $project->sub_total,
+                'profit_percentage' => $data['profit_percentage'] ?? $project->profit_percentage,
+                'discount' => $data['discount'] ?? $project->discount,
+                'tax' => $data['tax'] ?? $project->tax,
+            ]);
+            $data['total_amount'] = $this->pricingService->calculateQuotationTotals($calculationProject)['total'];
         }
 
         try {

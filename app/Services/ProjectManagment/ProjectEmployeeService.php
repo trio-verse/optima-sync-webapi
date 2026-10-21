@@ -32,7 +32,7 @@ class ProjectEmployeeService
                 $employee->id => [
                     'organization_id' => $project->organization_id,
                     'total_points' => $totalPoints,
-                ]
+                ],
             ]);
 
             DB::afterCommit(fn () => ProjectEmployeeAssigned::dispatch($project, $employee));
@@ -54,7 +54,7 @@ class ProjectEmployeeService
      */
     public function updateEmployeePoints(Project $project, Employee $employee, int $totalPoints): Employee
     {
-        if (!$project->employees()->where('employee_id', $employee->id)->exists()) {
+        if (! $project->employees()->where('employee_id', $employee->id)->exists()) {
             throw new \DomainException('Employee is not assigned to this project.');
         }
 
