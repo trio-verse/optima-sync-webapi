@@ -2,13 +2,21 @@
 
 namespace App\Services\ProjectManagment;
 
+use App\Contracts\IQuotationService;
 use App\Models\Project;
 use App\Models\ProjectVersion;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ProjectVersionService
 {
+    private IQuotationService $quotationService;
+    public function __construct(IQuotationService $quotationService)
+    {
+        $this->quotationService = $quotationService;
+    }
+
     /**
      * Get paginated project versions with optional filters.
      */
@@ -168,22 +176,59 @@ class ProjectVersionService
         ]);
     }
 
-    /**
-     * Explicitly freeze a project version and record snapshots.
+    /*
+     * Generate a freezed version of a project version and recored snapshots with the current state for quotation data.
      */
-    public function freezeVersion(ProjectVersion $version): ProjectVersion
+     public function generateFreezedVersion(ProjectVersion $version): array
     {
-        if ($version->freeze) {
-            return $version;
+       
+         
+        if($version->freeze && is_array($version->quotation_data)) {
+            return [
+                'success' => true,
+                'message' => 'Version is already freezed',
+                'data' => $version->quotation_data ?? $this->quotationService->getPreviewData($version),
+            ];
         }
 
-        return DB::transaction(function () use ($version) {
-            $version->freezeVersion(); // Uses Eloquent Model snapshot logic
+        try {
+            $data = $this->quotationService->getPreviewData($version);
 
-            // $version->project->update(['current_version_id' => $version->id]);
+            return DB::transaction(function () use ($version, $data) {
 
-            return $version->fresh();
-        });
+                $version->forceFill([
+                    'quotation_number' => $data['quo_number'],
+                    'quotation_data' => $data,
+                    'quotation_generated_at' => now(),
+                ])->save();
+
+                Log::info('version info saved => time : '.now());
+                if (! $version->freeze) {
+                    $version->loadMissing(['features', 'project.costs', 'project.employees']);
+                    $version->freezeVersion();
+                }
+
+                Log::info('version freezed info saved => time : '.now());
+
+                return [
+                    'success' => true,
+                    'message' => 'version freezed successfully',
+                    'data' => $data,
+                ];
+            });
+
+        } catch (\Throwable $exception) {
+            Log::error('freezing version Error.', [
+                'version_id' => $version->id,
+                'project_id' => $version->project_id,
+                'exception' => $exception,
+            ]);
+
+            return [
+                'success' => false,
+                'message' => 'Failed to freeze version : '.$exception->getMessage(),
+            ];
+        }
     }
 
     /**

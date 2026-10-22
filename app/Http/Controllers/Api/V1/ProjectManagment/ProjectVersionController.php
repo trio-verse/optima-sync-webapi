@@ -117,7 +117,8 @@ class ProjectVersionController extends Controller
     }
 
     /**
-     * freeze project version
+     * freeze project version.
+     * with all Quotation data and snapShots
      */
     public function freeze(Project $project, ProjectVersion $version): JsonResponse
     {
@@ -126,7 +127,7 @@ class ProjectVersionController extends Controller
             return ApiResponse::notFound('Project version not found for this project');
         }
 
-        $item = $this->service->freezeVersion($version);
+        $item = $this->service->generateFreezedVersion($version);
 
         return ApiResponse::success(new ProjectVersionResource($item), 'Project version frozen successfully');
     }

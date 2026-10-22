@@ -2,17 +2,18 @@
 
 namespace App\Services\ProjectManagment;
 
+use App\Contracts\IQuotationService;
 use App\Models\ProjectVersion;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Browsershot\Browsershot;
 
-class QuotationService
+class QuotationService implements IQuotationService
 {
     public function __construct(private ProjectPricingService $pricingService) {}
 
-    public function previewData(ProjectVersion $version): array
+    public function getPreviewData(ProjectVersion $version): array
     {
         $version->loadMissing(['project.organization', 'project.client', 'project.costs', 'features']);
 
@@ -46,7 +47,7 @@ class QuotationService
         $totals = $this->pricingService->calculateQuotationTotals($project);
 
         $data = [
-            'optimasync_logo' => asset('images/optima-sync-logo.jpg'),
+            // 'optimasync_logo' => asset('images/optima-sync-logo.jpg'),   
             'organization_name' => $project->organization?->name ?? config('app.name', 'OptimaSync'),
             'org_location' => $project->organization?->address ?? '',
             'quo_number' => $version->quotation_number ?? $this->quotationNumber($version),
@@ -79,155 +80,9 @@ class QuotationService
         return $data;
     }
 
-    public function generatePdf(ProjectVersion $version): array
-    {
-        if ($version->quotation_pdf_path && $version->quotation_pdf_path !== '') {
-            if (Storage::disk('local')->exists($version->quotation_pdf_path)) {
-                return [
-                    'success' => true,
-                    'message' => 'PDF retrieved successfully',
-                    'pdf_path' => $version->quotation_pdf_path,
-                ];
-            }
-        }
-
-        try {
-            $data = $this->previewData($version);
-
-            $logoPath = public_path('images/optima-sync-logo.jpg');
-
-            if (! file_exists($logoPath)) {
-                throw new \Exception("Logo not found: {$logoPath}");
-            }
-
-            $data['optimasync_logo'] = 'data:image/jpeg;base64,'.
-                base64_encode(file_get_contents($logoPath));
-
-            $html = view('quotations.quotation', [
-                'data' => $data,
-            ])->render();
-
-            $pdfPath = $this->buildPdfPath($version);
-            $pdfBytes = $this->renderPdf($html, $version);
-
-            Storage::disk('local')->put($pdfPath, $pdfBytes);
-
-            return DB::transaction(function () use ($version, $pdfPath, $data) {
-
-                $version->forceFill([
-                    'quotation_number' => $data['quo_number'],
-                    'quotation_data' => $data,
-                    'quotation_pdf_path' => $pdfPath,
-                    'quotation_generated_at' => now(),
-                ])->save();
-
-                Log::info('version info saved => time : '.now());
-                if (! $version->freeze) {
-                    $version->loadMissing(['features', 'project.costs', 'project.employees']);
-                    $version->freezeVersion();
-                }
-
-                Log::info('version freezed info saved => time : '.now());
-
-                return [
-                    'success' => true,
-                    'message' => 'PDF generated successfully',
-                    'pdf_path' => $pdfPath,
-                    'pdf_path' => $pdfPath,
-                ];
-            });
-
-        } catch (\Throwable $exception) {
-            Log::error('Failed to generate quotation PDF.', [
-                'version_id' => $version->id,
-                'project_id' => $version->project_id,
-                'exception' => $exception,
-            ]);
-
-            return [
-                'success' => false,
-                'message' => 'Failed to generate PDF: '.$exception->getMessage(),
-            ];
-        }
-    }
-
-    /**
-     * Render HTML to PDF bytes via Browsershot.
-     *
-     * A fresh Browsershot instance is created on every attempt, and the
-     * render is retried on failure (a stale browser process can still
-     * die mid-stream). The Windows process environment is restored
-     * first so the spawned node/chrome processes have what they need.
-     */
-    private function renderPdf(string $html, ProjectVersion $version): string
-    {
-        $attempts = 3;
-        $lastException = null;
-
-        for ($attempt = 1; $attempt <= $attempts; $attempt++) {
-            $browserShot = Browsershot::html($html)
-                ->setNodeModulePath(base_path('node_modules'))
-                ->format('A4')
-                ->timeout(120);
-
-            $chromePath = env('BROWSERSHOT_CHROME_PATH');
-            if ($chromePath) {
-                if (is_file($chromePath)) {
-                    $browserShot->setChromePath($chromePath);
-                } else {
-                    Log::warning("BROWSERSHOT_CHROME_PATH [{$chromePath}] not found; using bundled browser.");
-                }
-            }
-
-            try {
-                return $browserShot->pdf();
-            } catch (\Throwable $exception) {
-                $lastException = $exception;
-
-                Log::warning('Browsershot PDF render attempt failed.', [
-                    'version_id' => $version->id,
-                    'attempt' => $attempt,
-                    'of' => $attempts,
-                    'message' => $exception->getMessage(),
-                ]);
-
-                if ($attempt < $attempts) {
-                    sleep(2);
-                }
-            }
-        }
-
-        throw new \RuntimeException(
-            'PDF generation failed after '.$attempts.' attempts: '.$lastException->getMessage(),
-            0,
-            $lastException
-        );
-    }
-
-    public function downloadPdf(ProjectVersion $version)
-    {
-        if (! $version->quotation_pdf_path || ! Storage::disk('local')->exists($version->quotation_pdf_path)) {
-            abort(404, 'PDF not found. Please generate the PDF first.');
-        }
-
-        return response(Storage::disk('local')->get($version->quotation_pdf_path), 200, [
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'attachment; filename="'.$version->quotation_number.'.pdf"',
-        ]);
-    }
-
     private function quotationNumber(ProjectVersion $version): string
     {
         return sprintf('QTN-%s-%d-%d', now()->format('Ym'), $version->project_id, $version->id);
     }
 
-    private function buildPdfPath(ProjectVersion $version): string
-    {
-        return sprintf(
-            'quotations/%d/%d/version-%d.pdf',
-            $version->project->organization_id,
-            $version->project_id,
-            $version->version_number,
-        );
-    }
 }

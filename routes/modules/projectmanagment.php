@@ -46,6 +46,7 @@ Route::get('projects/{project}/versions', [ProjectVersionController::class, 'ind
 Route::get('projects/{project}/versions/{version}', [ProjectVersionController::class, 'show'])->name('project.versions.show');
 Route::patch('projects/{project}/versions/{version}', [ProjectVersionController::class, 'update'])->name('project.versions.update');
 Route::delete('projects/{project}/versions/{version}', [ProjectVersionController::class, 'destroy'])->name('project.versions.destroy');
+Route::post('projects/{project}/versions/{version}/freeze', [ProjectVersionController::class, 'freeze'])->name('project.versions.freeze');
 
 // Project Features — read routes
 Route::get('projects/{project}/features', [ProjectFeatureController::class, 'index'])->name('project.features.index');
@@ -78,12 +79,6 @@ Route::get('projects/{project}/meetings/{meeting}', [ProjectMeetingController::c
 Route::patch('projects/{project}/meetings/{meeting}', [ProjectMeetingController::class, 'update'])->name('project.meetings.update');
 Route::delete('projects/{project}/meetings/{meeting}', [ProjectMeetingController::class, 'destroy'])->name('project.meetings.destroy');
 
-// Quotations
+// Preview Quotation Data
 Route::get('/projects/{project}/versions/{version}/quotations/preview', [QuotationController::class, 'preview'])
     ->name('project.quotations.preview');
-
-Route::post('/projects/{project}/versions/{version}/quotations/generate-pdf', [QuotationController::class, 'generatePdf'])
-    ->name('project.quotations.generate-pdf');
-
-Route::get('/projects/{project}/versions/{version}/quotations/download', [QuotationController::class, 'downloadPdf'])
-    ->name('project.quotations.download-pdf');

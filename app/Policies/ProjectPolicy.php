@@ -22,28 +22,29 @@ class ProjectPolicy
 
     public function create(User $user): bool
     {
-        return $this->isAdministrator($user);
+        return  $this->belongsToActiveOrganization($user);
     }
 
     public function update(User $user, Project $project): bool
     {
-        return $this->isAdministrator($user) && $this->ownsActiveOrganization($project);
+        return $this->belongsToActiveOrganization($user) && $this->ownsActiveOrganization($project);
     }
 
     public function delete(User $user, Project $project): bool
     {
-        return $this->isOwner($user) && $this->ownsActiveOrganization($project);
+        return $this->belongsToActiveOrganization($user) && $this->ownsActiveOrganization($project);
     }
 
     public function manageFinancials(User $user, Project $project): bool
     {
-        return $this->isAdministrator($user) && $this->ownsActiveOrganization($project);
+        return $this->belongsToActiveOrganization($user) && $this->ownsActiveOrganization($project);
     }
 
     public function manageVersions(User $user, Project $project): bool
     {
-        return $this->isAdministrator($user) && $this->ownsActiveOrganization($project);
+        return $this->belongsToActiveOrganization($user) && $this->ownsActiveOrganization($project);
     }
+
 
     private function ownsActiveOrganization(Project $project): bool
     {
