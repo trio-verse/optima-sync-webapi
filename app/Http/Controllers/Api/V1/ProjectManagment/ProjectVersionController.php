@@ -127,9 +127,16 @@ class ProjectVersionController extends Controller
             return ApiResponse::notFound('Project version not found for this project');
         }
 
-        $item = $this->service->generateFreezedVersion($version);
+        $result = $this->service->generateFreezedVersion($version);
 
-        return ApiResponse::success(new ProjectVersionResource($item), 'Project version frozen successfully');
+        if (! $result['success']) {
+            return ApiResponse::error(null, $result['message'], 422);
+        }
+
+        return ApiResponse::success(
+            new ProjectVersionResource($version->fresh()),
+            'Project version frozen successfully'
+        );
     }
 
     /**
