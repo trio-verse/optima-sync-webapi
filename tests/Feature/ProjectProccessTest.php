@@ -4,14 +4,17 @@ use App\Models\Client;
 use App\Models\Employee;
 use App\Models\Organization;
 use App\Models\Project;
+use App\Models\ProjectCost;
 use App\Models\ProjectFeature;
 use App\Models\ProjectVersion;
 use App\Models\User;
+use App\Services\ProjectManagment\ProjectCostService;
+use App\Services\ProjectManagment\ProjectEmployeeService;
+use App\Services\ProjectManagment\ProjectFeatureService;
 use App\Services\ProjectManagment\ProjectVersionService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Queue;
-use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 uses(RefreshDatabase::class);
@@ -92,7 +95,7 @@ test('inssure that deleting a new cost from the Project will recalculate the tot
     expect($newTotalAmount)->toBeLessThan($oldTotalAmount);
 });
 
-test('branching a project version preserves the frozen source and copies its features', function () {
+test('branching the current version moves live features and preserves the frozen snapshot', function () {
     /** @var TestCase $this */
     $owner = User::factory()->create();
     $organization = Organization::factory()->create(['user_id' => $owner->id]);
@@ -113,7 +116,7 @@ test('branching a project version preserves the frozen source and copies its fea
     ]);
     $project->update(['current_version_id' => $sourceVersion->id]);
 
-    ProjectFeature::factory()->create([
+    $feature = ProjectFeature::factory()->create([
         'project_id' => $project->id,
         'project_version_id' => $sourceVersion->id,
         'name' => 'Original feature',
@@ -125,10 +128,69 @@ test('branching a project version preserves the frozen source and copies its fea
 
     expect($sourceVersion->fresh()->freeze)->toBeTrue()
         ->and($sourceVersion->fresh()->features_snapshot)->toHaveCount(1)
-        ->and($sourceVersion->fresh()->features)->toHaveCount(1)
+        ->and($sourceVersion->fresh()->features)->toHaveCount(0)
         ->and($newVersion->features)->toHaveCount(1)
+        ->and($newVersion->features->first()->id)->toBe($feature->id)
         ->and($newVersion->features->first()->name)->toBe('Original feature')
         ->and($project->fresh()->current_version_id)->toBe($newVersion->id);
+});
+
+test('a historical frozen version can create a new editable version from its feature snapshot', function () {
+    /** @var TestCase $this */
+    $owner = User::factory()->create();
+    $organization = Organization::factory()->create(['user_id' => $owner->id]);
+    $client = Client::factory()->create(['organization_id' => $organization->id]);
+    $this->actingAs($owner, 'sanctum');
+
+    $project = Project::factory()->create([
+        'organization_id' => $organization->id,
+        'client_id' => $client->id,
+        'current_version_id' => null,
+        'created_by' => $owner->id,
+    ]);
+    $versionOne = ProjectVersion::factory()->create([
+        'project_id' => $project->id,
+        'version_number' => 1,
+        'created_by' => $owner->id,
+    ]);
+    $project->update(['current_version_id' => $versionOne->id]);
+    $originalFeature = ProjectFeature::factory()->create([
+        'project_id' => $project->id,
+        'project_version_id' => $versionOne->id,
+        'name' => 'Feature from version one',
+    ]);
+
+    expect(app(ProjectVersionService::class)->generateFreezedVersion($versionOne)['success'])->toBeTrue();
+
+    $versionTwoOnlyFeature = app(ProjectFeatureService::class)->createFeature($project, [
+        'name' => 'Feature added in version two',
+    ]);
+    $versionTwo = $project->fresh()->currentVersion;
+
+    $versionThree = app(ProjectVersionService::class)->updateVersion($project, $versionOne->fresh(), [
+        'title' => 'Version three from version one',
+    ]);
+
+    $versionOne->refresh();
+    $versionTwo->refresh();
+    $project->refresh();
+
+    expect($versionThree->based_on_version_id)->toBe($versionOne->id)
+        ->and($versionThree->version_number)->toBe(3)
+        ->and($versionThree->freeze)->toBeFalse()
+        ->and($versionThree->features()->pluck('name')->all())->toBe(['Feature from version one'])
+        ->and($versionThree->features()->first()->id)->not->toBe($originalFeature->id)
+        ->and($versionOne->features_snapshot[0]['name'])->toBe('Feature from version one')
+        ->and($versionTwo->freeze)->toBeTrue()
+        ->and($versionTwo->features_snapshot)->toHaveCount(2)
+        ->and($versionTwo->features()->count())->toBe(0)
+        ->and($project->current_version_id)->toBe($versionThree->id);
+
+    expect(fn () => app(ProjectFeatureService::class)->updateFeature(
+        $project,
+        $versionTwoOnlyFeature,
+        ['name' => 'Must not mutate history']
+    ))->toThrow(DomainException::class, 'current editable version');
 });
 
 test('adding employee to the project then freeze the version and adding new Employee to the Same Project', function () {
@@ -264,10 +326,7 @@ test('View pdf for the target version', function () {
     $data = $response->json('data');
 
     expect($data['data'])->toBeGreaterThan(1);
-
 });
-
-
 
 test('mutating a frozen project version branches an editable version', function () {
 
@@ -332,6 +391,138 @@ test('mutating a frozen project version branches an editable version', function 
         ->and($project->currentVersion->based_on_version_id)->toBe($sourceVersion->id)
         ->and($project->features)->toHaveCount(1)
         ->and($project->costs)->toHaveCount(1);
+});
+
+test('failed mutation does not leave an unused branched project version', function () {
+
+    /** @var TestCase $this */
+    $owner = User::factory()->create();
+    $organization = Organization::factory()->create(['user_id' => $owner->id]);
+    $client = Client::factory()->create(['organization_id' => $organization->id]);
+    $this->actingAs($owner, 'sanctum');
+
+    $project = Project::factory()->create([
+        'organization_id' => $organization->id,
+        'client_id' => $client->id,
+        'current_version_id' => null,
+        'created_by' => $owner->id,
+    ]);
+    $version = ProjectVersion::factory()->create([
+        'project_id' => $project->id,
+        'version_number' => 1,
+        'created_by' => $owner->id,
+        'freeze' => true,
+    ]);
+    $project->update(['current_version_id' => $version->id]);
+
+    expect(fn () => app(ProjectVersionService::class)->withEditableVersion(
+        $project,
+        fn () => throw new DomainException('Mutation failed')
+    ))->toThrow(DomainException::class, 'Mutation failed');
+
+    $project->refresh();
+
+    expect($project->versions()->count())->toBe(1)
+        ->and($project->current_version_id)->toBe($version->id)
+        ->and($version->fresh()->freeze)->toBeTrue();
+});
+
+test('updating and deleting project data branches when the current version is frozen', function () {
+
+    /** @var TestCase $this */
+    $owner = User::factory()->create();
+    $organization = Organization::factory()->create(['user_id' => $owner->id]);
+    $client = Client::factory()->create(['organization_id' => $organization->id]);
+    $this->actingAs($owner, 'sanctum');
+
+    $project = Project::factory()->create([
+        'organization_id' => $organization->id,
+        'client_id' => $client->id,
+        'current_version_id' => null,
+        'created_by' => $owner->id,
+    ]);
+    $version = ProjectVersion::factory()->create([
+        'project_id' => $project->id,
+        'version_number' => 1,
+        'created_by' => $owner->id,
+        'freeze' => false,
+    ]);
+    $project->update(['current_version_id' => $version->id]);
+
+    $feature = ProjectFeature::factory()->create([
+        'project_id' => $project->id,
+        'project_version_id' => $version->id,
+        'name' => 'Original feature',
+    ]);
+    $cost = ProjectCost::create([
+        'project_id' => $project->id,
+        'name' => 'Original cost',
+        'description' => 'Original description',
+        'quantity' => 1,
+        'amount' => 100,
+    ]);
+    $employee = Employee::create([
+        'name' => 'Project employee',
+        'organization_id' => $organization->id,
+        'email' => 'versioning@example.com',
+        'phone' => '0936362738',
+        'position' => 'Developer',
+        'cost_per_hour' => 20,
+        'houres_per_point' => 2,
+    ]);
+    $project->employees()->attach($employee->id, [
+        'organization_id' => $organization->id,
+        'total_points' => 10,
+    ]);
+
+    $freezeCurrentVersion = function () use ($project): void {
+        app(ProjectVersionService::class)->generateFreezedVersion(
+            $project->fresh('currentVersion')->currentVersion
+        );
+    };
+
+    $freezeCurrentVersion();
+    $updatedFeature = app(ProjectFeatureService::class)
+        ->updateFeature($project, $feature, ['name' => 'Updated feature']);
+
+    expect($project->fresh()->versions)->toHaveCount(2)
+        ->and($updatedFeature->name)->toBe('Updated feature')
+        ->and($project->fresh()->currentVersion->features)->toHaveCount(1);
+
+    $freezeCurrentVersion();
+    app(ProjectFeatureService::class)
+        ->deleteFeature($project, $updatedFeature);
+
+    expect($project->fresh()->versions)->toHaveCount(3)
+        ->and($project->fresh()->currentVersion->features)->toHaveCount(0);
+
+    $freezeCurrentVersion();
+    $updatedCost = app(ProjectCostService::class)
+        ->updateCost($project, $cost, ['amount' => 150]);
+
+    expect($project->fresh()->versions)->toHaveCount(4)
+        ->and((float) $updatedCost->amount)->toBe(150.0);
+
+    $freezeCurrentVersion();
+    app(ProjectCostService::class)
+        ->deleteCost($project, $cost);
+
+    expect($project->fresh()->versions)->toHaveCount(5)
+        ->and($project->fresh()->costs)->toHaveCount(0);
+
+    $freezeCurrentVersion();
+    $updatedEmployee = app(ProjectEmployeeService::class)
+        ->updateEmployeePoints($project, $employee, 20);
+
+    expect($project->fresh()->versions)->toHaveCount(6)
+        ->and((int) $updatedEmployee->pivot->total_points)->toBe(20);
+
+    $freezeCurrentVersion();
+    app(ProjectEmployeeService::class)
+        ->detachEmployee($project, $employee);
+
+    expect($project->fresh()->versions)->toHaveCount(7)
+        ->and($project->fresh()->employees)->toHaveCount(0);
 });
 
 test('owner can freeze a project version and persist quotation data and snapshots', function () {
