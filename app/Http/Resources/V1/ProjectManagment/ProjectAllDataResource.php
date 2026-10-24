@@ -4,6 +4,7 @@ namespace App\Http\Resources\V1\ProjectManagment;
 
 use App\Http\Resources\V1\ClientResource;
 use App\Models\ProjectVersion;
+use App\Services\ProjectManagment\ProjectEmployeeService;
 use App\Services\ProjectManagment\ProjectPricingService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -19,8 +20,8 @@ class ProjectAllDataResource extends JsonResource
 
         // URL : previos versions
         $prevVersions = $this->freeze_versions
-            ->filter(fn(ProjectVersion $version) => (int) ($version->id ?? 0) !== $this->current_version_id)
-            ->map(fn(ProjectVersion $version) => [
+            ->filter(fn (ProjectVersion $version) => (int) ($version->id ?? 0) !== $this->current_version_id)
+            ->map(fn (ProjectVersion $version) => [
                 'id' => $version['id'],
                 'url' => route('project.versions.show', ['project' => $this->id, 'version' => $version->id]),
                 'version_number' => $version->version_number ?? null,
@@ -29,11 +30,13 @@ class ProjectAllDataResource extends JsonResource
             ->values()
             ->all();
 
-
-        $currentVersion = $this->active_version ?? $this->currentVersion;
+        // current_version_id is the authoritative pointer. Historical
+        // versions expose their Features through snapshots, never through the
+        // project's live Feature relation.
+        $currentVersion = $this->currentVersion ?? $this->active_version;
 
         // Get quotation totals
-        $pricingService = new ProjectPricingService(new \App\Services\ProjectManagment\ProjectEmployeeService());
+        $pricingService = new ProjectPricingService(new ProjectEmployeeService);
         $quotationTotals = $pricingService->calculateQuotationTotals($this->resource);
 
         return [
@@ -55,7 +58,6 @@ class ProjectAllDataResource extends JsonResource
             'added_costs_total' => number_format($quotationTotals['added_costs_total'], 2, '.', ''),
             'total_amount' => number_format($quotationTotals['total'], 2, '.', ''),
 
-
             'issue_date' => $this->issue_date ?? null,
             'valid_until' => $this->valid_until ?? null,
             'payment_terms' => $this->payment_terms ?? null,
@@ -66,12 +68,12 @@ class ProjectAllDataResource extends JsonResource
                 ? new ProjectVersionResource($currentVersion)
                 : null,
 
-
             'costs' => ProjectCostResource::collection($this->costs),
             'employees' => ProjectEmployeeResource::collection($this->whenLoaded('employees')),
+            'features' => ProjectFeatureResource::collection($currentVersion?->features ?? collect()),
             'counts' => [
                 'versions_count' => $this->versions_count,
-                'features_count' => $this->features_count,
+                'features_count' => $currentVersion?->features->count() ?? 0,
                 'employees_count' => $this->employees_count,
                 'costs_count' => $this->costs_count,
             ],
@@ -81,7 +83,6 @@ class ProjectAllDataResource extends JsonResource
                 'prev_versions' => $prevVersions,
             ],
             'freeze_versions_data' => ProjectVersionResource::collection($this->freeze_versions),
-            'features' => ProjectFeatureResource::collection($this->features),
 
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

@@ -5,7 +5,6 @@ namespace App\Services\ProjectManagment;
 use App\Models\Project;
 use App\Models\ProjectCost;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\DB;
 
 class ProjectCostService
 {
@@ -42,7 +41,7 @@ class ProjectCostService
      */
     public function createCost(Project $project, array $data): ProjectCost
     {
-        return DB::transaction(function () use ($project, $data) {
+        return app(ProjectVersionService::class)->withEditableVersion($project, function (Project $project) use ($data) {
             $data['project_id'] = $project->id;
             $data['quantity'] = $data['quantity'] ?? 1;
 
@@ -60,9 +59,9 @@ class ProjectCostService
     {
         $costModel = $this->getCost($project, $cost);
 
-        return DB::transaction(function () use ($costModel, $data) {
+        return app(ProjectVersionService::class)->withEditableVersion($project, function (Project $project) use ($costModel, $data) {
             $costModel->update($data);
-            $this->pricingService->recalculateQuotationTotal($costModel->project()->lockForUpdate()->firstOrFail());
+            $this->pricingService->recalculateQuotationTotal($project->fresh());
 
             return $costModel->fresh();
         });
@@ -75,8 +74,7 @@ class ProjectCostService
     {
         $costModel = $this->getCost($project, $cost);
 
-        return DB::transaction(function () use ($costModel) {
-            $project = $costModel->project()->lockForUpdate()->firstOrFail();
+        return app(ProjectVersionService::class)->withEditableVersion($project, function (Project $project) use ($costModel) {
             $deleted = (bool) $costModel->delete();
             $this->pricingService->recalculateQuotationTotal($project->fresh());
 

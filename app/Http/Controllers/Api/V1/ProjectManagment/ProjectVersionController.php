@@ -139,18 +139,4 @@ class ProjectVersionController extends Controller
         );
     }
 
-    /**
-     * clone project version
-     */
-    public function clone(Project $project, ProjectVersion $version): JsonResponse
-    {
-        $this->authorize('manageVersions', $project);
-        if ($version->project_id !== $project->id) {
-            return ApiResponse::notFound('Project version not found for this project');
-        }
-
-        $cloned = $this->service->cloneVersion($version);
-
-        return ApiResponse::success(new ProjectVersionResource($cloned), 'Project version cloned successfully', 201);
-    }
 }

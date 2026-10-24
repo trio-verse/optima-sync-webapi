@@ -6,7 +6,6 @@ use App\Enums\enProjectFeatureStatus;
 use App\Models\Project;
 use App\Models\ProjectFeature;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\DB;
 
 class ProjectFeatureService
 {
@@ -15,7 +14,13 @@ class ProjectFeatureService
      */
     public function getProjectFeatures(Project $project): Collection
     {
-        return $project->features()
+        if (! $project->current_version_id) {
+            return new Collection;
+        }
+
+        return ProjectFeature::query()
+            ->where('project_id', $project->id)
+            ->where('project_version_id', $project->current_version_id)
             ->orderBy('created_at', 'asc')
             ->get();
     }
@@ -29,7 +34,7 @@ class ProjectFeatureService
             ? ProjectFeature::find($feature)
             : $feature;
 
-        if (!$featureModel || $featureModel->project_id !== $project->id) {
+        if (! $featureModel || $featureModel->project_id !== $project->id) {
             throw new \DomainException('Feature does not belong to the specified project.');
         }
 
@@ -45,12 +50,11 @@ class ProjectFeatureService
             throw new \DomainException('Project does not have an active version.');
         }
 
-        $activeVersion = $project->currentVersion;
-        if ($activeVersion && $activeVersion->freeze) {
-            throw new \DomainException('Cannot add features to a frozen version.');
-        }
+        return app(ProjectVersionService::class)->withEditableVersion($project, function (Project $project) use ($data) {
+            if (! $project->current_version_id) {
+                throw new \DomainException('Project does not have an active version.');
+            }
 
-        return DB::transaction(function () use ($project, $data) {
             $data['project_id'] = $project->id;
             $data['project_version_id'] = $project->current_version_id;
             $data['status'] = $data['status'] ?? enProjectFeatureStatus::NEW->value;
@@ -66,12 +70,10 @@ class ProjectFeatureService
     {
         $featureModel = $this->getFeature($project, $feature);
 
-        if ($featureModel->projectVersion && $featureModel->projectVersion->freeze) {
-            throw new \DomainException('Cannot update features of a frozen version.');
-        }
-
-        return DB::transaction(function () use ($featureModel, $data) {
+        return app(ProjectVersionService::class)->withEditableVersion($project, function (Project $project) use ($featureModel, $data) {
+            $featureModel = $this->getCurrentFeatureForUpdate($project, $featureModel->id);
             $featureModel->update($data);
+
             return $featureModel->fresh();
         });
     }
@@ -83,11 +85,9 @@ class ProjectFeatureService
     {
         $featureModel = $this->getFeature($project, $feature);
 
-        if ($featureModel->projectVersion && $featureModel->projectVersion->freeze) {
-            throw new \DomainException('Cannot delete features of a frozen version.');
-        }
+        return app(ProjectVersionService::class)->withEditableVersion($project, function (Project $project) use ($featureModel) {
+            $featureModel = $this->getCurrentFeatureForUpdate($project, $featureModel->id);
 
-        return DB::transaction(function () use ($featureModel) {
             return (bool) $featureModel->delete();
         });
     }
@@ -99,13 +99,31 @@ class ProjectFeatureService
     {
         $featureModel = $this->getFeature($project, $feature);
 
-        if ($featureModel->projectVersion && $featureModel->projectVersion->freeze) {
-            throw new \DomainException('Cannot change status of features in a frozen version.');
-        }
-
-        return DB::transaction(function () use ($featureModel, $status) {
+        return app(ProjectVersionService::class)->withEditableVersion($project, function (Project $project) use ($featureModel, $status) {
+            $featureModel = $this->getCurrentFeatureForUpdate($project, $featureModel->id);
             $featureModel->update(['status' => $status]);
+
             return $featureModel->fresh();
         });
+    }
+
+    /**
+     * Mutations may only target the editable project's current Feature set.
+     * Frozen-version history is read from snapshots and is never mutable.
+     */
+    private function getCurrentFeatureForUpdate(Project $project, int $featureId): ProjectFeature
+    {
+        $feature = ProjectFeature::query()
+            ->whereKey($featureId)
+            ->where('project_id', $project->id)
+            ->where('project_version_id', $project->current_version_id)
+            ->lockForUpdate()
+            ->first();
+
+        if (! $feature) {
+            throw new \DomainException('Feature is not part of the current editable version.');
+        }
+
+        return $feature;
     }
 }

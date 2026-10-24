@@ -34,10 +34,10 @@ class ProjectVersionResource extends JsonResource
             'is_editable' => ! (bool) ($this->freeze ?? false),
             'has_generated_quotation' => filled($this->quotation_pdf_path),
             'quotation_number' => $this->quotation_number ?? null,
-            'quotation_pdf_path' => $this->quotation_pdf_path ?? null,
-            'quotation_pdf_url' => $this->quotation_pdf_path
-                ? url('storage/'.$this->quotation_pdf_path)
-                : null,
+            // 'quotation_pdf_path' => $this->quotation_pdf_path ?? null,
+            // 'quotation_pdf_url' => $this->quotation_pdf_path
+            //     ? url('storage/'.$this->quotation_pdf_path)
+            //     : null,
             'quotation_generated_at' => $this->quotation_generated_at ?? null,
             $this->mergeWhen($this->freeze, [
                 'features_snapshot' => $this->features_snapshot ?? null,
