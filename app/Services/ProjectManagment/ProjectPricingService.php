@@ -41,6 +41,13 @@ class ProjectPricingService
         ])->save();
     }
 
+    public function recalculateQuotationTotal(Project $project): void
+    {
+        $project->forceFill([
+            'total_amount' => $this->calculateQuotationTotals($project)['total'],
+        ])->save();
+    }
+
     /**
      * The only calculation used for persisted quotation money fields.
      */

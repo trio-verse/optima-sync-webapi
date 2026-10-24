@@ -29,6 +29,7 @@ class ProjectCostController extends Controller
      */
     public function index(Project $project): JsonResponse
     {
+        $this->authorize('view', $project);
         try {
             $costs = $this->service->getProjectCosts($project);
 
@@ -46,6 +47,7 @@ class ProjectCostController extends Controller
      */
     public function store(StoreProjectCostRequest $request, Project $project): JsonResponse
     {
+        $this->authorize('manageFinancials', $project);
         try {
             $cost = $this->service->createCost($project, $request->validated());
 
@@ -66,6 +68,7 @@ class ProjectCostController extends Controller
      */
     public function show(Project $project, ProjectCost $cost): JsonResponse
     {
+        $this->authorize('view', $project);
         try {
             $costModel = $this->service->getCost($project, $cost);
 
@@ -85,6 +88,7 @@ class ProjectCostController extends Controller
      */
     public function update(UpdateProjectCostRequest $request, Project $project, ProjectCost $cost): JsonResponse
     {
+        $this->authorize('manageFinancials', $project);
         try {
             $updatedCost = $this->service->updateCost($project, $cost, $request->validated());
 
@@ -95,7 +99,7 @@ class ProjectCostController extends Controller
         } catch (\DomainException $e) {
             return ApiResponse::error(null, $e->getMessage(), 422);
         } catch (\Throwable $th) {
-            return ApiResponse::error(null, 'Failed to update project cost: ' . $th->getMessage(), 500);
+            return ApiResponse::error(null, 'Failed to update project cost: '.$th->getMessage(), 500);
         }
     }
 
@@ -104,6 +108,7 @@ class ProjectCostController extends Controller
      */
     public function destroy(Project $project, ProjectCost $cost): JsonResponse
     {
+        $this->authorize('manageFinancials', $project);
         try {
             $this->service->deleteCost($project, $cost);
 
@@ -115,7 +120,7 @@ class ProjectCostController extends Controller
         } catch (\DomainException $e) {
             return ApiResponse::error(null, $e->getMessage(), 422);
         } catch (\Throwable $th) {
-            return ApiResponse::error(null, 'Failed to delete project cost: ' . $th->getMessage(), 500);
+            return ApiResponse::error(null, 'Failed to delete project cost: '.$th->getMessage(), 500);
         }
     }
 
@@ -124,6 +129,7 @@ class ProjectCostController extends Controller
      */
     public function totalBudget(Project $project): JsonResponse
     {
+        $this->authorize('view', $project);
         try {
             $budgetSummary = $this->service->calculateTotalBudget($project);
 

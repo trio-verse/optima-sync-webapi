@@ -12,7 +12,10 @@ use Illuminate\Support\Facades\Log;
 
 class ProjectService
 {
-    public function __construct(private ProjectPricingService $pricingService) {}
+    public function __construct(
+        private ProjectPricingService $pricingService,
+        private ProjectVersionService $projectVersionService
+    ) {}
 
     public function getFilteredProjects(array $filters = [])
     {
@@ -91,17 +94,8 @@ class ProjectService
             $project = DB::transaction(function () use (&$data): Project {
                 $project = Project::create($data);
 
-                // $version = $project->versions()->create([
-                //     'version_number' => 1,
-                //     'title' => $data['title'] ?? 'Initial Version',
-                //     'description' => $data['description'] ?? null,
-                //     'freeze' => false,
-                //     'created_by' => auth()->id(),
-                // ]);
 
-                // $project->current_version_id = $version->id;
-
-                (new ProjectVersionService)->createVersion($project, [
+                $this->projectVersionService->createVersion($project, [
                     'version_number' => 1,
                     'title' => $data['title'] ?? 'Initial Version',
                     'description' => $data['description'] ?? null,
@@ -140,9 +134,14 @@ class ProjectService
         unset($data['total_amount']);
 
         if (array_key_exists('sub_total', $data) || array_key_exists('profit_percentage', $data)) {
-            $subTotal = (float) ($data['sub_total'] ?? $project->sub_total);
-            $profitPercentage = (float) ($data['profit_percentage'] ?? $project->profit_percentage);
-            $data['total_amount'] = $this->pricingService->calculateQuotationTotals($project)['total'];
+            $calculationProject = $project->replicate();
+            $calculationProject->fill([
+                'sub_total' => $data['sub_total'] ?? $project->sub_total,
+                'profit_percentage' => $data['profit_percentage'] ?? $project->profit_percentage,
+                'discount' => $data['discount'] ?? $project->discount,
+                'tax' => $data['tax'] ?? $project->tax,
+            ]);
+            $data['total_amount'] = $this->pricingService->calculateQuotationTotals($calculationProject)['total'];
         }
 
         try {
@@ -164,14 +163,12 @@ class ProjectService
     {
         return $project->load([
             'client',
-            'currentVersion',
+            'currentVersion.features',
             'createdBy',
             'versions',
-            'features',
             'employees',
         ])->loadCount([
             'versions',
-            'features',
             'employees',
             'costs',
         ]);

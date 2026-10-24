@@ -33,6 +33,7 @@ class ProjectController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
+        $this->authorize('viewAny', Project::class);
         $projects = $this->service->getFilteredProjects($request->all());
 
         return ApiResponse::pagination(ProjectResource::collection($projects), 'Projects retrieved successfully');
@@ -43,6 +44,7 @@ class ProjectController extends Controller
      */
     public function store(StoreProjectRequest $request): JsonResponse
     {
+        $this->authorize('create', Project::class);
         $validated = $request->validated();
 
         $project = $this->service->createProject($validated);
@@ -55,6 +57,7 @@ class ProjectController extends Controller
      */
     public function show(Project $project): JsonResponse
     {
+        $this->authorize('view', $project);
         if (! $project) {
             return ApiResponse::notFound('Project not found');
         }
@@ -68,6 +71,7 @@ class ProjectController extends Controller
      */
     public function update(UpdateProjectRequest $request, Project $project): JsonResponse
     {
+        $this->authorize('update', $project);
         $validated = $request->validated();
         $project = $this->service->updateProject($project, $validated);
 
@@ -79,6 +83,7 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project): JsonResponse
     {
+        $this->authorize('delete', $project);
         if (! $this->service->deleteProject($project)) {
             return ApiResponse::notFound('Project not found');
         }
@@ -94,6 +99,7 @@ class ProjectController extends Controller
      */
     public function changeStatus(ChangeProjectStatusRequest $request, Project $project): JsonResponse
     {
+        $this->authorize('update', $project);
         $item = $this->service->changeStatus(
             $project,
             $request->validated('status')

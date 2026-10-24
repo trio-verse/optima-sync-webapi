@@ -4,15 +4,10 @@ namespace App\Providers;
 
 use App\Contracts\AffectsProjectCost;
 use App\Contracts\FileStorageInterface;
-use App\Events\EmployeeHourlyCostChanged;
-use App\Events\ProjectEmployeeAssigned;
-use App\Events\ProjectEmployeePointsUpdated;
-use App\Events\ProjectEmployeeRemoved;
-use App\Http\Middleware\SetActiveOrganization;
+use App\Contracts\IQuotationService;
 use App\Listeners\RecalculateProjectCostListener;
 use App\Services\FileStorageService;
-use App\Services\LocalStorageService;
-use App\Services\S3StorageService;
+use App\Services\ProjectManagment\QuotationService;
 use App\Singleton\TenantManager;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
@@ -33,6 +28,7 @@ class AppServiceProvider extends ServiceProvider
         //    : LocalStorageService::class;
 
         $this->app->bind(FileStorageInterface::class, FileStorageService::class);
+        $this->app->bind(IQuotationService::class, QuotationService::class);
 
 
         // Register TenantManager service as a singleton

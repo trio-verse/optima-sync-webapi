@@ -22,14 +22,14 @@ class ProjectFeatureController extends Controller
 {
     public function __construct(
         protected ProjectFeatureService $service
-    ) {
-    }
+    ) {}
 
     /**
      * Index project features
      */
     public function index(Project $project): JsonResponse
     {
+        $this->authorize('view', $project);
         try {
             $features = $this->service->getProjectFeatures($project);
 
@@ -47,6 +47,7 @@ class ProjectFeatureController extends Controller
      */
     public function store(StoreProjectFeatureRequest $request, Project $project): JsonResponse
     {
+        $this->authorize('manageVersions', $project);
         try {
             $feature = $this->service->createFeature($project, $request->validated());
 
@@ -58,7 +59,7 @@ class ProjectFeatureController extends Controller
         } catch (\DomainException $e) {
             return ApiResponse::error(null, $e->getMessage(), 422);
         } catch (\Throwable $th) {
-            return ApiResponse::error(null, 'Failed to create feature: ' . $th->getMessage(), 500);
+            return ApiResponse::error(null, 'Failed to create feature: '.$th->getMessage(), 500);
         }
     }
 
@@ -67,6 +68,7 @@ class ProjectFeatureController extends Controller
      */
     public function show(Project $project, ProjectFeature $feature): JsonResponse
     {
+        $this->authorize('view', $project);
         try {
             $featureModel = $this->service->getFeature($project, $feature);
 
@@ -86,6 +88,7 @@ class ProjectFeatureController extends Controller
      */
     public function update(UpdateProjectFeatureRequest $request, Project $project, ProjectFeature $feature): JsonResponse
     {
+        $this->authorize('manageVersions', $project);
         try {
             $updated = $this->service->updateFeature($project, $feature, $request->validated());
 
@@ -96,7 +99,7 @@ class ProjectFeatureController extends Controller
         } catch (\DomainException $e) {
             return ApiResponse::error(null, $e->getMessage(), 422);
         } catch (\Throwable $th) {
-            return ApiResponse::error(null, 'Failed to update feature: ' . $th->getMessage(), 500);
+            return ApiResponse::error(null, 'Failed to update feature: '.$th->getMessage(), 500);
         }
     }
 
@@ -105,6 +108,7 @@ class ProjectFeatureController extends Controller
      */
     public function destroy(Project $project, ProjectFeature $feature): JsonResponse
     {
+        $this->authorize('manageVersions', $project);
         try {
             $this->service->deleteFeature($project, $feature);
 
@@ -112,7 +116,7 @@ class ProjectFeatureController extends Controller
         } catch (\DomainException $e) {
             return ApiResponse::error(null, $e->getMessage(), 422);
         } catch (\Throwable $th) {
-            return ApiResponse::error(null, 'Failed to delete feature: ' . $th->getMessage(), 500);
+            return ApiResponse::error(null, 'Failed to delete feature: '.$th->getMessage(), 500);
         }
     }
 
@@ -121,6 +125,7 @@ class ProjectFeatureController extends Controller
      */
     public function changeStatus(ChangeProjectFeatureStatusRequest $request, Project $project, ProjectFeature $feature): JsonResponse
     {
+        $this->authorize('manageVersions', $project);
         try {
             $updated = $this->service->changeStatus(
                 $project,
@@ -135,7 +140,7 @@ class ProjectFeatureController extends Controller
         } catch (\DomainException $e) {
             return ApiResponse::error(null, $e->getMessage(), 422);
         } catch (\Throwable $th) {
-            return ApiResponse::error(null, 'Failed to update feature status: ' . $th->getMessage(), 500);
+            return ApiResponse::error(null, 'Failed to update feature status: '.$th->getMessage(), 500);
         }
     }
 }
