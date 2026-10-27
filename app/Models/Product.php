@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
+use App\Models\Connection;
 use App\Trait\BelongsToOrganization;
-use Dba\Connection;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Str;
 
 #[Fillable(['name', 'slug', 'price', 'description', 'organization_id'])]
@@ -49,6 +49,11 @@ class Product extends Model
     public function clients()
     {
         return $this->hasManyThrough(Client::class, Connection::class, 'product_id', 'id', 'id', 'client_id');
+    }
+
+    public function connections()
+    {
+        return $this->hasMany(Connection::class, 'product_id', 'id');
     }
 
 }

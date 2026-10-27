@@ -58,11 +58,14 @@ class ContentController extends Controller
     /**
      * Store content.
      */
-    public function store(StoreContentRequest $request)
+    public function store(StoreContentRequest $request, Campaign $campaign)
     {
-        $this->authorize('create', [Content::class, $request->campaign]);
         try {
-            $content = $this->create_content_service->createContent($request->user(), $request->validated());
+            $content = $this->create_content_service->createContent(
+                $request->user(),
+                $campaign,
+                $request->validated(),
+            );
         } catch (\Exception $e) {
             return ApiResponse::error($e->getMessage(), 422);
         }

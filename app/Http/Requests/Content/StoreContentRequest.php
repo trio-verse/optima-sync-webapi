@@ -11,7 +11,6 @@ use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use Override;
 
 class StoreContentRequest extends FormRequest
 {
@@ -20,15 +19,7 @@ class StoreContentRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        $campaign = $this->route('campaign');
-        return $this->user()->can('create', [Content::class, $campaign]);
-    }
-    #[Override]
-    public function prepareForValidation()
-    {
-        $this->merge([
-            'campaign_id' => (int) $this->route('campaign'),
-        ]);
+        return $this->user()->can('create', [Content::class, $this->campaign()]);
     }
 
     /**
@@ -39,7 +30,6 @@ class StoreContentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'campaign_id' => ['required', 'exists:campaigns,id'],
             'channel_id' => ['required', 'exists:channels,id'],
             'title' => [
                 'required',
@@ -47,8 +37,8 @@ class StoreContentRequest extends FormRequest
                 'max:255',
                 Rule::unique('contents')->where(function (Builder $query) {
                     return $query->where('organization_id', app(TenantManager::class)->getOrganizationId())
-                        ->where('campaign_id', (int) $this->route('campaign'));
-                })
+                        ->where('campaign_id', $this->campaign()->id);
+                }),
             ],
             'type' => ['required', 'string', 'max:255'],
             'script' => ['required', 'string'],
