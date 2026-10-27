@@ -4,8 +4,10 @@ namespace App\Services\ProjectManagment;
 
 use App\Enums\enProjectSource;
 use App\Enums\enProjectStatus;
+use App\Models\Client;
 use App\Models\Project;
 use App\Models\ProjectCost;
+use App\Services\ClientService;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -45,7 +47,12 @@ class ProjectService
 
         // Sort — user input must never reach ORDER BY unvalidated.
         $allowedSortColumns = [
-            'created_at', 'updated_at', 'reference_id', 'status', 'sub_total', 'total_amount',
+            'created_at',
+            'updated_at',
+            'reference_id',
+            'status',
+            'sub_total',
+            'total_amount',
         ];
         $sortBy = in_array($filters['sort_by'] ?? '', $allowedSortColumns, true)
             ? $filters['sort_by']
@@ -85,6 +92,37 @@ class ProjectService
         }
     }
 
+    public function requestProject(array $data): Project
+    {
+
+        $client = Client::where('phone', $data['phone'])
+            ->orWhere('email', $data['email'])
+            ->first();
+        if (!$client) {
+            DB::transaction(function () use (&$data, &$client) {
+                $client = Client::create([
+                    'name' => $data['name'],
+                    'phone' => $data['phone'],
+                    'email' => $data['email'] ?? null,
+                    'city_id' => $data['city_id'] ,
+                    'industry_id' => $data['industry_id'] 
+                ]);
+            });
+        }
+
+        $projectData = [
+            'client_id' => $client->id,
+            'status' => enProjectStatus::NEW->value,
+            // 'created_by' => "Client ID : " . $client->id,
+            'source' => enProjectSource::CLIENT->value,
+            'title' => $data['title'],
+            'description' => $data['description'],
+        ];  
+
+        $project = $this->createProject($projectData);
+        return $project;
+    }
+
     public function createProject(array $data): Project
     {
         $data = $this->preparingProjectData($data);
@@ -94,13 +132,12 @@ class ProjectService
             $project = DB::transaction(function () use (&$data): Project {
                 $project = Project::create($data);
 
-
                 $this->projectVersionService->createVersion($project, [
                     'version_number' => 1,
                     'title' => $data['title'] ?? 'Initial Version',
                     'description' => $data['description'] ?? null,
                     'freeze' => false,
-                    'created_by' => auth()->id(),
+                    'created_by' => auth()->id() ?? null,
                     'start_date' => $data['start_date'] ?? null,
                     'end_date' => $data['end_date'] ?? null,
                     'duration' => $data['duration'] ?? null,
@@ -114,7 +151,7 @@ class ProjectService
             return $project->load(['client', 'client.city', 'currentVersion', 'currentVersion.createdBy', 'createdBy', 'costs']);
 
         } catch (\Throwable $th) {
-            Log::error('Failed to create project: '.$th->getMessage(), [
+            Log::error('Failed to create project: ' . $th->getMessage(), [
                 'exception' => $th,
                 'data' => $data,
             ]);
@@ -224,10 +261,10 @@ class ProjectService
             $data['reference_id'] = $this->generateReferenceId();
         }
         // Set created_by
-        $data['created_by'] = auth()->id();
+        $data['created_by'] = auth()->id() ?? null;
         // Set default status
         $data['status'] = $data['status'] ?? enProjectStatus::NEW->value;
-        $data['source'] = enProjectSource::INTERNAL->value;
+        $data['source'] = $data['source'] ?? enProjectSource::INTERNAL->value;
 
         // financial
         $subTotal = (float) ($data['sub_total'] ?? 0);

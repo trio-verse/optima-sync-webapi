@@ -26,7 +26,9 @@ Route::prefix('v1')->group(function () {
     Route::post('verify-otp', [OtpAuthenticationController::class, 'verify']);
 
     // user request a project from organization (public link)
-    Route::post('{token}/project-request', [ProjectController::class, 'requestProject']);
+    Route::post('{token}/project-request', [ProjectController::class, 'requestProject'])
+    ->middleware(['check_org_token'])
+    ->name('projects.request');
 
     Route::middleware(['auth:sanctum'])->group(function () {
 

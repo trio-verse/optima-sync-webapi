@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests\Project;
 
+use App\Singleton\TenantManager;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class RequestProjectRequest extends FormRequest
 {
@@ -25,8 +27,11 @@ class RequestProjectRequest extends FormRequest
         return [
             // client info
             'name' => ['required' , 'string'],
-            'phone' => ['required', 'string', 'regex:/^\+[1-9][0-9]{1,14}$/', 'max:14'],
+            'phone' => ['required', 'string', 'regex:/^(\+\d{1,2}\s?)?1?\-?\.?\s?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/', 'max:14'],
             'email' => ['nullable', 'email', 'max:255'],
+            'city_id' => ['required', 'integer', Rule::exists('cities' , 'id')->where('organization_id', app(TenantManager::class)->getOrganizationId())],
+            'industry_id' => ['required', 'integer', Rule::exists('industries' , 'id')->where('organization_id', app(TenantManager::class)->getOrganizationId())],
+
             // project info
             'title' => ['required' , 'string'],
             'description' => ['required' , 'string' , 'max:255'],
