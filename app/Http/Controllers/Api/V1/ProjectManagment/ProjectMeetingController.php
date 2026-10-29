@@ -21,14 +21,14 @@ class ProjectMeetingController extends Controller
 {
     public function __construct(
         protected ProjectMeetingService $service
-    ) {
-    }
+    ) {}
 
     /**
      * Index project meetings
      */
     public function index(Project $project): JsonResponse
     {
+        $this->authorize('view', $project);
         try {
             $meetings = $this->service->getProjectMeetings($project);
 
@@ -46,6 +46,7 @@ class ProjectMeetingController extends Controller
      */
     public function store(StoreProjectMeetingRequest $request, Project $project): JsonResponse
     {
+        $this->authorize('update', $project);
         try {
             $meeting = $this->service->createMeeting($project, $request->validated());
 
@@ -57,7 +58,7 @@ class ProjectMeetingController extends Controller
         } catch (\DomainException $e) {
             return ApiResponse::error(null, $e->getMessage(), 422);
         } catch (\Throwable $th) {
-            return ApiResponse::error(null, 'Failed to schedule meeting: ' . $th->getMessage(), 500);
+            return ApiResponse::error(null, 'Failed to schedule meeting: '.$th->getMessage(), 500);
         }
     }
 
@@ -66,6 +67,7 @@ class ProjectMeetingController extends Controller
      */
     public function show(Project $project, ProjectMeeting $meeting): JsonResponse
     {
+        $this->authorize('view', $project);
         try {
             $meetingModel = $this->service->getMeeting($project, $meeting);
 
@@ -85,6 +87,7 @@ class ProjectMeetingController extends Controller
      */
     public function update(UpdateProjectMeetingRequest $request, Project $project, ProjectMeeting $meeting): JsonResponse
     {
+        $this->authorize('update', $project);
         try {
             $updatedMeeting = $this->service->updateMeeting($project, $meeting, $request->validated());
 
@@ -95,7 +98,7 @@ class ProjectMeetingController extends Controller
         } catch (\DomainException $e) {
             return ApiResponse::error(null, $e->getMessage(), 422);
         } catch (\Throwable $th) {
-            return ApiResponse::error(null, 'Failed to update meeting: ' . $th->getMessage(), 500);
+            return ApiResponse::error(null, 'Failed to update meeting: '.$th->getMessage(), 500);
         }
     }
 
@@ -104,6 +107,7 @@ class ProjectMeetingController extends Controller
      */
     public function destroy(Project $project, ProjectMeeting $meeting): JsonResponse
     {
+        $this->authorize('update', $project);
         try {
             $this->service->deleteMeeting($project, $meeting);
 
@@ -115,7 +119,7 @@ class ProjectMeetingController extends Controller
         } catch (\DomainException $e) {
             return ApiResponse::error(null, $e->getMessage(), 422);
         } catch (\Throwable $th) {
-            return ApiResponse::error(null, 'Failed to delete meeting: ' . $th->getMessage(), 500);
+            return ApiResponse::error(null, 'Failed to delete meeting: '.$th->getMessage(), 500);
         }
     }
 }

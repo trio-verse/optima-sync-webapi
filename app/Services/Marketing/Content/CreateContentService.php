@@ -3,6 +3,7 @@
 namespace App\Services\Marketing\Content;
 
 use App\Enums\enContentStatus;
+use App\Models\Campaign;
 use App\Models\Content;
 use App\Models\User;
 use App\Singleton\TenantManager;
@@ -15,12 +16,15 @@ class CreateContentService
      *
      * @throws UnauthorizedException
      */
-    public function createContent(User $user, array $data): Content
+    public function createContent(User $user, Campaign $campaign, array $data): Content
     {
-        if(isset($data['status']))
+        $data['campaign_id'] = $campaign->id;
+
+        if (isset($data['status'])) {
             $this->validateUserCanCreateContentWithStatus($user, $data['status']);
-        else
+        } else {
             $data['status'] = enContentStatus::DRAFT->value;
+        }
         $this->applyContentMetadata($user, $data);
 
         return Content::create($data);
@@ -56,7 +60,7 @@ class CreateContentService
      */
     private function applyContentMetadata(User $user, array &$data): void
     {
-        $status = $data['status'] ;
+        $status = $data['status'];
 
         if ($this->isContentAdmin($user)) {
             $this->applyAdminMetadata($user, $data, $status);

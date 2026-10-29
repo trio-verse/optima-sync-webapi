@@ -5,10 +5,11 @@ namespace App\Services\ProjectManagment;
 use App\Models\Project;
 use App\Models\ProjectCost;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\DB;
 
 class ProjectCostService
 {
+    public function __construct(private ProjectPricingService $pricingService) {}
+
     /**
      * Get all costs belonging to a project.
      */
@@ -28,7 +29,7 @@ class ProjectCostService
             ? ProjectCost::find($cost)
             : $cost;
 
-        if (!$costModel || $costModel->project_id !== $project->id) {
+        if (! $costModel || $costModel->project_id !== $project->id) {
             throw new \DomainException('Cost item does not belong to the specified project.');
         }
 
@@ -40,11 +41,14 @@ class ProjectCostService
      */
     public function createCost(Project $project, array $data): ProjectCost
     {
-        return DB::transaction(function () use ($project, $data) {
+        return app(ProjectVersionService::class)->withEditableVersion($project, function (Project $project) use ($data) {
             $data['project_id'] = $project->id;
             $data['quantity'] = $data['quantity'] ?? 1;
 
-            return $project->costs()->create($data);
+            $cost = $project->costs()->create($data);
+            $this->pricingService->recalculateQuotationTotal($project->fresh());
+
+            return $cost;
         });
     }
 
@@ -55,8 +59,9 @@ class ProjectCostService
     {
         $costModel = $this->getCost($project, $cost);
 
-        return DB::transaction(function () use ($costModel, $data) {
+        return app(ProjectVersionService::class)->withEditableVersion($project, function (Project $project) use ($costModel, $data) {
             $costModel->update($data);
+            $this->pricingService->recalculateQuotationTotal($project->fresh());
 
             return $costModel->fresh();
         });
@@ -69,8 +74,11 @@ class ProjectCostService
     {
         $costModel = $this->getCost($project, $cost);
 
-        return DB::transaction(function () use ($costModel) {
-            return (bool) $costModel->delete();
+        return app(ProjectVersionService::class)->withEditableVersion($project, function (Project $project) use ($costModel) {
+            $deleted = (bool) $costModel->delete();
+            $this->pricingService->recalculateQuotationTotal($project->fresh());
+
+            return $deleted;
         });
     }
 

@@ -27,12 +27,12 @@ class ProjectEmployeeService
     {
         $employee = Employee::findOrFail($employeeId);
 
-        DB::transaction(function () use ($project, $employee, $totalPoints) {
+        app(ProjectVersionService::class)->withEditableVersion($project, function (Project $project) use ($employee, $totalPoints) {
             $project->employees()->syncWithoutDetaching([
                 $employee->id => [
                     'organization_id' => $project->organization_id,
                     'total_points' => $totalPoints,
-                ]
+                ],
             ]);
 
             DB::afterCommit(fn () => ProjectEmployeeAssigned::dispatch($project, $employee));
@@ -54,11 +54,11 @@ class ProjectEmployeeService
      */
     public function updateEmployeePoints(Project $project, Employee $employee, int $totalPoints): Employee
     {
-        if (!$project->employees()->where('employee_id', $employee->id)->exists()) {
+        if (! $project->employees()->where('employee_id', $employee->id)->exists()) {
             throw new \DomainException('Employee is not assigned to this project.');
         }
 
-        DB::transaction(function () use ($project, $employee, $totalPoints) {
+        app(ProjectVersionService::class)->withEditableVersion($project, function (Project $project) use ($employee, $totalPoints) {
             $project->employees()->updateExistingPivot($employee->id, [
                 'total_points' => $totalPoints,
             ]);
@@ -74,11 +74,11 @@ class ProjectEmployeeService
      */
     public function detachEmployee(Project $project, Employee $employee): bool
     {
-        if (!$project->employees()->where('employee_id', $employee->id)->exists()) {
+        if (! $project->employees()->where('employee_id', $employee->id)->exists()) {
             throw new \DomainException('Employee is not assigned to this project.');
         }
 
-        $detached = DB::transaction(function () use ($project, $employee) {
+        $detached = app(ProjectVersionService::class)->withEditableVersion($project, function (Project $project) use ($employee) {
             $detached = (bool) $project->employees()->detach($employee->id);
 
             if ($detached) {

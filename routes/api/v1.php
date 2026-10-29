@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\V1\OrganizationLogoController;
 use App\Http\Controllers\Api\V1\OtpAuthenticationController;
 use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\ProjectManagment\ProjectController;
+use App\Http\Controllers\Api\V1\SalesStatsController;
 use App\Http\Controllers\Api\V1\StakeholderController;
 use App\Http\Controllers\Api\V1\UploadController;
 use Illuminate\Support\Facades\Route;
@@ -50,6 +51,11 @@ Route::prefix('v1')->group(function () {
             Route::post('/organizations/{organization}/logo', [OrganizationLogoController::class, 'store'])
                 ->name('organizations.logo.store');
 
+            /**
+             * =====================================
+             *      Reference Data Module
+             * =====================================
+             */
             //City
             Route::get('cities', [CityController::class, 'index']);
             Route::post('cities', [CityController::class, 'store']);
@@ -67,6 +73,14 @@ Route::prefix('v1')->group(function () {
             Route::post('/industries', [IndustryController::class, 'store']);
             Route::patch('/industries/{industry}', [IndustryController::class, 'update']);
             Route::delete('/industries/{industry}', [IndustryController::class, 'delete']);
+
+
+            /**
+             * =====================================
+             *      Sales Module
+             * =====================================
+             */
+            Route::get('/salesStats', SalesStatsController::class)->name('sales.stats');
 
             //Client
             Route::post('/clients', [ClientController::class, 'store']);
@@ -96,6 +110,7 @@ Route::prefix('v1')->group(function () {
             Route::patch('connections/{connection}/activities/{activity}', [ConnectionController::class, 'updateActivity']);
             Route::delete('connections/{connection}/activities/{activity}', [ConnectionController::class, 'deleteActivity']);
 
+            
             /**
              * =====================================
              *      Marketing Module
@@ -148,6 +163,5 @@ Route::prefix('v1')->group(function () {
             // require_once __DIR__ . '/modules/connection.php';
             // require_once __DIR__ . '/modules/product.php';
         });
-
     });
 });

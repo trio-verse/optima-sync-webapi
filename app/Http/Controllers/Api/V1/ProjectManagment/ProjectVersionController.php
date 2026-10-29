@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api\V1\ProjectManagment;
 
-
 use App\Helper\V1\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProjectVersion\StoreProjectVersionRequest;
@@ -11,9 +10,8 @@ use App\Http\Resources\V1\ProjectManagment\ProjectVersionResource;
 use App\Models\Project;
 use App\Models\ProjectVersion;
 use App\Services\ProjectManagment\ProjectVersionService;
-use App\Support\FakePersistence\ProjectModuleFakeStore;
-use Database\Factories\ProjectVersionFactory;
 use Illuminate\Http\JsonResponse;
+
 /**
  * @group Project Versions
  *
@@ -23,19 +21,19 @@ class ProjectVersionController extends Controller
 {
     public function __construct(
         protected ProjectVersionService $service
-    ) {
-    }
+    ) {}
 
     /**
      * index project versions
-     * @param string $project
-     * @return JsonResponse
+     *
+     * @param  string  $project
      */
     /**
      * index project versions
      */
     public function index(Project $project): JsonResponse
     {
+        $this->authorize('view', $project);
         $versions = $this->service->getProjectVersions($project, request()->all());
 
         return ApiResponse::success(
@@ -49,6 +47,7 @@ class ProjectVersionController extends Controller
      */
     public function store(StoreProjectVersionRequest $request, Project $project): JsonResponse
     {
+        $this->authorize('manageVersions', $project);
         $validated = $request->validated();
         $version = $this->service->createVersion($project, $validated);
 
@@ -60,6 +59,7 @@ class ProjectVersionController extends Controller
      */
     public function show(Project $project, ProjectVersion $version): JsonResponse
     {
+        $this->authorize('view', $project);
         if ($version->project_id !== $project->id) {
             return ApiResponse::notFound('Project version not found for this project');
         }
@@ -77,12 +77,13 @@ class ProjectVersionController extends Controller
      */
     public function update(UpdateProjectVersionRequest $request, Project $project, ProjectVersion $version): JsonResponse
     {
+        $this->authorize('manageVersions', $project);
         if ($version->project_id !== $project->id) {
             return ApiResponse::notFound('Project version not found for this project');
         }
 
         $wasFrozen = $version->freeze;
-        $resultVersion = $this->service->updateVersion($project , $version, $request->validated());
+        $resultVersion = $this->service->updateVersion($project, $version, $request->validated());
 
         $statusCode = $wasFrozen ? 201 : 200;
         $message = $wasFrozen
@@ -97,6 +98,7 @@ class ProjectVersionController extends Controller
      */
     public function destroy(Project $project, ProjectVersion $version): JsonResponse
     {
+        $this->authorize('manageVersions', $project);
         if ($version->project_id !== $project->id) {
             return ApiResponse::notFound('Project version not found for this project');
         }
@@ -115,30 +117,26 @@ class ProjectVersionController extends Controller
     }
 
     /**
-     * freeze project version
+     * freeze project version.
+     * with all Quotation data and snapShots
      */
     public function freeze(Project $project, ProjectVersion $version): JsonResponse
     {
+        $this->authorize('manageVersions', $project);
         if ($version->project_id !== $project->id) {
             return ApiResponse::notFound('Project version not found for this project');
         }
 
-        $item = $this->service->freezeVersion($version);
+        $result = $this->service->generateFreezedVersion($version);
 
-        return ApiResponse::success(new ProjectVersionResource($item), 'Project version frozen successfully');
-    }
-
-    /**
-     * clone project version
-     */
-    public function clone(Project $project, ProjectVersion $version): JsonResponse
-    {
-        if ($version->project_id !== $project->id) {
-            return ApiResponse::notFound('Project version not found for this project');
+        if (! $result['success']) {
+            return ApiResponse::error(null, $result['message'], 422);
         }
 
-        $cloned = $this->service->cloneVersion($version);
-
-        return ApiResponse::success(new ProjectVersionResource($cloned), 'Project version cloned successfully', 201);
+        return ApiResponse::success(
+            new ProjectVersionResource($version->fresh()),
+            'Project version frozen successfully'
+        );
     }
+
 }

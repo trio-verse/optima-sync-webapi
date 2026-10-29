@@ -6,20 +6,21 @@ use App\Helper\V1\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Project\Query\ProjectQueryRequest;
 use App\Http\Resources\V1\ProjectManagment\ProjectResource;
+use App\Models\Project;
 use App\Services\ProjectManagment\ProjectQueryService;
 
 class ProjectQueryController extends Controller
 {
     public function __construct(
         private readonly ProjectQueryService $projectQueryService
-    ) {
-    }
+    ) {}
 
     /**
      * Get query structure for projects query builder
      */
     public function getQueryStructure()
     {
+        $this->authorize('viewAny', Project::class);
         try {
             $structure = $this->projectQueryService->getQueryStructure();
 
@@ -34,6 +35,7 @@ class ProjectQueryController extends Controller
      */
     public function executeQuery(ProjectQueryRequest $request)
     {
+        $this->authorize('viewAny', Project::class);
         try {
             $validated = $request->validated();
 
@@ -54,6 +56,7 @@ class ProjectQueryController extends Controller
      */
     public function analytics(ProjectQueryRequest $request)
     {
+        $this->authorize('viewAny', Project::class);
         try {
             $validated = $request->validated();
 

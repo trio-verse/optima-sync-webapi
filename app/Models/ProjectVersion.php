@@ -47,7 +47,6 @@ class ProjectVersion extends Model
         ];
     }
 
-   
     protected $with = [];
 
     /**
@@ -88,30 +87,51 @@ class ProjectVersion extends Model
 
     public function freezeVersion(): bool
     {
-        $this->features_snapshot = $this->features->toArray();
-        $this->costs_snapshot = $this->project->costs->toArray();
-        $this->employees_snapshot = $this->project?->employees->map(function ($employee) {
-            $points = (int) ($employee->pivot->total_points ?? 0);
-            $hoursPerPoint = (int) ($employee->houres_per_point ?? 2);
-            $costPerHour = (float) $employee->cost_per_hour;
-            $calculatedHours = $points * $hoursPerPoint;
-            $calculatedCost = $calculatedHours * $costPerHour;
+        // A snapshot is the immutable historical record for a version. Never
+        // overwrite an existing one when branching from an older version.
+        $needsFeaturesSnapshot = $this->features_snapshot === null;
+        $needsCostsSnapshot = $this->costs_snapshot === null;
+        $needsEmployeesSnapshot = $this->employees_snapshot === null;
 
-            return [
-                'employee_id' => $employee->id,
-                'name' => $employee->name,
-                'email' => $employee->email,
-                'position' => $employee->position,
-                'cost_per_hour' => $costPerHour,
-                'houres_per_point' => $hoursPerPoint,
-                'total_points' => $points,
-                'calculated_hours' => $calculatedHours,
-                'calculated_cost' => $calculatedCost,
-            ];
-        })->toArray() ?? [];
-        $this->freeze = true;
+        if (! $this->freeze || $needsFeaturesSnapshot || $needsCostsSnapshot || $needsEmployeesSnapshot) {
+            $this->loadMissing(['features', 'project.costs', 'project.employees']);
 
-        return $this->save();
+            if ($needsFeaturesSnapshot) {
+                $this->features_snapshot = $this->features->toArray();
+            }
+
+            if ($needsCostsSnapshot) {
+                $this->costs_snapshot = $this->project->costs->toArray();
+            }
+
+            if ($needsEmployeesSnapshot) {
+                $this->employees_snapshot = $this->project?->employees->map(function ($employee) {
+                    $points = (int) ($employee->pivot->total_points ?? 0);
+                    $hoursPerPoint = (int) ($employee->houres_per_point ?? 2);
+                    $costPerHour = (float) $employee->cost_per_hour;
+                    $calculatedHours = $points * $hoursPerPoint;
+                    $calculatedCost = $calculatedHours * $costPerHour;
+
+                    return [
+                        'employee_id' => $employee->id,
+                        'name' => $employee->name,
+                        'email' => $employee->email,
+                        'position' => $employee->position,
+                        'cost_per_hour' => $costPerHour,
+                        'houres_per_point' => $hoursPerPoint,
+                        'total_points' => $points,
+                        'calculated_hours' => $calculatedHours,
+                        'calculated_cost' => $calculatedCost,
+                    ];
+                })->toArray() ?? [];
+            }
+
+            $this->freeze = true;
+
+            return $this->save();
+        }
+
+        return true;
     }
 
     public function createNewVersion(array $attributes = []): ProjectVersion
