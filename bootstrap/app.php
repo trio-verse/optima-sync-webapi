@@ -1,6 +1,7 @@
 <?php
 
 use App\Helper\V1\ApiResponse;
+use App\Http\Middleware\CheckOrganazationToken;
 use App\Http\Middleware\SetActiveOrganization;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
@@ -28,10 +29,15 @@ return Application::configure(basePath: dirname(__DIR__))
         },
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // $middleware->api(append:
+        // [
+        //     \App\Http\Middleware\MeasureRequestPerformance::class,
+        // ]);
         $middleware->trustProxies(at: '*');
         $middleware->alias([
             'active_org'      => SetActiveOrganization::class,
             'active_version'  => \App\Http\Middleware\EnsureActiveProjectVersion::class,
+            'check_org_token' => CheckOrganazationToken::class,
         ]);
 
     })

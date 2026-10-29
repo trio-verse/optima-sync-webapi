@@ -14,6 +14,7 @@ use App\Models\Organization;
 use App\Models\Project;
 use App\Services\OrgSecureCryptService;
 use App\Services\ProjectManagment\ProjectService;
+use App\Singleton\TenantManager;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -120,20 +121,9 @@ class ProjectController extends Controller
     public function requestProject(RequestProjectRequest $request, string $token)
     {
 
-        $orgId = OrgSecureCryptService::decrypt($token);
+        $project = $this->service->requestProject($request->validated());
 
-        if (! $orgId) {
-            return ApiResponse::notFound('Invalid or malformed token.', 404);
-        }
-        $request->validated();
-
-        $organization = Organization::find($orgId);
-
-        if (! $organization) {
-            return ApiResponse::notFound('Organization not found.', 404);
-        }
-
-        return ApiResponse::success(null, 'project request created successfully');
+        return ApiResponse::success(new ProjectResource($project), 'project request created successfully');
 
     }
 }
