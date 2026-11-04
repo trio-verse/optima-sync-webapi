@@ -64,6 +64,17 @@ class User extends Authenticatable
         return $this->hasMany(Organization::class, 'user_id');
     }
 
+    public function workspaces()
+    {
+        return $this->belongsToMany(Workspace::class, 'workspace_members');   
+    }
+
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
+    }
+    
+
 
     /**
      * get all clients that assigned to this user

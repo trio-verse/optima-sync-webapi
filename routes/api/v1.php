@@ -156,6 +156,7 @@ Route::prefix('v1')->group(function () {
 
             require __DIR__ . '/../modules/projectmanagment.php';
             require __DIR__ . '/../modules/hr.php';
+            require __DIR__ . '/../modules/workspace.php';
 
             // require_once __DIR__ . '/modules/marketing.php';
             // require_once __DIR__ . '/modules/content.php';
