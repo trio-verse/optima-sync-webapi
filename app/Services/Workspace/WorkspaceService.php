@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Workspace;
 
-use App\Models\Workspace;
+use App\Models\WorksapceModels\Workspace;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 

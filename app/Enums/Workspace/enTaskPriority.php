@@ -1,6 +1,7 @@
 <?php
 
-namespace App\Enums;
+namespace App\Enums\Workspace;
+
 
 enum enTaskPriority: string
 {

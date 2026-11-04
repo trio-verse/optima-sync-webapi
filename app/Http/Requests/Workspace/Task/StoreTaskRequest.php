@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests\Workspace\Task;
 
-use App\Enums\enTaskPriority;
-use App\Enums\enTaskStatus;
+use App\Enums\Workspace\enTaskPriority;
+use App\Enums\Workspace\enTaskStatus;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;

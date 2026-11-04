@@ -2,18 +2,15 @@
 
 namespace App\Services\Workspace;
 
-use App\Models\Task;
-use App\Models\Workspace;
-use App\Singleton\TenantManager;
-use Illuminate\Auth\Access\AuthorizationException;
+use App\Models\WorksapceModels\Task;
+use App\Models\WorksapceModels\Workspace;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
 
 class TaskService
 {
 
-    public function getAllTasks(Workspace $workspace): Task
+    public function getAllTasks(Workspace $workspace): Collection
     {
         return Task::with('assignee')->where('workspace_id', $workspace->id)
             ->orderByDesc('created_at')

@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Workspace;
 
-use App\Enums\enWorkspaceStatus;
+use App\Enums\Workspace\enWorkspaceStatus;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;

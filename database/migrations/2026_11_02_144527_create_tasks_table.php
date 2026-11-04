@@ -1,7 +1,7 @@
 <?php
 
-use App\Enums\enWorkspaceTaskPriorities;
-use App\Enums\enWorkspaceTaskStatus;
+use App\Enums\Workspace\enTaskPriority;
+use App\Enums\Workspace\enTaskStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -18,10 +18,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('assignee_id')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('workspace_id')->constrained('workspaces')->onDelete('cascade');
-            $table->string('name');
+            $table->string('title');
             $table->text('description')->nullable();
-            $table->enum('priority', enWorkspaceTaskPriorities::all())->default(enWorkspaceTaskPriorities::MEDIUM->value);
-            $table->enum('status', enWorkspaceTaskStatus::all())->default(enWorkspaceTaskStatus::PENDING->value);
+            $table->enum('priority', enTaskPriority::all())->default(enTaskPriority::MEDIUM->value);
+            $table->enum('status', enTaskStatus::all())->default(enTaskStatus::PENDING->value);
 
             $table->timestamps();
         });

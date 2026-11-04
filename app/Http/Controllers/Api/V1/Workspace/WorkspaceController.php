@@ -7,9 +7,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Workspace\IndexWorkspaceRequest;
 use App\Http\Requests\Workspace\StoreWorkspaceRequest;
 use App\Http\Requests\Workspace\UpdateWorkspaceRequest;
-use App\Http\Resources\V1\WorkspaceResource;
-use App\Models\Workspace;
-use App\Services\WorkspaceService;
+use App\Http\Resources\V1\Workspace\WorkspaceResource;
+use App\Models\WorksapceModels\Workspace;
+use App\Services\Workspace\WorkspaceService;
 
 /**
  * @group Workspaces
