@@ -9,7 +9,8 @@ use App\Http\Requests\Workspace\Task\ChangeTaskStatusRequest;
 use App\Http\Requests\Workspace\Task\StoreTaskRequest;
 use App\Http\Requests\Workspace\Task\UpdateTaskRequest;
 use App\Http\Resources\V1\Workspace\TaskResource;
-use App\Models\Task;
+use App\Models\WorksapceModels\Task;
+use App\Models\WorksapceModels\Workspace;
 use App\Services\Workspace\TaskService;
 use Illuminate\Auth\Access\AuthorizationException;
 
@@ -59,10 +60,8 @@ class TaskController extends Controller
      */
     public function update(UpdateTaskRequest $request,  Workspace $workspace, Task $task)
     {
-        if ($task->workspace_id !== $workspace->id) {
-            return ApiResponse::error([], 'This task does not belong to the workspace ', 403);
-        }
-        $is_updated = $this->task_service->update($workspace, $task, $request->validated());
+        $this->authorize('update', [$task, $workspace]);
+        $is_updated = $this->task_service->update($task, $request->validated());
         if ($is_updated) {
             return ApiResponse::response(new TaskResource($task), 'The task was updated successfully', 200);
         } else
@@ -77,6 +76,7 @@ class TaskController extends Controller
      */
     public function destroy(Workspace $workspace, Task $task)
     {
+        $this->authorize('delete', [$task, $workspace]);
         $isDeleted = $this->task_service->delete($workspace->id, $task);
         if (!$isDeleted) {
             return ApiResponse::error([], 'deleting fail', 500);
@@ -95,8 +95,10 @@ class TaskController extends Controller
      */
     public function changeStatus(ChangeTaskStatusRequest $request,  Workspace $workspace, Task $task)
     {
+        $this->authorize('update', [$task, $workspace]);
+
         try {
-            $task = $this->task_service->changeStatusTask($workspace, $task, $request->validated('status'));
+            $task = $this->task_service->changeStatusTask($task, $request->validated('status'));
         } catch (AuthorizationException $e) {
             return ApiResponse::forbidden($e->getMessage());
         } catch (\Exception $e) {
@@ -112,8 +114,10 @@ class TaskController extends Controller
 
     public function changePriority(ChangeTaskPriorityRequest $request,  Workspace $workspace, Task $task)
     {
+        $this->authorize('update', [$task, $workspace]);
+
         try {
-            $task = $this->task_service->changePriorityTask($workspace, $task, $request->validated('status'));
+            $task = $this->task_service->changePriorityTask($task, $request->validated('priority'));
         } catch (AuthorizationException $e) {
             return ApiResponse::forbidden($e->getMessage());
         } catch (\Exception $e) {
