@@ -27,7 +27,7 @@ class WorkspaceTaskPolicy
         return $workspace->id == $task->workspace_id &&
          ($this->isOwner($user) ||
           $this->isAdministrator($user) ||
-            $workspace->workspaceMembers()->where('assignee_id', $user->id)->exists());
+            $workspace->workspaceMembers()->where('member_id', $user->id)->exists());
     }
 
     /**
@@ -38,7 +38,7 @@ class WorkspaceTaskPolicy
         return $workspace->id == $task->workspace_id &&
          ($this->isOwner($user) ||
           $this->isAdministrator($user) ||
-            $workspace->workspaceMembers()->where('assignee_id', $user->id)->exists());
+            $workspace->workspaceMembers()->where('member_id', $user->id)->exists());
     }
 
 

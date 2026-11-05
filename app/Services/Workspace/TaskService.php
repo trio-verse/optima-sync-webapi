@@ -12,7 +12,7 @@ class TaskService
 
     public function getAllTasks(Workspace $workspace): Collection
     {
-        return Task::with('assignee')->where('workspace_id', $workspace->id)
+        return Task::with('member')->where('workspace_id', $workspace->id)
             ->orderByDesc('created_at')
             ->get();
     }

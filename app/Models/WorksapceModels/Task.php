@@ -20,15 +20,15 @@ class Task extends Model
         'status',
         'priority',
         'workspace_id',
-        'assignee_id',
+        'member_id',
     ];
 
     public function workspace()
     {
         return $this->belongsTo(Workspace::class);
     }
-    public function assignee()
+    public function member()
     {
-        return $this->belongsTo(User::class, 'assignee_id');
+        return $this->belongsTo(User::class, 'member_id');
     }
 }

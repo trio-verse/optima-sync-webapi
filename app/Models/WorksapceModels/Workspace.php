@@ -3,9 +3,11 @@
 namespace App\Models\WorksapceModels;
 
 
+use App\Models\User;
 use App\Trait\BelongsToOrganization;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable(['name', 'description', 'deadline', 'status'])]
@@ -26,11 +28,16 @@ class Workspace extends Model
         return $this->hasMany(Task::class);
     }
 
-    // public function users()
-    // {
-    //     return $this->belongsToMany(User::class, 'workspace_members')
-    //         ->withPivot('role');
-    // }
+    // Many-to-Many relationship with User model through WorkspaceMember pivot table
+    public function members(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            User::class,
+            'workspace_members',
+            'workspace_id',
+            'member_id'
+        );
+    }
 
     public function workspaceMembers()
     {
