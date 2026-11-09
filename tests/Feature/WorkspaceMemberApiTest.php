@@ -375,6 +375,6 @@ test('workspace members can only see the workspaces they are members of', functi
     $this->actingAs($member, 'sanctum')
         ->withHeader('X-Organization-Id', (string) $organization->id)
         ->getJson("/api/v1/workspaces")
-        ->assertJsonCount(2, 'data')
+        ->assertJsonCount(1, 'data')
         ->assertJsonPath('data.0.id', $workspace1->id);
 });

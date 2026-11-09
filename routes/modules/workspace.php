@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\V1\Workspace\WorkspaceController;
 use App\Http\Controllers\Api\V1\Workspace\WorkspaceMemberController;
 use Illuminate\Support\Facades\Route;
 
+Route::get('workspaces/stats', [\App\Http\Controllers\Api\V1\Workspace\WorkspaceStatsController::class, '__invoke']);
 Route::apiResource('workspaces', WorkspaceController::class);
 Route::prefix('workspaces')->group(function () {
     // members
