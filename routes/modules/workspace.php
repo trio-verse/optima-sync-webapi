@@ -7,9 +7,13 @@ use Illuminate\Support\Facades\Route;
 
 Route::apiResource('workspaces', WorkspaceController::class);
 Route::prefix('workspaces')->group(function () {
+    // members
     Route::apiResource('{workspace}/members', WorkspaceMemberController::class)
         ->only(['index', 'store', 'destroy']);
+    // tasks
     Route::apiResource('{workspace}/tasks', TaskController::class)->except(['show']);
     Route::post('{workspace}/tasks/{task}/change-status', [TaskController::class, 'changeStatus']);
     Route::post('{workspace}/tasks/{task}/change-priority', [TaskController::class, 'changePriority']);
+
+    Route::post('{workspace}/tasks/{task}/assign-to-member', [TaskController::class, 'assigneTaskToMember']);
 });

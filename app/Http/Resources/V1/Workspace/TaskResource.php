@@ -22,8 +22,8 @@ class TaskResource extends JsonResource
             'description' => $this->description,
             'status' => $this->status,
             'priority' => $this->priority,
-            'assignee_id' => $this->assignee_id,
-            'assignee_info' => $this->whenNotNull($this->assignee_id, new UserResource($this->assignee)),
+            'member_id' => $this->member_id,
+            'member_info' => $this->whenLoaded('member', new UserResource($this->member)),
             'created_at' => $this->created_at?->format('Y-m-d\TH:i:s\Z'),
             'updated_at' => $this->updated_at?->format('Y-m-d\TH:i:s\Z'),
         ];

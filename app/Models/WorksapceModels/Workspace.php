@@ -4,13 +4,16 @@ namespace App\Models\WorksapceModels;
 
 
 use App\Models\User;
+use App\Policies\WorkspacePolicy;
 use App\Trait\BelongsToOrganization;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable(['name', 'description', 'deadline', 'status'])]
+#[UsePolicy(WorkspacePolicy::class)]
 class Workspace extends Model
 {
     use BelongsToOrganization;

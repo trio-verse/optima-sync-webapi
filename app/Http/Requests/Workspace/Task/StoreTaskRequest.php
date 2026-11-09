@@ -4,6 +4,7 @@ namespace App\Http\Requests\Workspace\Task;
 
 use App\Enums\Workspace\enTaskPriority;
 use App\Enums\Workspace\enTaskStatus;
+use App\Models\WorksapceModels\Workspace;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -27,13 +28,20 @@ class StoreTaskRequest extends FormRequest
      */
     public function rules(): array
     {
+        $workspace = $this->route('workspace') instanceof(Workspace::class) ? $this->route('workspace') : Workspace::find($this->route('workspace'));
+
         return [
             'title' => ['string', 'required', 'max:255'],
             'description' => ['string', 'required', 'max:255'],
             'status' => ['string', 'nullable', Rule::in(enTaskStatus::all())],
             'priority' => ['string', 'nullable', Rule::in(enTaskPriority::all())],
             // 'workspace_id' => ['required', 'exists:workspaces,id'],
-            'assignee_id' => ['nullable', 'exists:users,id'],
+            'member_id' => [
+                'nullable',
+                'integer',
+                Rule::exists('workspace_members', 'member_id')
+                    ->where('workspace_id', $workspace?->id),
+            ],
         ];
     }
 }

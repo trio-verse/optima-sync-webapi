@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Workspace\Members;
 
+use App\Models\WorksapceModels\Workspace;
 use App\Rules\AcceptedOrganizationMember;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -24,15 +25,14 @@ class StoreWorkspaceMemberRequest extends FormRequest
      */
     public function rules(): array
     {
+        $workspace = $this->route('workspace') instanceof(Workspace::class) ? $this->route('workspace') : Workspace::find($this->route('workspace'));
         return [
             'member_id' => [
                 'required',
                 'integer',
                 'exists:users,id',
+                'not_in:' . $workspace?->members()->pluck('users.id')->implode(','),
                 new AcceptedOrganizationMember,
-                // Ensure the member is not already part of the workspace
-                Rule::unique('workspace_members', 'member_id')
-                    ->where('workspace_id', $this->route('workspace')->id),
             ],
         ];
     }

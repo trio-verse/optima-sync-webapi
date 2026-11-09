@@ -10,6 +10,7 @@ use App\Http\Requests\Workspace\UpdateWorkspaceRequest;
 use App\Http\Resources\V1\Workspace\WorkspaceResource;
 use App\Models\WorksapceModels\Workspace;
 use App\Services\Workspace\WorkspaceService;
+use Illuminate\Support\Facades\Log;
 
 /**
  * @group Workspaces
@@ -23,7 +24,9 @@ class WorkspaceController extends Controller
      */
     public function index(IndexWorkspaceRequest $request)
     {
-        $workspaces = $this->workspaceService->list($request->validated());
+        $this->authorize('viewAny' , Workspace::class);
+  
+        $workspaces = $this->workspaceService->list($request->user(), $request->validated());
 
         return ApiResponse::pagination(
             WorkspaceResource::collection($workspaces),
@@ -36,6 +39,7 @@ class WorkspaceController extends Controller
      */
     public function store(StoreWorkspaceRequest $request)
     {
+        $this->authorize('create', Workspace::class);
         $workspace = $this->workspaceService->create($request->validated());
 
         return ApiResponse::success(
@@ -61,6 +65,8 @@ class WorkspaceController extends Controller
      */
     public function update(UpdateWorkspaceRequest $request, Workspace $workspace)
     {
+        $this->authorize('update', $workspace);
+
         $workspace = $this->workspaceService->update($workspace, $request->validated());
 
         return ApiResponse::success(
@@ -74,6 +80,7 @@ class WorkspaceController extends Controller
      */
     public function destroy(Workspace $workspace)
     {
+        $this->authorize('delete', $workspace);
         $this->workspaceService->delete($workspace);
 
         return ApiResponse::success(null, 'Workspace deleted successfully');

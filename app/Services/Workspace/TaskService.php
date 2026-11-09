@@ -59,4 +59,17 @@ class TaskService
 
         return $task;
     }
+
+    public function assignTaskToMember(Workspace $workspace, Task $task, int $memberId): Task
+    {
+        // turn it on if you want to prevent assigning a task that is already assigned to a member
+        // if ($task->member_id !== null) {
+        //     throw new \Exception('The Task is already assigned to a member');
+        // }
+
+        $task->member_id = $memberId;
+        $task->saveOrFail();
+
+        return $task->load('member');
+    }
 }

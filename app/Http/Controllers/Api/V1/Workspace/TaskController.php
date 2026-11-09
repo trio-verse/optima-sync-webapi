@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1\Workspace;
 
 use App\Helper\V1\ApiResponse;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Workspace\Task\AssignTaskToMemberRequest;
 use App\Http\Requests\Workspace\Task\ChangeTaskPriorityRequest;
 use App\Http\Requests\Workspace\Task\ChangeTaskStatusRequest;
 use App\Http\Requests\Workspace\Task\StoreTaskRequest;
@@ -13,6 +14,8 @@ use App\Models\WorksapceModels\Task;
 use App\Models\WorksapceModels\Workspace;
 use App\Services\Workspace\TaskService;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Log;
 
 /**
  * @group Task
@@ -44,6 +47,7 @@ class TaskController extends Controller
      */
     public function store(StoreTaskRequest $request, Workspace $workspace)
     {
+        $this->authorize('store', [Task::class, $workspace]);
 
         $task = $this->task_service->create($workspace, $request->validated());
 
@@ -125,5 +129,26 @@ class TaskController extends Controller
         }
 
         return ApiResponse::success(new TaskResource($task), 'Task priority changed successfully');
+    }
+
+    /**
+     * Assign task to a member.
+     */
+    public function assigneTaskToMember(AssignTaskToMemberRequest $request, Workspace $workspace, Task $task)
+    {
+
+        $this->authorize('update', [$task, $workspace]);
+
+        try {
+            $task = $this->task_service->assignTaskToMember($workspace, $task, $request->validated('member_id'));
+        } catch (AuthorizationException $e) {
+            return ApiResponse::forbidden($e->getMessage());
+        } catch (ModelNotFoundException $e) {
+            return ApiResponse::notFound($e->getMessage());
+        } catch (\Exception $e) {
+            return ApiResponse::error(null, $e->getMessage(), 422);
+        }
+
+        return ApiResponse::success(new TaskResource($task), 'Task assigned to member successfully');
     }
 }

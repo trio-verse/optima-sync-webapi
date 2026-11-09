@@ -2,16 +2,23 @@
 
 namespace App\Services\Workspace;
 
+use App\Models\User;
 use App\Models\WorksapceModels\Workspace;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 
 class WorkspaceService
 {
-    public function list(array $filters): LengthAwarePaginator
+    public function list(User $user, array $filters): LengthAwarePaginator
     {
         $query = Workspace::query()
             ->select(['id', 'name', 'description', 'deadline', 'status', 'created_at', 'updated_at']);
+
+        if (! $user->isOwnerOrAdmin()) {
+            $query->whereHas('workspaceMembers', function (Builder $query) use ($user) {
+                $query->where('member_id', $user->id);
+            });
+        }
 
         $this->applyFilters($query, $filters);
 
