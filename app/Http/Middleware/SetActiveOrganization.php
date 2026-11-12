@@ -2,7 +2,6 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\Organization;
 use App\Singleton\TenantManager;
 use Closure;
 use Illuminate\Http\Request;
@@ -30,7 +29,7 @@ class SetActiveOrganization
             return response()->json(['message' => 'Organization context required (X-Organization-Id header missing).'], 400);
         }
         $user = $request->user();
-        $isAdmin = Organization::where('id',$orgId)->where('user_id', $user->id)->exists();
+        $isAdmin = $user->isOwnerOrAdmin((int) $orgId);
         $isMember = DB::table("organization_members")->where("organization_id", $orgId)->where("user_id", $user->id)->exists();
 
         if (!$isMember && !$isAdmin) {
