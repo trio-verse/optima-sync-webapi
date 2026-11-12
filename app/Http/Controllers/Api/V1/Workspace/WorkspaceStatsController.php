@@ -8,10 +8,13 @@ use App\Models\WorksapceModels\Workspace;
 use App\Services\Workspace\WorkspaceStatusService;
 use Illuminate\Http\Request;
 
+/**
+ * @group Workspaces
+ */
 class WorkspaceStatsController extends Controller
 {
     /**
-     * Handle the incoming request.
+     * Stats for Workspace.
      */
     public function __invoke(Request $request)
     {

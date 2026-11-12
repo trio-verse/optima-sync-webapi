@@ -20,7 +20,7 @@ class WorkspaceController extends Controller
     public function __construct(private readonly WorkspaceService $workspaceService) {}
 
     /**
-     * Display a listing of the resource.
+     * Display Workspaces.
      */
     public function index(IndexWorkspaceRequest $request)
     {
@@ -35,7 +35,7 @@ class WorkspaceController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store Workspace.
      */
     public function store(StoreWorkspaceRequest $request)
     {
@@ -50,7 +50,7 @@ class WorkspaceController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display Workspace.
      */
     public function show(Workspace $workspace)
     {
@@ -61,7 +61,7 @@ class WorkspaceController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update Workspace.
      */
     public function update(UpdateWorkspaceRequest $request, Workspace $workspace)
     {
@@ -76,7 +76,7 @@ class WorkspaceController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove Workspace.
      */
     public function destroy(Workspace $workspace)
     {

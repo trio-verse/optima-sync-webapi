@@ -10,12 +10,15 @@ use App\Models\WorksapceModels\Workspace;
 use App\Models\WorksapceModels\WorkspaceMember;
 use App\Services\Workspace\WorkspaceMemberService;
 
+/**
+ * @group Workspaces
+ */
 class WorkspaceMemberController extends Controller
 {
     public function __construct(private readonly WorkspaceMemberService $memberService) {}
 
     /**
-     * Display a listing of the resource.
+     * Display Workspace Members.
      */
     public function index(Workspace $workspace)
     {
@@ -25,7 +28,7 @@ class WorkspaceMemberController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store Workspace Member.
      */
     public function store(StoreWorkspaceMemberRequest $request, Workspace $workspace)
     {
@@ -39,7 +42,7 @@ class WorkspaceMemberController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove Workspace Member.
      */
     public function destroy(Workspace $workspace, WorkspaceMember $member)
     {
