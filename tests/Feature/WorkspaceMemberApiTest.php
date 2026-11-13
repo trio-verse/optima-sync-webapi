@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Organization;
+use App\Models\OrganizationMember;
 use App\Models\User;
 use App\Models\WorksapceModels\Workspace;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -25,6 +26,10 @@ test('organization members can be added, listed, and removed from a workspace', 
         'created_at' => now(),
         'updated_at' => now(),
     ]);
+    $organizationMember = OrganizationMember::query()
+        ->where('organization_id', $organization->id)
+        ->where('user_id', $member->id)
+        ->firstOrFail();
 
     $this->actingAs($owner, 'sanctum')
         ->withHeader('X-Organization-Id', (string) $organization->id)
@@ -32,11 +37,11 @@ test('organization members can be added, listed, and removed from a workspace', 
             'member_id' => $member->id,
         ])
         ->assertCreated()
-        ->assertJsonPath('data.id', $member->id);
+        ->assertJsonPath('data.id', $organizationMember->id);
 
     $this->getJson("/api/v1/workspaces/{$workspace->id}/members")
         ->assertOk()
-        ->assertJsonPath('data.0.id', $member->id);
+        ->assertJsonPath('data.0.id', $organizationMember->id);
 
     $workspaceMember = $workspace->workspaceMembers()->firstOrFail();
 

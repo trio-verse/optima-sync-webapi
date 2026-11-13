@@ -2,8 +2,7 @@
 
 namespace App\Models\WorksapceModels;
 
-
-use App\Models\User;
+use App\Models\OrganizationMember;
 use App\Policies\WorkspacePolicy;
 use App\Trait\BelongsToOrganization;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -31,14 +30,14 @@ class Workspace extends Model
         return $this->hasMany(Task::class);
     }
 
-    // Many-to-Many relationship with User model through WorkspaceMember pivot table
+    // Many-to-many relationship with organization members through the workspace membership table.
     public function members(): BelongsToMany
     {
         return $this->belongsToMany(
-            User::class,
+            OrganizationMember::class,
             'workspace_members',
             'workspace_id',
-            'member_id'
+            'organization_member_id'
         );
     }
 

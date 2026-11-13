@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\V1\Workspace;
 use App\Helper\V1\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Workspace\Members\StoreWorkspaceMemberRequest;
-use App\Http\Resources\V1\UserResource;
+use App\Http\Resources\V1\OrganizationMemberResource;
 use App\Models\WorksapceModels\Workspace;
 use App\Models\WorksapceModels\WorkspaceMember;
 use App\Services\Workspace\WorkspaceMemberService;
@@ -24,7 +24,7 @@ class WorkspaceMemberController extends Controller
     {
         $members = $this->memberService->getAllMembers($workspace);
 
-        return ApiResponse::success(UserResource::collection($members), 'Members retrieved successfully');
+        return ApiResponse::success(OrganizationMemberResource::collection($members), 'Members retrieved successfully');
     }
 
     /**
@@ -32,10 +32,10 @@ class WorkspaceMemberController extends Controller
      */
     public function store(StoreWorkspaceMemberRequest $request, Workspace $workspace)
     {
-        $member = $this->memberService->addMember($workspace, (int) $request->validated('member_id'));
+        $member = $this->memberService->addMember($workspace, (int) $request->validated('organization_member_id'));
 
         return ApiResponse::success(
-            new UserResource($member->member),
+            new OrganizationMemberResource($member->organizationMember->load('user')),
             'Member added successfully',
             201
         );

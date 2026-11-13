@@ -2,6 +2,7 @@
 
 namespace App\Services\Workspace;
 
+use App\Models\WorksapceModels\Task;
 use App\Models\WorksapceModels\Workspace;
 use App\Models\WorksapceModels\WorkspaceMember;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -13,17 +14,17 @@ class WorkspaceMemberService
     {
         // used pluck to get only the member models from the workspaceMembers relationship
         return $workspace->workspaceMembers()
-            ->with('member')
+            ->with('organizationMember.user')
             ->latest()
             ->get()
-            ->pluck('member');
+            ->map(fn (WorkspaceMember $workspaceMember) => $workspaceMember->organizationMember);
     }
 
-    public function addMember(Workspace $workspace, int $memberId): WorkspaceMember
+    public function addMember(Workspace $workspace, int $organizationMemberId): WorkspaceMember
     {
         return $workspace->workspaceMembers()->create([
-            'member_id' => $memberId,
-        ])->load('member');
+            'organization_member_id' => $organizationMemberId,
+        ])->load('organizationMember.user');
         // after creating the workspace member, we load the member relationship to return the full member model
     }
 
@@ -34,6 +35,11 @@ class WorkspaceMemberService
         if ($workspaceMember->workspace_id !== $workspace->id) {
             throw (new ModelNotFoundException('Workspace member not found in this workspace.'))->setModel(WorkspaceMember::class, [$workspaceMember->id]);
         }
+
+        Task::query()
+            ->where('workspace_id', $workspace->id)
+            ->where('organization_member_id', $workspaceMember->organization_member_id)
+            ->update(['organization_member_id' => null]);
 
         $workspaceMember->deleteOrFail();
     }

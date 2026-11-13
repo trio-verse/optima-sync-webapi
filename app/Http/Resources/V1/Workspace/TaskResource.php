@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources\V1\Workspace;
 
-use App\Http\Resources\V1\UserResource;
+use App\Http\Resources\V1\OrganizationMemberResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -22,8 +22,10 @@ class TaskResource extends JsonResource
             'description' => $this->description,
             'status' => $this->status,
             'priority' => $this->priority,
-            'member_id' => $this->member_id,
-            'member_info' => $this->whenLoaded('member', new UserResource($this->member)),
+            'member_id' => $this->organization_member_id,
+            'member_info' => $this->whenLoaded('organizationMember', function () {
+                return new OrganizationMemberResource($this->organizationMember->loadMissing('user'));
+            }),
             'created_at' => $this->created_at?->format('Y-m-d\TH:i:s\Z'),
             'updated_at' => $this->updated_at?->format('Y-m-d\TH:i:s\Z'),
         ];
