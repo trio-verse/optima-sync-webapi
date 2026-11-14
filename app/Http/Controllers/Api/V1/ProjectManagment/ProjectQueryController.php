@@ -8,7 +8,9 @@ use App\Http\Requests\Project\Query\ProjectQueryRequest;
 use App\Http\Resources\V1\ProjectManagment\ProjectResource;
 use App\Models\Project;
 use App\Services\ProjectManagment\ProjectQueryService;
-
+/**
+ * @group Projects/queries
+ */
 class ProjectQueryController extends Controller
 {
     public function __construct(
@@ -16,7 +18,8 @@ class ProjectQueryController extends Controller
     ) {}
 
     /**
-     * Get query structure for projects query builder
+     * Get query structure.
+     *  for projects query builder
      */
     public function getQueryStructure()
     {

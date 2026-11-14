@@ -23,7 +23,8 @@ class QuotationController extends Controller
     }
 
     /**
-     * preview quotation as data and send to the front to show the HTML page
+     * preview quotation.
+     *  as data and send to the front to show the HTML page
      */
     public function preview(Project $project, ProjectVersion $version)
     {

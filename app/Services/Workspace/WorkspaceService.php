@@ -16,7 +16,9 @@ class WorkspaceService
 
         if (! $user->isOwnerOrAdmin()) {
             $query->whereHas('workspaceMembers', function (Builder $query) use ($user) {
-                $query->where('member_id', $user->id);
+                $query->whereHas('organizationMember', function (Builder $query) use ($user) {
+                    $query->where('user_id', $user->id);
+                });
             });
         }
 

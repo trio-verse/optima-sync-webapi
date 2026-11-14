@@ -9,13 +9,13 @@ use App\Http\Requests\Workspace\Task\ChangeTaskPriorityRequest;
 use App\Http\Requests\Workspace\Task\ChangeTaskStatusRequest;
 use App\Http\Requests\Workspace\Task\StoreTaskRequest;
 use App\Http\Requests\Workspace\Task\UpdateTaskRequest;
+use App\Http\Resources\V1\OrganizationMemberResource;
 use App\Http\Resources\V1\Workspace\TaskResource;
 use App\Models\WorksapceModels\Task;
 use App\Models\WorksapceModels\Workspace;
 use App\Services\Workspace\TaskService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Facades\Log;
 
 /**
  * @group Task
@@ -26,7 +26,7 @@ class TaskController extends Controller
 
     /**
      * Display all tasks.
-     * 
+     *
      * this endpoint display all tasks from DB
      * response get all tasks
      */
@@ -37,11 +37,9 @@ class TaskController extends Controller
         return ApiResponse::success(TaskResource::collection($tasks), 'tasks retrieved successfully');
     }
 
-
-
     /**
      * create task.
-     * 
+     *
      * this endpoint create new task
      * response new task
      */
@@ -54,27 +52,26 @@ class TaskController extends Controller
         return ApiResponse::response(new TaskResource($task), 'The task was created successfully', 201);
     }
 
-
-
     /**
      * Update task.
-     * 
+     *
      * this endpoint update task data
      * response updated task data
      */
-    public function update(UpdateTaskRequest $request,  Workspace $workspace, Task $task)
+    public function update(UpdateTaskRequest $request, Workspace $workspace, Task $task)
     {
         $this->authorize('update', [$task, $workspace]);
         $is_updated = $this->task_service->update($task, $request->validated());
         if ($is_updated) {
             return ApiResponse::response(new TaskResource($task), 'The task was updated successfully', 200);
-        } else
-            return ApiResponse::error(null, "bad request", 400);
+        } else {
+            return ApiResponse::error(null, 'bad request', 400);
+        }
     }
 
     /**
      * Delete task.
-     * 
+     *
      * this endpoint delete task data from DB
      * response remove the specified task from DB
      */
@@ -82,7 +79,7 @@ class TaskController extends Controller
     {
         $this->authorize('delete', [$task, $workspace]);
         $isDeleted = $this->task_service->delete($workspace->id, $task);
-        if (!$isDeleted) {
+        if (! $isDeleted) {
             return ApiResponse::error([], 'deleting fail', 500);
         }
 
@@ -93,11 +90,10 @@ class TaskController extends Controller
         );
     }
 
-
     /**
      * Change task status.
      */
-    public function changeStatus(ChangeTaskStatusRequest $request,  Workspace $workspace, Task $task)
+    public function changeStatus(ChangeTaskStatusRequest $request, Workspace $workspace, Task $task)
     {
         $this->authorize('update', [$task, $workspace]);
 
@@ -115,8 +111,7 @@ class TaskController extends Controller
     /**
      * Change task priority.
      */
-
-    public function changePriority(ChangeTaskPriorityRequest $request,  Workspace $workspace, Task $task)
+    public function changePriority(ChangeTaskPriorityRequest $request, Workspace $workspace, Task $task)
     {
         $this->authorize('update', [$task, $workspace]);
 
@@ -140,7 +135,7 @@ class TaskController extends Controller
         $this->authorize('update', [$task, $workspace]);
 
         try {
-            $task = $this->task_service->assignTaskToMember($workspace, $task, $request->validated('member_id'));
+            $task = $this->task_service->assignTaskToMember($workspace, $task, $request->validated('organization_member_id'));
         } catch (AuthorizationException $e) {
             return ApiResponse::forbidden($e->getMessage());
         } catch (ModelNotFoundException $e) {
@@ -149,6 +144,9 @@ class TaskController extends Controller
             return ApiResponse::error(null, $e->getMessage(), 422);
         }
 
-        return ApiResponse::success(new TaskResource($task), 'Task assigned to member successfully');
+        return ApiResponse::success(
+            new OrganizationMemberResource($task->organizationMember->load('user')),
+            'Task assigned to member successfully'
+        );
     }
 }

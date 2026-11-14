@@ -9,10 +9,9 @@ use Illuminate\Support\Collection;
 
 class TaskService
 {
-
     public function getAllTasks(Workspace $workspace): Collection
     {
-        return Task::with('member')->where('workspace_id', $workspace->id)
+        return Task::with('organizationMember.user')->where('workspace_id', $workspace->id)
             ->orderByDesc('created_at')
             ->get();
     }
@@ -31,7 +30,7 @@ class TaskService
             return $task->updateOrFail($data);
         } catch (\Exception $e) {
             // Handle the exception, log it, or rethrow it as needed
-            throw new ModelNotFoundException('Failed to update task: ' . $e->getMessage(), 0, $e);
+            throw new ModelNotFoundException('Failed to update task: '.$e->getMessage(), 0, $e);
         }
     }
 
@@ -40,9 +39,9 @@ class TaskService
         if ($task->workspace_id !== $workspace_id) {
             return false;
         }
+
         return $task->delete();
     }
-
 
     public function changeStatusTask(Task $task, string $status): Task
     {
@@ -60,16 +59,16 @@ class TaskService
         return $task;
     }
 
-    public function assignTaskToMember(Workspace $workspace, Task $task, int $memberId): Task
+    public function assignTaskToMember(Workspace $workspace, Task $task, int $organizationMemberId): Task
     {
         // turn it on if you want to prevent assigning a task that is already assigned to a member
-        // if ($task->member_id !== null) {
+        // if ($task->organization_member_id !== null) {
         //     throw new \Exception('The Task is already assigned to a member');
         // }
 
-        $task->member_id = $memberId;
+        $task->organization_member_id = $organizationMemberId;
         $task->saveOrFail();
 
-        return $task->load('member');
+        return $task->load('organizationMember.user');
     }
 }

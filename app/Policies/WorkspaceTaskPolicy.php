@@ -5,7 +5,6 @@ namespace App\Policies;
 use App\Models\User;
 use App\Models\WorksapceModels\Task;
 use App\Models\WorksapceModels\Workspace;
-use Illuminate\Auth\Access\Response;
 
 class WorkspaceTaskPolicy
 {
@@ -17,17 +16,17 @@ class WorkspaceTaskPolicy
         return false;
     }
 
-
     /**
      * Determine whether the user can store a task.
      */
-    public function store(User $user,  Workspace $workspace): bool
+    public function store(User $user, Workspace $workspace): bool
     {
         return
          $user->isOwnerOrAdmin() ||
-            $workspace->workspaceMembers()->where('member_id', $user->id)->exists();
+            $workspace->workspaceMembers()
+                ->whereHas('organizationMember', fn ($query) => $query->where('user_id', $user->id))
+                ->exists();
     }
-
 
     /**
      * Determine whether the user can update the model.
@@ -36,7 +35,9 @@ class WorkspaceTaskPolicy
     {
         return $workspace->id == $task->workspace_id &&
          ($user->isOwnerOrAdmin() ||
-            $workspace->workspaceMembers()->where('member_id', $user->id)->exists());
+            $workspace->workspaceMembers()
+                ->whereHas('organizationMember', fn ($query) => $query->where('user_id', $user->id))
+                ->exists());
     }
 
     /**
@@ -46,6 +47,8 @@ class WorkspaceTaskPolicy
     {
         return $workspace->id == $task->workspace_id &&
          ($user->isOwnerOrAdmin() ||
-            $workspace->workspaceMembers()->where('member_id', $user->id)->exists());
+            $workspace->workspaceMembers()
+                ->whereHas('organizationMember', fn ($query) => $query->where('user_id', $user->id))
+                ->exists());
     }
 }

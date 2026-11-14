@@ -5,15 +5,15 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Models\WorksapceModels\Task;
-use App\Models\WorksapceModels\Workspace;
+use App\Singleton\TenantManager;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use App\Singleton\TenantManager;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
@@ -21,7 +21,7 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, HasApiTokens;
+    use HasApiTokens, HasFactory, Notifiable;
 
     /**
      * The attributes that should be appended to arrays.
@@ -46,21 +46,21 @@ class User extends Authenticatable
     public function isAdmin(): Attribute
     {
         return new Attribute(
-            get: fn() => $this->pivot?->role === 'admin' || false
+            get: fn () => $this->pivot?->role === 'admin' || false
         );
     }
 
     public function isMember(): Attribute
     {
         return new Attribute(
-            get: fn() => $this->pivot?->role === "member" || false
+            get: fn () => $this->pivot?->role === 'member' || false
         );
     }
 
     public function isOwner(): Attribute
     {
         return new Attribute(
-            get: fn() => $this->organizations()->where('organizations.user_id', $this->id)->exists() || false
+            get: fn () => $this->organizations()->where('organizations.user_id', $this->id)->exists() || false
         );
     }
 
@@ -98,19 +98,27 @@ class User extends Authenticatable
         return $this->hasMany(Organization::class, 'user_id');
     }
 
-    public function workspaces()
+    public function organizationMemberships()
     {
-        return $this->belongsToMany(Workspace::class, 'workspace_members');   
+        return $this->hasMany(OrganizationMember::class);
     }
 
     public function tasks()
     {
-        return $this->hasMany(Task::class);
+        return $this->hasManyThrough(
+            Task::class,
+            OrganizationMember::class,
+            'user_id',
+            'organization_member_id',
+            'id',
+            'id'
+        );
     }
 
     /**
      * get all clients that assigned to this user
-     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough<Client, Connection, User>
+     *
+     * @return HasManyThrough<Client, Connection, User>
      */
     public function clients()
     {
@@ -119,7 +127,8 @@ class User extends Authenticatable
 
     /**
      * get all connections that assigned to this user
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Connection, User>
+     *
+     * @return HasMany<Connection, User>
      */
     public function connections()
     {
