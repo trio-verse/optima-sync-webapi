@@ -10,14 +10,20 @@ return new class extends Migration
     public function up(): void
     {
         DB::transaction(function (): void {
+            // 1. إضافة الأعمدة فقط إذا لم تكن موجودة مسبقاً
             Schema::table('workspace_members', function (Blueprint $table): void {
-                $table->unsignedBigInteger('organization_member_id')->nullable()->after('workspace_id');
+                if (!Schema::hasColumn('workspace_members', 'organization_member_id')) {
+                    $table->unsignedBigInteger('organization_member_id')->nullable()->after('workspace_id');
+                }
             });
 
             Schema::table('tasks', function (Blueprint $table): void {
-                $table->unsignedBigInteger('organization_member_id')->nullable()->after('workspace_id');
+                if (!Schema::hasColumn('tasks', 'organization_member_id')) {
+                    $table->unsignedBigInteger('organization_member_id')->nullable()->after('workspace_id');
+                }
             });
 
+            // 2. عمليات نقل البيانات والربط
             foreach (DB::table('workspace_members')->get() as $workspaceMember) {
                 $organizationId = DB::table('workspaces')
                     ->where('id', $workspaceMember->workspace_id)
@@ -73,27 +79,34 @@ return new class extends Migration
                     ->update(['organization_member_id' => $organizationMemberId]);
             }
 
+            // 3. القيود والفهارس (Constraints & Indexes)
             Schema::table('workspace_members', function (Blueprint $table): void {
+                // التأكد من عدم وجود المفتاح الخارجي القديم قبل حذفه لمنع الأخطاء
                 $table->dropForeign(['member_id']);
                 $table->dropColumn('member_id');
+                
                 $table->foreign('organization_member_id')
                     ->references('id')
                     ->on('organization_members')
                     ->cascadeOnDelete();
+                
                 $table->unique(['workspace_id', 'organization_member_id']);
             });
 
             Schema::table('tasks', function (Blueprint $table): void {
                 $table->dropForeign(['member_id']);
                 $table->dropColumn('member_id');
+                
                 $table->foreign('organization_member_id')
                     ->references('id')
                     ->on('organization_members')
                     ->nullOnDelete();
+                
                 $table->foreign(['workspace_id', 'organization_member_id'])
                     ->references(['workspace_id', 'organization_member_id'])
                     ->on('workspace_members')
                     ->restrictOnDelete();
+                
                 $table->index(['workspace_id', 'organization_member_id']);
             });
         });
