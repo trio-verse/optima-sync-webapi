@@ -10,7 +10,7 @@ return new class extends Migration
     public function up(): void
     {
         DB::transaction(function (): void {
-            // 1. إضافة الأعمدة فقط إذا لم تكن موجودة مسبقاً
+            // 1. إضافة الأعمدة الجديدة إذا لم تكن موجودة
             Schema::table('workspace_members', function (Blueprint $table): void {
                 if (!Schema::hasColumn('workspace_members', 'organization_member_id')) {
                     $table->unsignedBigInteger('organization_member_id')->nullable()->after('workspace_id');
@@ -23,80 +23,98 @@ return new class extends Migration
                 }
             });
 
-            // 2. عمليات نقل البيانات والربط
-            foreach (DB::table('workspace_members')->get() as $workspaceMember) {
-                $organizationId = DB::table('workspaces')
-                    ->where('id', $workspaceMember->workspace_id)
-                    ->value('organization_id');
+            // 2. نقل البيانات فقط إذا كان عمود member_id ما زال موجوداً ولم يتم حذفه في تشغيلة سابقة
+            if (Schema::hasColumn('workspace_members', 'member_id')) {
+                foreach (DB::table('workspace_members')->get() as $workspaceMember) {
+                    $organizationId = DB::table('workspaces')
+                        ->where('id', $workspaceMember->workspace_id)
+                        ->value('organization_id');
 
-                $organizationMemberId = DB::table('organization_members')
-                    ->where('organization_id', $organizationId)
-                    ->where('user_id', $workspaceMember->member_id)
-                    ->value('id');
-
-                if ($organizationMemberId === null) {
-                    $isOwner = DB::table('organizations')
-                        ->where('id', $organizationId)
+                    $organizationMemberId = DB::table('organization_members')
+                        ->where('organization_id', $organizationId)
                         ->where('user_id', $workspaceMember->member_id)
-                        ->exists();
+                        ->value('id');
 
-                    if ($isOwner) {
-                        $organizationMemberId = DB::table('organization_members')->insertGetId([
-                            'organization_id' => $organizationId,
-                            'user_id' => $workspaceMember->member_id,
-                            'role' => 'admin',
-                            'created_at' => now(),
-                            'updated_at' => now(),
-                        ]);
+                    if ($organizationMemberId === null) {
+                        $isOwner = DB::table('organizations')
+                            ->where('id', $organizationId)
+                            ->where('user_id', $workspaceMember->member_id)
+                            ->exists();
+
+                        if ($isOwner) {
+                            $organizationMemberId = DB::table('organization_members')->insertGetId([
+                                'organization_id' => $organizationId,
+                                'user_id' => $workspaceMember->member_id,
+                                'role' => 'admin',
+                                'created_at' => now(),
+                                'updated_at' => now(),
+                            ]);
+                        }
                     }
-                }
 
-                if ($organizationMemberId === null) {
-                    throw new RuntimeException(
-                        "Workspace member {$workspaceMember->id} cannot be mapped to an organization member."
-                    );
-                }
+                    if ($organizationMemberId === null) {
+                        throw new RuntimeException(
+                            "Workspace member {$workspaceMember->id} cannot be mapped to an organization member."
+                        );
+                    }
 
-                DB::table('workspace_members')
-                    ->where('id', $workspaceMember->id)
-                    ->update(['organization_member_id' => $organizationMemberId]);
+                    DB::table('workspace_members')
+                        ->where('id', $workspaceMember->id)
+                        ->update(['organization_member_id' => $organizationMemberId]);
+                }
             }
 
-            foreach (DB::table('tasks')->whereNotNull('member_id')->get() as $task) {
-                $organizationMemberId = DB::table('workspace_members')
-                    ->where('workspace_id', $task->workspace_id)
-                    ->where('member_id', $task->member_id)
-                    ->value('organization_member_id');
+            if (Schema::hasColumn('tasks', 'member_id')) {
+                foreach (DB::table('tasks')->whereNotNull('member_id')->get() as $task) {
+                    $organizationMemberId = DB::table('workspace_members')
+                        ->where('workspace_id', $task->workspace_id)
+                        ->where('member_id', $task->member_id)
+                        ->value('organization_member_id');
 
-                if ($organizationMemberId === null) {
-                    throw new RuntimeException(
-                        "Task {$task->id} cannot be mapped to a workspace organization member."
-                    );
+                    if ($organizationMemberId === null) {
+                        throw new RuntimeException(
+                            "Task {$task->id} cannot be mapped to a workspace organization member."
+                        );
+                    }
+
+                    DB::table('tasks')
+                        ->where('id', $task->id)
+                        ->update(['organization_member_id' => $organizationMemberId]);
                 }
-
-                DB::table('tasks')
-                    ->where('id', $task->id)
-                    ->update(['organization_member_id' => $organizationMemberId]);
             }
 
-            // 3. القيود والفهارس (Constraints & Indexes)
+            // 3. حذف الأعمدة القديمة والقيود فقط إذا كانت موجودة
             Schema::table('workspace_members', function (Blueprint $table): void {
-                // التأكد من عدم وجود المفتاح الخارجي القديم قبل حذفه لمنع الأخطاء
-                $table->dropForeign(['member_id']);
-                $table->dropColumn('member_id');
-                
-                $table->foreign('organization_member_id')
-                    ->references('id')
-                    ->on('organization_members')
-                    ->cascadeOnDelete();
-                
-                $table->unique(['workspace_id', 'organization_member_id']);
+                if (Schema::hasColumn('workspace_members', 'member_id')) {
+                    try {
+                        $table->dropForeign(['member_id']);
+                    } catch (\Throwable $e) {
+                        // تجاهل الخطأ إذا كان المفتاح غير موجود
+                    }
+                    $table->dropColumn('member_id');
+                }
+
+                if (!collect(Schema::getIndexes('workspace_members'))->contains('name', 'workspace_members_workspace_id_organization_member_id_unique')) {
+                    $table->foreign('organization_member_id')
+                        ->references('id')
+                        ->on('organization_members')
+                        ->cascadeOnDelete();
+                    
+                    $table->unique(['workspace_id', 'organization_member_id']);
+                }
             });
 
             Schema::table('tasks', function (Blueprint $table): void {
-                $table->dropForeign(['member_id']);
-                $table->dropColumn('member_id');
-                
+                if (Schema::hasColumn('tasks', 'member_id')) {
+                    try {
+                        $table->dropForeign(['member_id']);
+                    } catch (\Throwable $e) {
+                        // تجاهل الخطأ إذا كان المفتاح غير موجود
+                    }
+                    $table->dropColumn('member_id');
+                }
+
+                // إضافة القيود الجديدة إذا لم تكن موجودة مسبقاً
                 $table->foreign('organization_member_id')
                     ->references('id')
                     ->on('organization_members')
@@ -119,13 +137,17 @@ return new class extends Migration
                 $table->dropForeign(['workspace_id', 'organization_member_id']);
                 $table->dropForeign(['organization_member_id']);
                 $table->dropIndex(['workspace_id', 'organization_member_id']);
-                $table->unsignedBigInteger('member_id')->nullable()->after('workspace_id');
+                if (!Schema::hasColumn('tasks', 'member_id')) {
+                    $table->unsignedBigInteger('member_id')->nullable()->after('workspace_id');
+                }
             });
 
             Schema::table('workspace_members', function (Blueprint $table): void {
                 $table->dropUnique(['workspace_id', 'organization_member_id']);
                 $table->dropForeign(['organization_member_id']);
-                $table->unsignedBigInteger('member_id')->nullable()->after('workspace_id');
+                if (!Schema::hasColumn('workspace_members', 'member_id')) {
+                    $table->unsignedBigInteger('member_id')->nullable()->after('workspace_id');
+                }
             });
 
             DB::table('workspace_members')->update([
