@@ -14,7 +14,7 @@ class WorkspaceResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'title' => $this->name,
+            'name' => $this->name,
             'description' => $this->description,
             'deadline' => $this->deadline?->toIso8601String(),
             'status' => $this->status,
