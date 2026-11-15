@@ -23,7 +23,7 @@ return new class extends Migration
                 }
             });
 
-            // 2. نقل البيانات فقط إذا كان عمود member_id ما زال موجوداً ولم يتم حذفه في تشغيلة سابقة
+            // 2. نقل البيانات فقط إذا كان عمود member_id القديم ما زال موجوداً
             if (Schema::hasColumn('workspace_members', 'member_id')) {
                 foreach (DB::table('workspace_members')->get() as $workspaceMember) {
                     $organizationId = DB::table('workspaces')
@@ -83,49 +83,57 @@ return new class extends Migration
                 }
             }
 
-            // 3. حذف الأعمدة القديمة والقيود فقط إذا كانت موجودة
+            // 3. تعديل جدول workspace_members القيود والفهارس
             Schema::table('workspace_members', function (Blueprint $table): void {
                 if (Schema::hasColumn('workspace_members', 'member_id')) {
                     try {
                         $table->dropForeign(['member_id']);
                     } catch (\Throwable $e) {
-                        // تجاهل الخطأ إذا كان المفتاح غير موجود
+                        // تجاهل إذا كان المفتاح غير موجود
                     }
                     $table->dropColumn('member_id');
                 }
 
-                if (!collect(Schema::getIndexes('workspace_members'))->contains('name', 'workspace_members_workspace_id_organization_member_id_unique')) {
+                try {
                     $table->foreign('organization_member_id')
                         ->references('id')
                         ->on('organization_members')
                         ->cascadeOnDelete();
-                    
+                } catch (\Throwable $e) {}
+
+                try {
                     $table->unique(['workspace_id', 'organization_member_id']);
-                }
+                } catch (\Throwable $e) {}
             });
 
+            // 4. تعديل جدول tasks القيود والفهارس مع حماية ضد التكرار
             Schema::table('tasks', function (Blueprint $table): void {
                 if (Schema::hasColumn('tasks', 'member_id')) {
                     try {
                         $table->dropForeign(['member_id']);
                     } catch (\Throwable $e) {
-                        // تجاهل الخطأ إذا كان المفتاح غير موجود
+                        // تجاهل إذا كان المفتاح غير موجود
                     }
                     $table->dropColumn('member_id');
                 }
 
-                // إضافة القيود الجديدة إذا لم تكن موجودة مسبقاً
-                $table->foreign('organization_member_id')
-                    ->references('id')
-                    ->on('organization_members')
-                    ->nullOnDelete();
-                
-                $table->foreign(['workspace_id', 'organization_member_id'])
-                    ->references(['workspace_id', 'organization_member_id'])
-                    ->on('workspace_members')
-                    ->restrictOnDelete();
-                
-                $table->index(['workspace_id', 'organization_member_id']);
+                try {
+                    $table->foreign('organization_member_id')
+                        ->references('id')
+                        ->on('organization_members')
+                        ->nullOnDelete();
+                } catch (\Throwable $e) {}
+
+                try {
+                    $table->foreign(['workspace_id', 'organization_member_id'])
+                        ->references(['workspace_id', 'organization_member_id'])
+                        ->on('workspace_members')
+                        ->restrictOnDelete();
+                } catch (\Throwable $e) {}
+
+                try {
+                    $table->index(['workspace_id', 'organization_member_id']);
+                } catch (\Throwable $e) {}
             });
         });
     }
@@ -134,38 +142,52 @@ return new class extends Migration
     {
         DB::transaction(function (): void {
             Schema::table('tasks', function (Blueprint $table): void {
-                $table->dropForeign(['workspace_id', 'organization_member_id']);
-                $table->dropForeign(['organization_member_id']);
-                $table->dropIndex(['workspace_id', 'organization_member_id']);
+                try { $table->dropForeign(['workspace_id', 'organization_member_id']); } catch (\Throwable $e) {}
+                try { $table->dropForeign(['organization_member_id']); } catch (\Throwable $e) {}
+                try { $table->dropIndex(['workspace_id', 'organization_member_id']); } catch (\Throwable $e) {}
+                
                 if (!Schema::hasColumn('tasks', 'member_id')) {
                     $table->unsignedBigInteger('member_id')->nullable()->after('workspace_id');
                 }
             });
 
             Schema::table('workspace_members', function (Blueprint $table): void {
-                $table->dropUnique(['workspace_id', 'organization_member_id']);
-                $table->dropForeign(['organization_member_id']);
+                try { $table->dropUnique(['workspace_id', 'organization_member_id']); } catch (\Throwable $e) {}
+                try { $table->dropForeign(['organization_member_id']); } catch (\Throwable $e) {}
+                
                 if (!Schema::hasColumn('workspace_members', 'member_id')) {
                     $table->unsignedBigInteger('member_id')->nullable()->after('workspace_id');
                 }
             });
 
-            DB::table('workspace_members')->update([
-                'member_id' => DB::raw('(select user_id from organization_members where organization_members.id = workspace_members.organization_member_id)'),
-            ]);
+            if (Schema::hasColumn('workspace_members', 'organization_member_id')) {
+                DB::table('workspace_members')->update([
+                    'member_id' => DB::raw('(select user_id from organization_members where organization_members.id = workspace_members.organization_member_id)'),
+                ]);
+            }
 
-            DB::table('tasks')->update([
-                'member_id' => DB::raw('(select user_id from organization_members where organization_members.id = tasks.organization_member_id)'),
-            ]);
+            if (Schema::hasColumn('tasks', 'organization_member_id')) {
+                DB::table('tasks')->update([
+                    'member_id' => DB::raw('(select user_id from organization_members where organization_members.id = tasks.organization_member_id)'),
+                ]);
+            }
 
             Schema::table('workspace_members', function (Blueprint $table): void {
-                $table->dropColumn('organization_member_id');
-                $table->foreign('member_id')->references('id')->on('users')->cascadeOnDelete();
+                if (Schema::hasColumn('workspace_members', 'organization_member_id')) {
+                    $table->dropColumn('organization_member_id');
+                }
+                try {
+                    $table->foreign('member_id')->references('id')->on('users')->cascadeOnDelete();
+                } catch (\Throwable $e) {}
             });
 
             Schema::table('tasks', function (Blueprint $table): void {
-                $table->dropColumn('organization_member_id');
-                $table->foreign('member_id')->references('id')->on('users')->nullOnDelete();
+                if (Schema::hasColumn('tasks', 'organization_member_id')) {
+                    $table->dropColumn('organization_member_id');
+                }
+                try {
+                    $table->foreign('member_id')->references('id')->on('users')->nullOnDelete();
+                } catch (\Throwable $e) {}
             });
         });
     }
